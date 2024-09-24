@@ -55,6 +55,11 @@
 											 <i class="bi-pencil"></i>
 											</a>
 										</td>
+                                        <td>
+											<a href="{{ url('panel/admin/tax-rates/delete', $tax->id) }}" class="btn btn-danger rounded-pill btn-sm">
+											 <i class="bi-trash"></i>
+											</a>
+										</td>
 
 									</tr><!-- /.TR -->
 									@endforeach

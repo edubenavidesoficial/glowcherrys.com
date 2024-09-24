@@ -29,8 +29,8 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\LangController;
 use App\Http\Controllers\InstallScriptController;
 use App\Http\Controllers\InstallController;
-use App\Http\Controllers\StripeController; 
-use App\Http\Controllers\UploadMediaMessageController; 
+use App\Http\Controllers\StripeController;
+use App\Http\Controllers\UploadMediaMessageController;
 use App\Http\Controllers\UploadMediaController;
 use App\Http\Controllers\TwoFactorAuthController;
 use App\Http\Controllers\LiveStreamingsController;
@@ -389,7 +389,7 @@ Route::get('verify/account/{confirmation_code}', [HomeController::class, 'getVer
 	Route::any('upload/media/shop/preview',[UploadMediaPreviewShopController::class, 'store']);
 	Route::post('delete/media/shop/preview',[UploadMediaPreviewShopController::class, 'delete']);
 
-	Route::any('upload/media/shop/file',[UploadMediaFileShopController::class, 'store']); 
+	Route::any('upload/media/shop/file',[UploadMediaFileShopController::class, 'store']);
 	Route::post('delete/media/shop/file',[UploadMediaFileShopController::class, 'delete']);
 
 	Route::post('buy/now/product',[ProductsController::class, 'buy']);
@@ -403,17 +403,17 @@ Route::get('verify/account/{confirmation_code}', [HomeController::class, 'getVer
 	// Files Images Messages
 	Route::get('files/messages/{id}/{path}', [UpdatesController::class, 'messagesImage'])->where(['id' =>'[0-9]+', 'path' => '.*']);
 
-	Route::any('upload/media',[UploadMediaController::class, 'store']); 
+	Route::any('upload/media',[UploadMediaController::class, 'store']);
 	Route::post('delete/media',[UploadMediaController::class, 'delete']);
 
-	Route::any('upload/media/message',[UploadMediaMessageController::class, 'store']); 
+	Route::any('upload/media/message',[UploadMediaMessageController::class, 'store']);
 	Route::post('delete/media/message',[UploadMediaMessageController::class, 'delete']);
 
 	Route::post('new/message/massive', [MessagesController::class, 'sendMessageMassive']);
 
 	Route::post('reject/order/{id}',[ProductsController::class, 'rejectOrder']);
 
-	Route::post('create/live', [LiveStreamingsController::class, 'create']);  
+	Route::post('create/live', [LiveStreamingsController::class, 'create']);
 	Route::post('finish/live', [LiveStreamingsController::class, 'finish']);
 
 	Route::get('live/{username}',[LiveStreamingsController::class, 'show'])->name('live');
@@ -424,7 +424,7 @@ Route::get('verify/account/{confirmation_code}', [HomeController::class, 'getVer
 	Route::post('live/like',[LiveStreamingsController::class, 'like']);
 
 	// Comment Like
-	Route::post('comment/like',[CommentsController::class, 'like'])->middleware('auth'); 
+	Route::post('comment/like',[CommentsController::class, 'like'])->middleware('auth');
 
 	Route::get('my/posts',[UserController::class, 'myPosts']);
 	Route::get('block/countries',[UserController::class, 'blockCountries']);
@@ -451,7 +451,7 @@ Route::get('verify/account/{confirmation_code}', [HomeController::class, 'getVer
 
 	// Insert Video Views
 	Route::post('story/views/{id}', [StoriesController::class, 'insertView']);
-	
+
 
  });//<------ End User Views LOGGED
 
@@ -498,6 +498,12 @@ Route::group(['middleware' => 'private.content'], function() {
 	// Limits
 	Route::get('panel/admin/settings/limits',[AdminController::class, 'settingsLimits'])->name('general');
 	Route::post('panel/admin/settings/limits',[AdminController::class, 'saveSettingsLimits']);
+    // Slider
+    Route::get('panel/admin/settings/slider',[AdminController::class, 'settingsSlider'])->name('general');
+    Route::post('panel/admin/settings/slider',[AdminController::class, 'saveSettingsSlider']);
+
+
+
 
 	// BILLING
 	Route::view('panel/admin/billing','admin.billing')->name('billing');
@@ -691,7 +697,7 @@ Route::group(['middleware' => 'private.content'], function() {
 	Route::get('panel/admin/sales',[AdminController::class, 'sales'])->name('sales');
 	Route::post('panel/admin/sales/refund/{id}',[AdminController::class, 'salesRefund']);
 
-	Route::get('panel/admin/tax-rates', [TaxRatesController::class, 'show'])->name('tax'); 
+	Route::get('panel/admin/tax-rates', [TaxRatesController::class, 'show'])->name('tax');
 	Route::view('panel/admin/tax-rates/add', 'admin.add-tax')->name('tax');
 	Route::post('panel/admin/tax-rates/add', [TaxRatesController::class, 'store']);
 	Route::get('panel/admin/tax-rates/edit/{id}', [TaxRatesController::class, 'edit'])->name('tax');
@@ -756,7 +762,7 @@ Route::group(['middleware' => 'private.content'], function() {
  Route::post('payment/stripe/charge', [StripeController::class, 'charge']);
 
 // Files Images Post
-Route::get('files/storage/{id}/{path}', [UpdatesController::class, 'image'])->where(['id' =>'[0-9]+', 'path' => '.*']); 
+Route::get('files/storage/{id}/{path}', [UpdatesController::class, 'image'])->where(['id' =>'[0-9]+', 'path' => '.*']);
 
 // Change Lang
 Route::get('change/lang/{id}', [LangController::class, 'changeLang'])->where(['id' => '[a-z]+']);
@@ -772,7 +778,7 @@ Route::get('search/creators', [HomeController::class, 'searchCreator']);
 // Explore Creators refresh
 Route::post('refresh/creators', [HomeController::class, 'refreshCreators']);
 
-Route::get('payment/paystack', [PaystackController::class, 'show'])->name('paystack'); 
+Route::get('payment/paystack', [PaystackController::class, 'show'])->name('paystack');
 Route::get('payment/ccbill', [CCBillController::class, 'show'])->name('ccbill');
 
 // File Media
@@ -788,7 +794,7 @@ Route::post('2fa/resend',[TwoFactorAuthController::class, 'resend']);
 
 Route::get('explore/creators/live',[HomeController::class, 'creatorsBroadcastingLive']);
 
-Route::post('webhook/mollie', [AddFundsController::class, 'webhookMollie']); 
+Route::post('webhook/mollie', [AddFundsController::class, 'webhookMollie']);
 
 // PayPal Webhook
 Route::post('webhook/paypal', [PayPalController::class, 'webhook']);

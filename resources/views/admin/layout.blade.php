@@ -86,6 +86,11 @@
                   <i class="bi-chevron-right fs-7 me-1"></i> {{ trans('admin.limits') }}
                   </a>
                 </li>
+                <li>
+                <a class="nav-link text-truncate @if (request()->is('panel/admin/settings/slider')) text-white @endif" href="{{ url('panel/admin/settings/slider') }}">
+                  <i class="bi-chevron-right fs-7 me-1"></i> {{ trans('admin.slider') }}
+                  </a>
+                </li>
               </div><!-- /end collapse settings -->
 
               @if (auth()->user()->hasPermission('withdrawals'))
@@ -101,7 +106,7 @@
                   </a>
               </li><!-- /end list -->
               @endif
-              
+
               @if (auth()->user()->hasPermission('verification_requests'))
               <li class="nav-item">
                   <a href="{{ url('panel/admin/verification/members') }}" class="nav-link text-truncate @if (request()->is('panel/admin/verification/members')) active @endif">
@@ -171,12 +176,12 @@
             @if (auth()->user()->hasPermission('reports'))
               <li class="nav-item">
                   <a href="{{ url('panel/admin/reports') }}" class="nav-link text-truncate @if (request()->is('panel/admin/reports')) active @endif">
-                      <i class="bi-flag me-2"></i> 
+                      <i class="bi-flag me-2"></i>
 
                       @if ($reports <> 0)
                         <span class="badge rounded-pill bg-warning text-dark me-1">{{ $reports }}</span>
                       @endif
-                      
+
                       {{ __('admin.reports') }}
                   </a>
               </li><!-- /end list -->

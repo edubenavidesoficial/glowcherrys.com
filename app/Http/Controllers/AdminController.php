@@ -148,7 +148,7 @@ class AdminController extends Controller
 	 	$stat_revenue_month = $revenues->month;
 		// Last Month
 		$stat_revenue_last_month = $revenues->lastMonth;
-		
+
 		return view('admin.dashboard', [
 			'dataChart' => $dataChart,
 			'users' => $users,
@@ -407,7 +407,12 @@ class AdminController extends Controller
     	return redirect('panel/admin/settings/limits');
 
 	}//<--- END METHOD
-
+	public function settingsSlider()
+	{
+		return view('admin.slider')->withSettings($this->settings);
+	}//<--- END METHOD
+    public function saveSettingsSlider(Request $request)
+	{}//<--- END METHOD
 	public function maintenanceMode(Request $request)
 	{
 		$strRandom = str_random(50);
@@ -945,7 +950,7 @@ else {
 
 			// Delete likes
 			Like::where('updates_id', $request->id)->delete();
-			
+
 			$sql->delete();
 
 		return back();
@@ -1033,7 +1038,7 @@ else {
 
 	}//<--- End method
 
-	public function themeStore(Request $request) 
+	public function themeStore(Request $request)
 	{
 		$temp  = '/temp/'; // Temp
 	  	$path  = 'img/'; // Path
@@ -1444,7 +1449,7 @@ else {
 		}
 
 		\Session::flash('success_message', __('admin.success_update'));
-		
+
 		return back();
 
 	}
@@ -1512,7 +1517,7 @@ else {
 
 			Helper::envUpdate($key, $value);
 		}
-		
+
 		return back()->withSuccessMessage(__('admin.success_update'));
 
 	} // End Method
@@ -2181,82 +2186,82 @@ else {
 	  if (! $request->expectsJson()) {
 		abort(401);
 	  }
-  
+
 	  switch ($request->range) {
 		case 'month':
 		  $month = date('m');
 		  $year  = date('Y');
 		  $daysMonth = Helper::daysInMonth($month, $year);
 		  $dateFormat = "$year-$month-";
-  
+
 		  $monthFormat  = __("months.$month");
 		  $currencySymbol = $this->settings->currency_symbol;
-  
+
 		  for ($i=1; $i <= $daysMonth; ++$i) {
 			$date = date('Y-m-d', strtotime($dateFormat.$i));
 			$payments = Transactions::whereDate('created_at', '=', $date)->sum('earning_net_admin');
-			
+
 			$monthsData[] =  "$monthFormat $i";
 			$earningNetUser = $payments;
 			$earningNetUserSum[] = $earningNetUser;
 		  }
-  
+
 		  $label = $monthsData;
 		  $data = $earningNetUserSum;
-  
+
 		  break;
-  
+
 		  case 'last-month':
 			$month = date('m', strtotime('-1 month'));
 			$year  = date('Y');
 			$daysMonth = Helper::daysInMonth($month, $year);
 			$dateFormat = "$year-$month-";
-  
+
 			$monthFormat  = __("months.$month");
 			$currencySymbol = $this->settings->currency_symbol;
-  
+
 			for ($i=1; $i <= $daysMonth; ++$i) {
 			  $date = date('Y-m-d', strtotime($dateFormat.$i));
 			  $payments = Transactions::whereDate('created_at', '=', $date)->sum('earning_net_admin');
-			  
+
 			  $monthsData[] =  "$monthFormat $i";
 			  $earningNetUser = $payments;
 			  $earningNetUserSum[] = $earningNetUser;
 			}
-			
+
 			$label = $monthsData;
 			$data = $earningNetUserSum;
-  
+
 			break;
-  
+
 			case 'year':
 			  $year  = date('Y');
 			  $dateFormat = "$year-";
 			  $currencySymbol = $this->settings->currency_symbol;
-  
+
 			  for ($i=1; $i <= 12; ++$i) {
 				$month = str_pad($i, 2, "0", STR_PAD_LEFT);
 				$date = date('Y-m', strtotime($dateFormat.$month));
 				$payments = Transactions::where('created_at', 'LIKE', '%'.$date.'%')->sum('earning_net_admin');
-				
+
 				$monthsData[] =  __("months.$month");
 				$earningNetUser = $payments;
 				$earningNetUserSum[] = $earningNetUser;
 			  }
-  
+
 			  $label = $monthsData;
 			  $data = $earningNetUserSum;
 			  break;
-		
+
 		default:
-  
+
 		return response()->json([
 		  'success' => false
 		], 401);
-  
+
 		  break;
 	  }
-  
+
 	  return response()->json([
 		'success' => true,
 		'labels'  => $label,
@@ -2286,7 +2291,7 @@ else {
 					unlink($pathLogFile);
 				}
 			}
-			
+
 		  } catch (\Exception $e) {}
 
 		  return redirect('panel/admin/maintenance/mode')
@@ -2347,7 +2352,7 @@ else {
 		if ($request->hasFile('image')) {
 			$extension = $request->file('image')->getClientOriginalExtension();
 			$file = str_random(5).time().'.'.$extension;
-	
+
 			if ($request->file('image')->move($temp, $file)) {
 				\File::copy($temp.$file, $path.$file);
 				\File::delete($temp.$file);
