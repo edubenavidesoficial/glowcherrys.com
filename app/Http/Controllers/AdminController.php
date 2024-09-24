@@ -713,8 +713,8 @@ class AdminController extends Controller
 
 	public function storeCategories(Request $request) {
 
-		$temp            = 'public/temp/'; // Temp
-	  $path            = 'public/img-category/'; // Path General
+		$temp            = '/temp/'; // Temp
+	  $path            = 'img-category/'; // Path General
 
 		Validator::extend('ascii_only', function($attribute, $value, $parameters){
     		return !preg_match('/[^x00-x7F\-]/i', $value);
@@ -774,8 +774,8 @@ else {
 	public function updateCategories(Request $request)
 	{
 		$categories        = Categories::find($request->id);
-		$temp            = 'public/temp/'; // Temp
-	  $path            = 'public/img-category/'; // Path General
+		$temp            = '/temp/'; // Temp
+	  $path            = 'img-category/'; // Path General
 
 	  if(!isset($categories)) {
 			return redirect('panel/admin/categories');
@@ -834,7 +834,7 @@ else {
 	{
 
 			$categories   = Categories::findOrFail($id);
-			$thumbnail    = 'public/img-category/'.$categories->image; // Path General
+			$thumbnail    = 'img-category/'.$categories->image; // Path General
 
 			$userCategory = User::where('categories_id', $id)->update(['categories_id' => 0]);
 
@@ -1035,8 +1035,8 @@ else {
 
 	public function themeStore(Request $request) 
 	{
-		$temp  = 'public/temp/'; // Temp
-	  	$path  = 'public/img/'; // Path
+		$temp  = '/temp/'; // Temp
+	  	$path  = 'img/'; // Path
 		$pathAvatar  = config('path.avatar'); // Path
 
 		$rules = array(
@@ -1817,7 +1817,7 @@ else {
 
 			\File::delete(env($key));
 
-			$envIcon = 'public/images/icons/' . $filename;
+			$envIcon = '/images/icons/' . $filename;
 			Helper::envUpdate($key, $envIcon);
 			}
 		}
@@ -2337,8 +2337,8 @@ else {
 
 	public function addStoryBackground(Request $request)
 	{
-		$temp  = 'public/temp/';
-	  	$path  = 'public/img/stories-bg/';
+		$temp  = '/temp/';
+	  	$path  = 'img/stories-bg/';
 
 		  $request->validate([
 			'image' => 'required|mimes:jpg,png,jpe,jpeg'
@@ -2363,7 +2363,7 @@ else {
 
 	public function deleteStoryBackground($id)
 	{
-		$path  = 'public/img/stories-bg/';
+		$path  = 'img/stories-bg/';
 		$storyBackground = StoryBackgrounds::findOrFail($id);
 
 		\File::delete($path.$storyBackground->name);

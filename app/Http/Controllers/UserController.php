@@ -1326,7 +1326,7 @@ class UserController extends Controller
 
     public function deleteImageCover()
     {
-      $path  = 'public/cover/';
+      $path  = '/cover/';
       $id    = auth()->id();
 
       // Image Cover

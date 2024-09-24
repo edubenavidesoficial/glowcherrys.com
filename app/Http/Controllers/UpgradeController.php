@@ -1061,7 +1061,7 @@ class UpgradeController extends Controller {
 
 			file_put_contents(
 					'.env',
-					"\nBACKBLAZE_ACCOUNT_ID=\nBACKBLAZE_APP_KEY=\nBACKBLAZE_BUCKET=\nBACKBLAZE_BUCKET_ID=\n\nVULTR_ACCESS_KEY=\nVULTR_SECRET_KEY=\nVULTR_REGION=\nVULTR_BUCKET=\nVULTR_ENDPOINT=https://ewr1.vultrobjects.com\n\nPWA_SHORT_NAME=\"Sponzy\"\nPWA_ICON_72=public/images/icons/icon-72x72.png\nPWA_ICON_96=public/images/icons/icon-96x96.png\nPWA_ICON_128=public/images/icons/icon-128x128.png\nPWA_ICON_144=public/images/icons/icon-144x144.png\nPWA_ICON_152=public/images/icons/icon-152x152.png\nPWA_ICON_384=public/images/icons/icon-384x384.png\nPWA_ICON_512=public/images/icons/icon-512x512.png\n\nPWA_SPLASH_640=public/images/icons/splash-640x1136.png\nPWA_SPLASH_750=public/images/icons/splash-750x1334.png\nPWA_SPLASH_1125=public/images/icons/splash-1125x2436.png\nPWA_SPLASH_1242=public/images/icons/splash-1242x2208.png\nPWA_SPLASH_1536=public/images/icons/splash-1536x2048.png\nPWA_SPLASH_1668=public/images/icons/splash-1668x2224.png\nPWA_SPLASH_2048=public/images/icons/splash-2048x2732.png\n",
+					"\nBACKBLAZE_ACCOUNT_ID=\nBACKBLAZE_APP_KEY=\nBACKBLAZE_BUCKET=\nBACKBLAZE_BUCKET_ID=\n\nVULTR_ACCESS_KEY=\nVULTR_SECRET_KEY=\nVULTR_REGION=\nVULTR_BUCKET=\nVULTR_ENDPOINT=https://ewr1.vultrobjects.com\n\nPWA_SHORT_NAME=\"Sponzy\"\nPWA_ICON_72=/images/icons/icon-72x72.png\nPWA_ICON_96=/images/icons/icon-96x96.png\nPWA_ICON_128=/images/icons/icon-128x128.png\nPWA_ICON_144=/images/icons/icon-144x144.png\nPWA_ICON_152=/images/icons/icon-152x152.png\nPWA_ICON_384=/images/icons/icon-384x384.png\nPWA_ICON_512=/images/icons/icon-512x512.png\n\nPWA_SPLASH_640=/images/icons/splash-640x1136.png\nPWA_SPLASH_750=/images/icons/splash-750x1334.png\nPWA_SPLASH_1125=/images/icons/splash-1125x2436.png\nPWA_SPLASH_1242=/images/icons/splash-1242x2208.png\nPWA_SPLASH_1536=/images/icons/splash-1536x2048.png\nPWA_SPLASH_1668=/images/icons/splash-1668x2224.png\nPWA_SPLASH_2048=/images/icons/splash-2048x2732.png\n",
 					FILE_APPEND
 			);
 
@@ -5550,7 +5550,7 @@ Route::post('comment/like','CommentsController@like')->middleware('auth');",
 
 		file_put_contents(
 				'.env',
-				"\nPWA_SPLASH_828=public/images/icons/splash-828x1792.png\nPWA_SPLASH_1242_2=public/images/icons/splash-1242x2688.png",
+				"\nPWA_SPLASH_828=/images/icons/splash-828x1792.png\nPWA_SPLASH_1242_2=/images/icons/splash-1242x2688.png",
 				FILE_APPEND
 		);
 	 //=============== End Query SQL ====================================
@@ -5802,7 +5802,7 @@ Route::post('comment/like','CommentsController@like')->middleware('auth');",
 			$oldVersion = $this->settings->version;
 			$path       = "v$version/";
 			$pathAdmin  = "v$version/admin/";
-			$pathPublic = "v$version/public/";
+			$pathPublic = "v$version//";
 			$copy       = true;
 
 			if ($this->settings->version == $version) {
@@ -6317,7 +6317,7 @@ if (! Schema::hasColumn('verification_requests', 'image_reverse', 'image_selfie'
 			$oldVersion = $this->settings->version;
 			$path       = "v$version/";
 			$pathAdmin  = "v$version/admin/";
-			$pathPublic = "v$version/public/";
+			$pathPublic = "v$version//";
 			$copy       = true;
 
 			if ($this->settings->version == $version) {
@@ -6455,7 +6455,7 @@ if (! Schema::hasColumn('verification_requests', 'image_reverse', 'image_selfie'
 			$oldVersion = $this->settings->version;
 			$path       = "v$version/";
 			$pathAdmin  = "v$version/admin/";
-			$pathPublic = "v$version/public/";
+			$pathPublic = "v$version//";
 			$copy       = true;
 
 			if ($this->settings->version == $version) {
@@ -6996,7 +6996,7 @@ if (! Schema::hasColumn('verification_requests', 'image_reverse', 'image_selfie'
 			$oldVersion = $this->settings->version;
 			$path       = "v$version/";
 			$pathAdmin  = "v$version/admin/";
-			$pathPublic = "v$version/public/";
+			$pathPublic = "v$version//";
 			$copy       = true;
 
 			if ($this->settings->version == $version) {
@@ -7139,7 +7139,7 @@ if (! Schema::hasColumn('verification_requests', 'image_reverse', 'image_selfie'
 			$oldVersion = $this->settings->version;
 			$path       = "v$version/";
 			$pathAdmin  = "v$version/admin/";
-			$pathPublic = "v$version/public/";
+			$pathPublic = "v$version//";
 			$copy       = true;
 
 			if ($this->settings->version == $version) {
@@ -7206,7 +7206,7 @@ if (! Schema::hasColumn('verification_requests', 'image_reverse', 'image_selfie'
 			$oldVersion = $this->settings->version;
 			$path       = "v$version/";
 			$pathAdmin  = "v$version/admin/";
-			$pathPublic = "v$version/public/";
+			$pathPublic = "v$version//";
 			$copy       = true;
 
 			if ($this->settings->version == $version) {
@@ -7349,7 +7349,7 @@ if (! Schema::hasColumn('verification_requests', 'image_reverse', 'image_selfie'
 			$oldVersion = $this->settings->version;
 			$path       = "v$version/";
 			$pathAdmin  = "v$version/admin/";
-			$pathPublic = "v$version/public/";
+			$pathPublic = "v$version//";
 			$copy       = true;
 
 			if ($this->settings->version == $version) {
@@ -7490,7 +7490,7 @@ if (! Schema::hasColumn('verification_requests', 'image_reverse', 'image_selfie'
 			$oldVersion = $this->settings->version;
 			$path       = "v$version/";
 			$pathAdmin  = "v$version/admin/";
-			$pathPublic = "v$version/public/";
+			$pathPublic = "v$version//";
 			$copy       = true;
 
 			if ($this->settings->version == $version) {
@@ -7834,7 +7834,7 @@ if (! Schema::hasColumn('verification_requests', 'image_reverse', 'image_selfie'
 			$oldVersion = $this->settings->version;
 			$path       = "v$version/";
 			$pathAdmin  = "v$version/admin/";
-			$pathPublic = "v$version/public/";
+			$pathPublic = "v$version//";
 			$copy       = true;
 
 			if ($this->settings->version == $version) {
@@ -7923,7 +7923,7 @@ if (! Schema::hasColumn('verification_requests', 'image_reverse', 'image_selfie'
 			$oldVersion = '4.7';
 			$path       = "v$version/";
 			$pathAdmin  = "v$version/admin/";
-			$pathPublic = "v$version/public/";
+			$pathPublic = "v$version//";
 			$copy       = false;
 
 			if ($this->settings->version == $version) {
