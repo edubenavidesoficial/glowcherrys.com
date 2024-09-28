@@ -1,27 +1,53 @@
 @extends('layouts.app')
 
 @section('content')
-  <!-- jumbotron -->
-  <div class="jumbotron homepage m-0 bg-gradient">
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-5 second">
-          <h1 class="display-4 pt-5 mb-3 text-white text-center-sm">{{trans('general.welcome_title')}}</h1>
-          <p class="text-white text-center-sm">{{trans('general.subtitle_welcome')}}</p>
-          <p>
-            <a href="{{url('creators')}}" class="btn btn-lg btn-main btn-outline-light btn-w-mb px-4 mr-2" role="button">{{trans('general.explore')}}</a>
-
-            <a class="btn btn-lg btn-main btn-outline-light btn-w px-4 toggleRegister btn-arrow" href="{{ $settings->registration_active == '1' ? url('signup') : url('login')}}">
-              {{trans('general.getting_started')}}</a>
-          </p>
-        </div>
-        <div class="col-lg-7 first">
-          <img src="{{url('/img', $settings->home_index)}}" class="img-center img-fluid">
-        </div>
+ <!-- jumbotron -->
+<div class="jumbotron homepage m-0 bg-gradient">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-5 second">
+        <h1 class="display-4 pt-5 mb-3 text-white text-center-sm">{{ trans('general.welcome_title') }}</h1>
+        <p class="text-white text-center-sm">{{ trans('general.subtitle_welcome') }}</p>
+        <p>
+          <a href="{{ url('creators') }}" class="btn btn-lg btn-main btn-outline-light btn-w-mb px-4 mr-2" role="button">{{ trans('general.explore') }}</a>
+          <a class="btn btn-lg btn-main btn-outline-light btn-w px-4 toggleRegister btn-arrow" href="{{ $settings->registration_active == '1' ? url('signup') : url('login') }}">
+            {{ trans('general.getting_started') }}
+          </a>
+        </p>
+      </div>
+      <div class="col-lg-7 first">
+        @if($sliders->count() > 0) <!-- Verifica si hay imágenes en el slider -->
+          <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+            <ol class="carousel-indicators">
+              @foreach($sliders as $index => $slider)
+                <li data-target="#carouselExampleIndicators" data-slide-to="{{ $index }}" class="{{ $index == 0 ? 'active' : '' }}"></li>
+              @endforeach
+            </ol>
+            <div class="carousel-inner">
+              @foreach($sliders as $index => $slider)
+                <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
+                  <img src="{{ url('/img/sliders', $slider->image) }}" class="d-block w-100 img-center img-fluid" alt="Slide {{ $index + 1 }}">
+                </div>
+              @endforeach
+            </div>
+            <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="sr-only">Next</span>
+            </a>
+          </div>
+        @else
+          <!-- Si no hay imágenes en el slider, mostrar la imagen estática -->
+          <img src="{{ url('/img', $settings->home_index) }}" class="img-center img-fluid" alt="Home Image">
+        @endif
       </div>
     </div>
   </div>
-  <!-- ./ jumbotron -->
+</div>
+<!-- ./ jumbotron -->
 
   <div class="section py-5 py-large">
     <div class="container">
