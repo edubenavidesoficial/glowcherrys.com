@@ -5,11 +5,11 @@
     "keywords": ["laravel", "framework"],
     "license": "MIT",
     "require": {
-       "anhskohbo/no-captcha": "^3.5",
+        "anhskohbo/no-captcha": "^3.5",
         "barryvdh/laravel-dompdf": "^2.0",
         "doctrine/dbal": "^3.6",
         "guzzlehttp/guzzle": "^7.2",
-        "intervention/image": "^2.7",
+        "intervention/image": "^2",
         "intervention/imagecache": "^2.6",
         "laravel/cashier": "^14.12",
         "laravel/framework": "^10.10",

@@ -107,4 +107,10 @@ class TaxRatesController extends Controller
 
       return response()->json($states);
     }//<--- End Method
+    public function destroy($id){
+        $tax = TaxRates::findOrFail($id);
+        $tax->delete();
+        return redirect('panel/admin/tax-rates')
+            ->withSuccessMessage(trans('general.success_delete'));
+    }
 }
