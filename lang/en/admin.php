@@ -38,6 +38,7 @@ return array(
 	'image_slider'              =>      'Image Slider',
 	'link_1'                    =>      'Action 1',
 	'link_2'                    =>      'Action 2',
+	'estado'                    =>      'Status',
 	'keywords'                  =>      'Keywords',
 	'message_length'            =>      'Message length',
 	'comment_length'            =>      'Comment length',

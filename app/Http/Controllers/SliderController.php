@@ -101,6 +101,19 @@ class SliderController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            DB::beginTransaction();
+            $slider = Slider::find($id);
+            $slider->delete();
+            DB::commit();
+            \Session::flash('success_message', trans('admin.success_delete'));
+            return redirect('panel/admin/settings/slider');
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw ValidationException::withMessages([
+                'Error al eliminar' => [$e->getMessage()],
+            ]);
+        }
+
     }
 }

@@ -500,6 +500,7 @@ Route::group(['middleware' => 'role'], function () {
     // Slider
     Route::get('panel/admin/settings/slider', [AdminController::class, 'settingsSlider'])->name('general');
     Route::post('panel/admin/settings/slider', [AdminController::class, 'saveSettingsSlider']);
+    Route::get('panel/admin/settings/sliders/delete/{id}', [SliderController::class, 'destroy']);
 
 
 
