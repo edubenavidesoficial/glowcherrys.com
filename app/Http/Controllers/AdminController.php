@@ -28,6 +28,7 @@ use App\Models\StoryFonts;
 use App\Models\Withdrawals;
 use Illuminate\Support\Str;
 use App\Events\NewPostEvent;
+use App\Http\Resources\SliderResource;
 use App\Models\Transactions;
 use Illuminate\Http\Request;
 use App\Models\AdminSettings;
@@ -40,6 +41,7 @@ use App\Models\StoryBackgrounds;
 use Illuminate\Support\Facades\DB;
 use App\Notifications\PostRejected;
 use App\Models\ReferralTransactions;
+use App\Models\Slider;
 use App\Models\VerificationRequests;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -409,8 +411,9 @@ class AdminController extends Controller
 	}//<--- END METHOD
 	public function settingsSlider()
 	{
-        
-		return view('admin.slider')->withSettings($this->settings);
+        $results = Slider::all(); // Obtén las imágenes del slider desde la base de datos
+        $sliders = SliderResource::collection($results);
+		return view('admin.slider',['sliders'=>$sliders])->withSettings($this->settings);
 	}//<--- END METHOD
     public function saveSettingsSlider(Request $request)
 	{}//<--- END METHOD
