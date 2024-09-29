@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\GuardarImagenIndividual;
+use App\Http\Requests\RutasStorage;
 use App\Http\Requests\SliderRequest;
+use App\Http\Requests\Utils;
 use App\Http\Resources\SliderResource;
 use App\Models\Slider;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 use Image;
@@ -38,7 +42,7 @@ class SliderController extends Controller
             $slider = Slider::create($request->validated());
             DB::commit();
             //$mensaje = Utils::obtenerMensaje($this->entidad, 'store');
-            \Session::flash('success_message',trans('admin.success_add'));
+            \Session::flash('success_message', trans('admin.success_add'));
 
             return redirect('panel/admin/settings/slider');
         } catch (Exception $e) {
@@ -61,17 +65,31 @@ class SliderController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(SliderRequest $request, slider $slider)
+
+    public function update(Slider $slider, Request $request)
     {
         try {
             DB::beginTransaction();
-            $slider->update($request->validated());
+            $datos = $request->all();
+            if ($datos['image_slider'] && Utils::esBase64($datos['image_slider'])) {
+                $datos['image_slider'] = (new GuardarImagenIndividual($datos['image_slider'], RutasStorage::SLIDER))->execute();
+            } else {
+                unset($datos['image_slider']);
+            }
+                      // Actualiza el slider con los datos validados
+            $slider->update($datos);
+            // Puedes devolver un recurso o los datos actualizados como prefieras
             $modelo = new SliderResource($slider->refresh());
             DB::commit();
-            // $mensaje = Utils::obtenerMensaje($this->entidad, 'update');
-            return response()->json(compact('modelo'));
+
+            return response()->json([
+                'modelo' => $modelo,
+                'message' => 'Slider actualizado correctamente.'
+            ], 200); // Respuesta exitosa*/
         } catch (Exception $e) {
             DB::rollBack();
+
+            // Retorna un error de validación con el mensaje de excepción
             throw ValidationException::withMessages([
                 'Error al actualizar' => [$e->getMessage()],
             ]);

@@ -3,7 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-
+use Illuminate\Support\Facades\Log;
+use PhpParser\Node\Stmt\TryCatch;
 
 class SliderRequest extends FormRequest
 {
@@ -35,19 +36,23 @@ class SliderRequest extends FormRequest
     }
     public static function  convertirComprobantesBase64Url(array $datos, $tipo_metodo = 'store')
     {
-        switch ($tipo_metodo) {
-            case 'store':
-                if ($datos['image_slider']) {
-                    $datos['image_slider'] = (new GuardarImagenIndividual($datos['image_slider'], RutasStorage::SLIDER))->execute();
-                }
-                break;
-            case 'update':
-                if ($datos['image_slider'] && Utils::esBase64($datos['image_slider'])) {
-                    $datos['image_slider'] = (new GuardarImagenIndividual($datos['image_slider'], RutasStorage::SLIDER))->execute();
-                } else {
-                    unset($datos['image_slider']);
-                }
-                break;
+        try {
+            switch ($tipo_metodo) {
+                case 'store':
+                    if ($datos['image_slider']) {
+                        $datos['image_slider'] = (new GuardarImagenIndividual($datos['image_slider'], RutasStorage::SLIDER))->execute();
+                    }
+                    break;
+                case 'update':
+                    if ($datos['image_slider'] && Utils::esBase64($datos['image_slider'])) {
+                        $datos['image_slider'] = (new GuardarImagenIndividual($datos['image_slider'], RutasStorage::SLIDER))->execute();
+                    } else {
+                        unset($datos['image_slider']);
+                    }
+                    break;
+            }
+        } catch (\Throwable $th) {
+            Log::error('Error al convertir comprobantes base64: '. $th->getMessage());
         }
         return $datos;
     }
