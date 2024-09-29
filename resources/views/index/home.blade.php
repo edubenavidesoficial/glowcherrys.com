@@ -26,7 +26,7 @@
             <div class="carousel-inner">
               @foreach($sliders as $index => $slider)
                 <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
-                  <img src="{{ url('/img/sliders', $slider->image) }}" class="d-block w-100 img-center img-fluid" alt="Slide {{ $index + 1 }}">
+                  <img src="{{ url($slider->image_slider) }}" class="d-block w-100 img-center img-fluid" alt="Slide {{ $index + 1 }}">
                 </div>
               @endforeach
             </div>

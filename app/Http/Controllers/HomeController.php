@@ -19,10 +19,13 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 use App\Helper;
+use App\Http\Resources\SliderResource;
 use Image;
 use Cache;
 use Mail;
 use App\Models\Countries;
+use App\Models\Slider;
+use Stripe\Tax\Settings;
 
 class HomeController extends Controller
 {
@@ -47,10 +50,9 @@ class HomeController extends Controller
      */
     public function index()
     {
-    $sliders = Slider::all(); // Obtén las imágenes del slider desde la base de datos
-    $settings = Settings::first(); // Obtener los ajustes de la imagen por defecto y otras configuraciones
-    return view('welcome', compact('sliders', 'settings'));
-      try {
+    $results = Slider::all(); // Obtén las imágenes del slider desde la base de datos
+    $sliders = SliderResource::collection($results);
+    try {
         // Check Datebase access
          $this->settings;
       } catch (\Exception $e) {
@@ -104,7 +106,8 @@ class HomeController extends Controller
 
           return view('index.'.$home, [
               'users' => $users ?? null,
-              'usersTotal' => $usersTotal
+              'usersTotal' => $usersTotal,
+              'sliders' => $sliders
             ]);
 
         } else {
@@ -130,6 +133,7 @@ class HomeController extends Controller
           return view('index.home-session', [
             'users' => $users,
             'updates' => $updates,
+            'sliders' => $sliders,
             'hasPages' => $updates->hasPages(),
             'stories' => $stories,
             'fonts' => $fonts ?? null,
