@@ -409,6 +409,7 @@ class AdminController extends Controller
 	}//<--- END METHOD
 	public function settingsSlider()
 	{
+        
 		return view('admin.slider')->withSettings($this->settings);
 	}//<--- END METHOD
     public function saveSettingsSlider(Request $request)
