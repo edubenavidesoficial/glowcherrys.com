@@ -33,11 +33,11 @@
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home"
                                     type="button" role="tab" aria-controls="home"
-                                    aria-selected="true">Formulario</button>
+                                    aria-selected="true">Formulary</button>
                             </li>
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link" id="table-tab" data-bs-toggle="tab" data-bs-target="#table"
-                                    type="button" role="tab" aria-controls="table" aria-selected="false">Tabla</button>
+                                    type="button" role="tab" aria-controls="table" aria-selected="false">Table</button>
                             </li>
                         </ul>
                         <!-- Contenido de las pestañas -->
@@ -114,6 +114,8 @@
                                                     <th class="active">{{ __('admin.image_slider') }}</th>
                                                     <th class="active">{{ trans('admin.link_1') }}</th>
                                                     <th class="active">{{ trans('admin.link_2') }}</th>
+                                                    <th class="active">{{ trans('admin.update') }}</th>
+                                                    <th class="active">{{ trans('admin.delete') }}</th>
                                                 </tr>
                                                 @foreach ($sliders as $slider)
                                                     <tr>

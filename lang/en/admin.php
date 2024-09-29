@@ -92,6 +92,8 @@ return array(
 	'yearly'                    =>      'yearly',
 	'no_result'                 =>      'No results have been found',
     'actions'                   =>      'Actions',
+    'delete'                    =>      'Delete',
+    'update'                    =>      'Update',
     'save'                      =>      'Save',
     'cancel'                    =>      'Cancel',
     'edit'                		=> 		'Edit',

@@ -40,6 +40,7 @@
 										<th class="active">{{ trans('general.percentage') }}</th>
 										<th class="active">{{ trans('admin.status') }}</th>
 										<th class="active">{{ trans('admin.actions') }}</th>
+                                        <th class="active">{{ trans('admin.delete') }}</th>
 									</tr>
 
 								@foreach ($taxes as $tax)
