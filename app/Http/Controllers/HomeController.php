@@ -47,6 +47,9 @@ class HomeController extends Controller
      */
     public function index()
     {
+    $sliders = Slider::all(); // Obtén las imágenes del slider desde la base de datos
+    $settings = Settings::first(); // Obtener los ajustes de la imagen por defecto y otras configuraciones
+    return view('welcome', compact('sliders', 'settings'));
       try {
         // Check Datebase access
          $this->settings;
@@ -54,7 +57,7 @@ class HomeController extends Controller
         // Redirect to Installer
         return redirect('install/script');
       }
-      
+
         // Home Guest
         if (auth()->guest()) {
           if (config('settings.home_style') == 0) {
@@ -67,7 +70,7 @@ class HomeController extends Controller
                   })
                   ->where('id', '<>', config('settings.hide_admin_profile') == 'on' ? 1 : 0)
                   ->where('blocked_countries', 'NOT LIKE', '%'.Helper::userCountry().'%')
-                  ->with(['media' => fn ($q) => 
+                  ->with(['media' => fn ($q) =>
                   $q->select('type')
                 ])
                 ->orWhere('featured','yes')
@@ -78,7 +81,7 @@ class HomeController extends Controller
                     ->where('id', '<>', config('settings.hide_admin_profile') == 'on' ? 1 : 0)
                     ->where('blocked_countries', 'NOT LIKE', '%'.Helper::userCountry().'%')
                     ->inRandomOrder()
-                    ->with(['media' => fn ($q) => 
+                    ->with(['media' => fn ($q) =>
                   $q->select('type')
                 ])
                   ->paginate(6);
@@ -125,7 +128,7 @@ class HomeController extends Controller
           $payPerViewsUser = auth()->user()->payPerView()->count();
 
           return view('index.home-session', [
-            'users' => $users, 
+            'users' => $users,
             'updates' => $updates,
             'hasPages' => $updates->hasPages(),
             'stories' => $stories,
@@ -243,7 +246,7 @@ class HomeController extends Controller
                   ->whereHideName('no')
                   ->where('blocked_countries', 'NOT LIKE', '%'.Helper::userCountry().'%')
                 ->orderBy('featured_date','desc')
-                ->with(['plans:id,status', 'media' => fn ($q) => 
+                ->with(['plans:id,status', 'media' => fn ($q) =>
                   $q->select('type')
                 ])
                 ->simplePaginate($resultShowByPage);
@@ -338,7 +341,7 @@ class HomeController extends Controller
                 'users.free_subscription',
                 'users.featured'
               )
-              ->with(['plans', 'media' => fn ($q) => 
+              ->with(['plans', 'media' => fn ($q) =>
                 $q->select('type')
               ])
               ->simplePaginate($resultShowByPage);
@@ -480,7 +483,7 @@ class HomeController extends Controller
                 'users.free_subscription',
                 'users.featured'
               )
-              ->with(['media' => fn ($q) => 
+              ->with(['media' => fn ($q) =>
                 $q->select('type')
               ])
             ->simplePaginate(12);
@@ -689,7 +692,7 @@ class HomeController extends Controller
       {
         $type = $this->request->type == 'free' ?: false;
         $users = $this->userExplore($type);
-        
+
         return view('includes.listing-explore-creators', ['users' => $users])->render();
       }
 
