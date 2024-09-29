@@ -3,33 +3,23 @@
 @section('content')
   <section class="section section-sm">
     <div class="container container-lg-3 pt-lg-5 pt-2">
-        
-        
-         
-        
-        
-        
-        
       <div class="row">
-
         <div class="col-md-2">
           @include('includes.menu-sidebar-home')
         </div>
 
         <div class="col-md-6 p-0 second wrap-post">
-            
-            
-              <div>
-          
-              <div class="text-center">
-                <img style="width:640px!important" src="{{url('/img', $settings->img_5)}}" class="img-center img-fluid" width="120">
-                 </div>
-             
-          </div>
-        
-            
-            
-
+            <div>
+        @foreach($sliders as $index => $slider)
+        @if(strtolower($slider->estado) === 'social')
+        <div class="{{ $index == 0 ? 'active' : '' }}">
+            <div class="text-center">
+            <img src="{{ url($slider->image_slider) }}" class="img-center img-fluid slider-image" alt="Slide {{ $index + 1 }}">
+            </div>
+        </div>
+         @endif
+         @endforeach
+        </div>
           @if ($stories->count() || $settings->story_status && auth()->user()->verified_id == 'yes')
           <div id="stories" class="storiesWrapper mb-2 p-2">
             @if ($settings->story_status && auth()->user()->verified_id == 'yes')
@@ -81,7 +71,7 @@
           @endif
 
         @if (auth()->user()->verified_id == 'yes')
-        
+
           @include('includes.modal-add-story')
 
           @include('includes.form-post')
@@ -263,21 +253,21 @@
               callback();  // on navigate item of story
             },
           },
-        
+
           language: { // if you need to translate :)
             unmute: '{{ __("general.touch_unmute") }}',
             keyboardTip: 'Press space to see next',
             visitLink: 'Visit link',
             time: {
-              ago:'{{ __("general.ago") }}', 
-              hour:'{{ __("general.hour") }}', 
-              hours:'{{ __("general.hours") }}', 
-              minute:'{{ __("general.minute") }}', 
-              minutes:'{{ __("general.minutes") }}', 
-              fromnow: '{{ __("general.fromnow") }}', 
-              seconds:'{{ __("general.seconds") }}', 
-              yesterday: '{{ __("general.yesterday") }}', 
-              tomorrow: 'tomorrow', 
+              ago:'{{ __("general.ago") }}',
+              hour:'{{ __("general.hour") }}',
+              hours:'{{ __("general.hours") }}',
+              minute:'{{ __("general.minute") }}',
+              minutes:'{{ __("general.minutes") }}',
+              fromnow: '{{ __("general.fromnow") }}',
+              seconds:'{{ __("general.seconds") }}',
+              yesterday: '{{ __("general.yesterday") }}',
+              tomorrow: 'tomorrow',
               days:'days'
             }
           }
@@ -323,3 +313,13 @@
    @endif
 
  @endsection
+
+ @section('css')
+<style>
+.slider-image {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+}
+</style>
+@endsection

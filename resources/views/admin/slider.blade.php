@@ -33,11 +33,11 @@
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home"
                                     type="button" role="tab" aria-controls="home"
-                                    aria-selected="true">Formulario</button>
+                                    aria-selected="true">Formulary</button>
                             </li>
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link" id="table-tab" data-bs-toggle="tab" data-bs-target="#table"
-                                    type="button" role="tab" aria-controls="table" aria-selected="false">Tabla</button>
+                                    type="button" role="tab" aria-controls="table" aria-selected="false">Table</button>
                             </li>
                         </ul>
                         <!-- Contenido de las pestañas -->
@@ -123,6 +123,63 @@
                                     <button type="button" onclick="update()"
                                         class="btn btn-dark mt-3 px-5">{{ __('admin.edit') }}</button>
                                 </div>
+                            <div class="tab-pane fade my-2" id="table" role="tabpanel" aria-labelledby="table-tab">
+                                <div class="table-responsive p-0">
+                                    <table class="table table-hover">
+                                        <tbody>
+                                            @if ($sliders->count() != 0)
+                                                <tr>
+                                                    <th class="active">{{ trans('admin.title_slider') }}</th>
+                                                    <th class="active">{{ trans('admin.description_slider') }}</th>
+                                                    <th class="active">{{ __('admin.image_slider') }}</th>
+                                                    <th class="active">{{ trans('admin.link_1') }}</th>
+                                                    <th class="active">{{ trans('admin.link_2') }}</th>
+                                                    <th class="active">{{ trans('admin.update') }}</th>
+                                                    <th class="active">{{ trans('admin.delete') }}</th>
+                                                </tr>
+                                                @foreach ($sliders as $slider)
+                                                    <tr>
+                                                        <td>{{ $slider->title_slider }}</td>
+                                                        <td>{{ $slider->description_slider }}
+                                                        </td>
+                                                        <td>
+                                                            <img src="{{ url($slider->image_slider) }}"
+                                                                style="max-width: 100px; max-height: 100px;"
+                                                                alt="Image">
+                                                        </td>
+                                                        <td>
+                                                            <a href="{{ $slider->link_1 }}" target="_blank"
+                                                                class="btn btn-primary rounded-pill btn-sm">
+                                                                <i class="bi-link"></i>
+                                                            </a>
+                                                        </td>
+                                                        <td>
+                                                            <a href="{{ $slider->link_1 }}" target="_blank"
+                                                                class="btn btn-primary rounded-pill btn-sm">
+                                                                <i class="bi-link"></i>
+                                                            </a>
+                                                        </td>
+                                                        <td>
+                                                            <a href="#" onclick="edit({{ $slider->id }})"
+                                                                class="btn btn-success rounded-pill btn-sm">
+                                                                <i class="bi-pencil"></i>
+                                                            </a>
+                                                        </td>
+                                                        <td>
+                                                            <a href="{{ url('panel/admin/sliders/delete', $slider->id) }}"
+                                                                class="btn btn-danger rounded-pill btn-sm">
+                                                                <i class="bi-trash"></i>
+                                                            </a>
+                                                        </td>
+                                                    </tr><!-- /.TR -->
+                                                @endforeach
+                                            @else
+                                                <h5 class="text-center p-5 text-muted fw-light m-0">
+                                                    {{ trans('general.no_results_found') }}</h5>
+                                            @endif
+                                        </tbody>
+                                    </table>
+                                </div><!-- /.box-body -->
                             </div>
                             </form>
                         </div>
