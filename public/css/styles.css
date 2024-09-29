@@ -1535,7 +1535,7 @@ display: none;
  .f-size-20 {
    font-size:20px;
  }
- 
+
 @media (max-width: 767px) {
     .navbar-brand img {
         max-height: 50px; /* Ajusta el tamaño del logo para móviles */
