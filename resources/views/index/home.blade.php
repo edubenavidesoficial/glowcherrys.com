@@ -15,6 +15,7 @@
   <!-- Elementos del carrusel -->
   <div class="carousel-inner">
     @foreach($sliders as $index => $slider)
+    @if(strtolower($slider->estado) === 'banner')
       <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
         <!-- Imagen del slider como fondo -->
         <img src="{{ url($slider->image_slider) }}" class="d-block w-100 img-fluid" alt="Slide {{ $index + 1 }}">
@@ -35,6 +36,7 @@
             </div>
         </div>
       </div>
+      @endif
     @endforeach
   </div>
 
