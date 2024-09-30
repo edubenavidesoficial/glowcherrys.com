@@ -21,6 +21,7 @@ class SliderResource extends JsonResource
             'image_slider' => url($this->image_slider),
             'link_1' => $this->link_1,
             'link_2' => $this->link_2,
+            'estado' => $this->estado,
         ];
     }
 }
