@@ -106,23 +106,25 @@
                                             <input class=" form-control form-check-input" type="checkbox"
                                                 id="estado">
                                             <p id="status_slider">Banner</p>
-                                            <input class=" form-control form-check-input" type="checkbox" name="estado"
-                                                id="estado">
+                                            <input class=" form-control" type="hidden" name="estado" id="estado_slider"
+                                                >
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3" id="createSlider">
+                                        <div class="col-sm-10 offset-sm-2">
+                                            <button type="submit"
+                                                class="btn btn-dark mt-3 px-5">{{ __('admin.save') }}</button>
                                         </div>
                                     </div>
 
-                            </div><!-- end row -->
-                            <div class="row mb-3" id="createSlider">
-                                <div class="col-sm-10 offset-sm-2">
-                                    <button type="submit" class="btn btn-dark mt-3 px-5">{{ __('admin.save') }}</button>
-                                </div>
+                                    <div class="row mb-3" style="visibility: hidden;" id="updateSlider">
+                                        <div class="col-sm-10 offset-sm-2">
+                                            <button type="button" onclick="update()"
+                                                class="btn btn-dark mt-3 px-5">{{ __('admin.edit') }}</button>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
-
-                            <div class="row mb-3" style="visibility: hidden;" id="updateSlider">
-                                <div class="col-sm-10 offset-sm-2">
-                                    <button type="button" onclick="update()"
-                                        class="btn btn-dark mt-3 px-5">{{ __('admin.edit') }}</button>
-                                </div>
                             <div class="tab-pane fade my-2" id="table" role="tabpanel" aria-labelledby="table-tab">
                                 <div class="table-responsive p-0">
                                     <table class="table table-hover">
@@ -181,68 +183,11 @@
                                     </table>
                                 </div><!-- /.box-body -->
                             </div>
-                            </form>
                         </div>
-                        <div class="tab-pane fade my-2" id="table" role="tabpanel" aria-labelledby="table-tab">
-                            <div class="table-responsive p-0">
-                                <table class="table table-hover">
-                                    <tbody>
-                                        @if ($sliders->count() != 0)
-                                            <tr>
-                                                <th class="active">{{ trans('admin.title_slider') }}</th>
-                                                <th class="active">{{ trans('admin.description_slider') }}</th>
-                                                <th class="active">{{ __('admin.image_slider') }}</th>
-                                                <th class="active">{{ trans('admin.link_1') }}</th>
-                                                <th class="active">{{ trans('admin.link_2') }}</th>
-                                            </tr>
-                                            @foreach ($sliders as $slider)
-                                                <tr>
-                                                    <td>{{ $slider->title_slider }}</td>
-                                                    <td>{{ $slider->description_slider }}
-                                                    </td>
-                                                    <td>
-                                                        <img src="{{ url($slider->image_slider) }}"
-                                                            style="max-width: 100px; max-height: 100px;" alt="Image">
-                                                    </td>
-                                                    <td>
-                                                        <a href="{{ $slider->link_1 }}" target="_blank"
-                                                            class="btn btn-primary rounded-pill btn-sm">
-                                                            <i class="bi-link"></i>
-                                                        </a>
-                                                    </td>
-                                                    <td>
-                                                        <a href="{{ $slider->link_1 }}" target="_blank"
-                                                            class="btn btn-primary rounded-pill btn-sm">
-                                                            <i class="bi-link"></i>
-                                                        </a>
-                                                    </td>
-                                                    <td>
-                                                        <a href="#" onclick="edit({{ $slider->id }})"
-                                                            class="btn btn-success rounded-pill btn-sm">
-                                                            <i class="bi-pencil"></i>
-                                                        </a>
-                                                    </td>
-                                                    <td>
-                                                        <a href="{{ url('panel/admin/settings/sliders/delete', $slider->id) }}"
-                                                            class="btn btn-danger rounded-pill btn-sm">
-                                                            <i class="bi-trash"></i>
-                                                        </a>
-                                                    </td>
-                                                </tr><!-- /.TR -->
-                                            @endforeach
-                                        @else
-                                            <h5 class="text-center p-5 text-muted fw-light m-0">
-                                                {{ trans('general.no_results_found') }}</h5>
-                                        @endif
-                                    </tbody>
-                                </table>
-                            </div><!-- /.box-body -->
-                        </div>
-                    </div>
-                </div><!-- card-body -->
-            </div><!-- card  -->
-        </div><!-- col-lg-12 -->
-    </div><!-- end row -->
+                    </div><!-- card-body -->
+                </div><!-- card  -->
+            </div><!-- col-lg-12 -->
+        </div><!-- end row -->
     </div><!-- end content -->
 @endsection
 @section('javascript')
@@ -268,17 +213,12 @@
         // Agregar un event listener para el evento 'change'
         checkbox.addEventListener('change', function() {
             // Verificar si el checkbox está marcado o no
-            if (checkbox.checked) {
-                console.log("El checkbox está marcado.");
-                // Cambiar el contenido del párrafo al estar marcado
-                document.getElementById('status_slider').innerText = "Banner";
-            } else {
-                console.log("El checkbox no está marcado.");
-                // Cambiar el contenido del párrafo al estar desmarcado
-                document.getElementById('status_slider').innerText = "Social";
-            }
+            document.getElementById('status_slider').innerText = checkbox.checked? "Banner" :"Social";
+            document.getElementById('estado_slider').value = checkbox.checked? "banner" :"social";
         });
         async function edit(id) {
+            console.log('editar');
+
             const url = "/panel/admin/settings/sliders/" + id;
             try {
                 const response = await fetch(url);
@@ -292,7 +232,7 @@
                 document.getElementById('previewImage').src = modelo.image_slider;
                 document.getElementById('link_1').value = modelo.link_1;
                 document.getElementById('link_2').value = modelo.link_2;
-                // Selecciona la pestaña usando el identificador del botón de la pestaña
+                checkbox.checked = modelo.estado == 'banner'?  true:false;
                 const tabId = 'home'
                 const tabTrigger = document.querySelector(`button[data-bs-target="#${tabId}"]`);
 
