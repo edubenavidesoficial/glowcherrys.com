@@ -14,6 +14,7 @@ class Slider extends Model
         'description_slider',
         'image_slider',
         'link_1',
-        'link_2'
+        'link_2',
+        'estado'
     ];
 }

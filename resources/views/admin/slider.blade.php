@@ -168,7 +168,7 @@
                                                             </a>
                                                         </td>
                                                         <td>
-                                                            <a href="{{ url('panel/admin/sliders/delete', $slider->id) }}"
+                                                            <a href="{{ url('/panel/admin/sliders/delete', $slider->id) }}"
                                                                 class="btn btn-danger rounded-pill btn-sm">
                                                                 <i class="bi-trash"></i>
                                                             </a>
@@ -217,8 +217,6 @@
             document.getElementById('estado_slider').value = checkbox.checked? "banner" :"social";
         });
         async function edit(id) {
-            console.log('editar');
-
             const url = "/panel/admin/settings/sliders/" + id;
             try {
                 const response = await fetch(url);
@@ -228,11 +226,13 @@
                 const json = await response.json();
                 const modelo = json.modelo;
                 document.getElementById('title_slider').value = modelo.title_slider;
-                document.getElementById('description_slider').value = modelo.title_slider;
+                document.getElementById('description_slider').value = modelo.description_slider;
                 document.getElementById('previewImage').src = modelo.image_slider;
                 document.getElementById('link_1').value = modelo.link_1;
                 document.getElementById('link_2').value = modelo.link_2;
                 checkbox.checked = modelo.estado == 'banner'?  true:false;
+                document.getElementById('status_slider').innerText = modelo.estado =='banner'? "Banner" :"Social";
+                document.getElementById('estado_slider').value =modelo.estado == 'banner'?  true:false;
                 const tabId = 'home'
                 const tabTrigger = document.querySelector(`button[data-bs-target="#${tabId}"]`);
 
@@ -258,7 +258,9 @@
                 description_slider: formData.get('description_slider'),
                 image_slider: formData.get('image_slider'),
                 link_1: formData.get('link_1'),
-                link_2: formData.get('link_2')
+                link_2: formData.get('link_2'),
+                estado: formData.get('estado')
+                //estado: formData.get('estado')
             };
 
             try {
