@@ -176,6 +176,7 @@ return [
         Stevebauman\Purify\PurifyServiceProvider::class,
         Phattarachai\LaravelMobileDetect\AgentServiceProvider::class,
         ProtoneMedia\LaravelFFMpeg\Support\ServiceProvider::class,
+        Anhskohbo\NoCaptcha\NoCaptchaServiceProvider::class,
     ])->toArray(),
 
     /*
@@ -218,6 +219,7 @@ return [
         'Products' => App\Models\Products::class,
         'Blogs' => App\Models\Blogs::class,
         'Agent' => Phattarachai\LaravelMobileDetect\Facades\Agent::class,
+        'NoCaptcha' => Anhskohbo\NoCaptcha\Facades\NoCaptcha::class,
     ])->toArray(),
 
 ];
