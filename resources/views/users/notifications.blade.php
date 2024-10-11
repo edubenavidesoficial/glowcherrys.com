@@ -210,19 +210,25 @@
 
                 @if ($notyNormal)
         				<a href="{{url($key->username)}}">
-        					{{$key->hide_name == 'yes' ? $key->username : $key->name}}
+        					{{$key->hide_name == 'yes' ? $key->username :  $key->name}}
         				</a>
               @endif
 
                 {{$action}}
 
                 @if ($linkDestination != false)
-                  <a href="{{url($linkDestination)}}">{{$text_link}}</a>
+                  <a href="{{url($linkDestination)}}">{{$text_link}} </a>
                 @endif
               </h6>
 
         				<small class="timeAgo text-muted" data="{{date('c', strtotime($key->created_at))}}"></small>
-        		</div><!-- media body -->
+        		<div>
+                    <a href="{{ url('/notifications/delete-notification', $key->id_noty) }}"
+                        class="btn btn-danger rounded-pill btn-sm">
+                        <i class="bi-trash"></i>
+                    </a>
+                </div>
+                    </div><!-- media body -->
         	</div><!-- media -->
         </div><!-- card body -->
         </div>
@@ -314,7 +320,7 @@
                 <i class="bi-info-circle mr-1"></i> {{__('general.push_notification_warning')}}
               </small>
               @endif
-              
+
               @if (auth()->user()->verified_id == 'yes' && $settings->disable_new_post_notification || ! $settings->disable_new_post_notification)
                 <div class="mt-3">
                   <h6 class="position-relative">{{__('general.email_notification')}}
@@ -359,3 +365,4 @@
     </div>
   </div><!-- End Modal new Message -->
 @endsection
+

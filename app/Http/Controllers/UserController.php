@@ -46,7 +46,7 @@ class UserController extends Controller
 {
   use Traits\UserDelete, Traits\Functions;
 
-  public function __construct(Request $request, AdminSettings $settings) 
+  public function __construct(Request $request, AdminSettings $settings)
   {
     $this->request = $request;
     $this->settings = $settings::first();
@@ -146,7 +146,7 @@ class UserController extends Controller
     			'stat_revenue_week' => $stat_revenue_week,
           'stat_revenue_last_week' => $stat_revenue_last_week,
     			'stat_revenue_month' => $stat_revenue_month,
-          'stat_revenue_last_month' => $stat_revenue_last_month 
+          'stat_revenue_last_month' => $stat_revenue_last_month
         ]);
   }
 
@@ -280,7 +280,7 @@ class UserController extends Controller
       }
 
       // Find post pinned
-      $findPostPinned = $user->updates()->selectPostsFields()->whereFixedPost('1')->simplePaginate(config('settings.number_posts_show'));      
+      $findPostPinned = $user->updates()->selectPostsFields()->whereFixedPost('1')->simplePaginate(config('settings.number_posts_show'));
 
       // Count all likes
       $likeCount = $user->likesCount();
@@ -390,7 +390,7 @@ class UserController extends Controller
         ->where('status', '<>', 'encode')
         ->orderBy('id','desc')
       ])->firstOrFail();
-      
+
     $updatesCount = $user->updates->count();
 
       // Check the status of the post
@@ -566,6 +566,11 @@ class UserController extends Controller
     {
       auth()->user()->notifications()->delete();
       return back();
+    }
+    public function deleteNotification($id)
+    {
+        Notifications::where('id', $id)->delete();
+        return back();
     }
 
     public function password()
@@ -1251,7 +1256,7 @@ class UserController extends Controller
     		];
 
           if ($this->settings->amount_max_withdrawal) {
-            if ($this->request->amount <= auth()->user()->balance 
+            if ($this->request->amount <= auth()->user()->balance
               && $this->request->amount > $this->settings->amount_max_withdrawal
               ) {
                 $maxAmountWitdrawal = $this->settings->amount_max_withdrawal;
@@ -1576,7 +1581,7 @@ class UserController extends Controller
         if ($data->user_id != auth()->id() && ! auth()->user()->isSuperAdmin()) {
           abort(404);
         }
-          
+
       $taxes = TaxRates::whereIn('id', collect(explode('_', $data->taxes)))->get();
       $total = $data->amount + ($data->amount * $taxes->sum('percentage') / 100);
       $creator = isset($data->subscribed()->username) ? ' @'.$data->subscribed()->username : null;
@@ -1671,7 +1676,7 @@ class UserController extends Controller
 
      // My Bookmarks
      public function myBookmarks()
-     {      
+     {
        $bookmarks = auth()->user()->bookmarks()
         ->orderBy('bookmarks.id','desc')
         ->getSelectRelations()
@@ -1683,7 +1688,7 @@ class UserController extends Controller
        $users = $this->userExplore();
 
        return view('users.bookmarks', [
-        'updates' => $bookmarks, 
+        'updates' => $bookmarks,
         'hasPages' => $bookmarks->hasPages(),
         'users' => $users,
         'payPerViewsUser' => $payPerViewsUser ?? null
@@ -1886,7 +1891,7 @@ class UserController extends Controller
       $posts = Updates::whereUserId(auth()->id())
       ->with([
         'creator:id,username',
-        'media' => fn ($query) => 
+        'media' => fn ($query) =>
 				$query->select(['updates_id', 'type','status'])
 				->groupBy('type')
       ])
@@ -2057,7 +2062,7 @@ class UserController extends Controller
       $users = $this->userExplore();
 
       return view('users.likes', [
-        'updates' => $likes, 
+        'updates' => $likes,
         'hasPages' => $likes->hasPages(),
         'users' => $users,
         'payPerViewsUser' => $payPerViewsUser ?? null
@@ -2105,7 +2110,7 @@ class UserController extends Controller
         for ($i=1; $i <= $daysMonth; ++$i) {
           $date = date('Y-m-d', strtotime($dateFormat.$i));
           $payments = auth()->user()->myPaymentsReceived()->whereDate('created_at', '=', $date)->sum('earning_net_user');
-          
+
           $monthsData[] =  "$monthFormat $i";
           $earningNetUser = $payments;
           $earningNetUserSum[] = $earningNetUser;
@@ -2128,12 +2133,12 @@ class UserController extends Controller
           for ($i=1; $i <= $daysMonth; ++$i) {
             $date = date('Y-m-d', strtotime($dateFormat.$i));
             $payments = auth()->user()->myPaymentsReceived()->whereDate('created_at', '=', $date)->sum('earning_net_user');
-            
+
             $monthsData[] =  "$monthFormat $i";
             $earningNetUser = $payments;
             $earningNetUserSum[] = $earningNetUser;
           }
-          
+
           $label = $monthsData;
           $data = $earningNetUserSum;
 
@@ -2148,7 +2153,7 @@ class UserController extends Controller
               $month = str_pad($i, 2, "0", STR_PAD_LEFT);
               $date = date('Y-m', strtotime($dateFormat.$month));
               $payments = auth()->user()->myPaymentsReceived()->where('created_at', 'LIKE', '%'.$date.'%')->sum('earning_net_user');
-              
+
               $monthsData[] =  __("months.$month");
               $earningNetUser = $payments;
               $earningNetUserSum[] = $earningNetUser;
@@ -2157,7 +2162,7 @@ class UserController extends Controller
             $label = $monthsData;
             $data = $earningNetUserSum;
             break;
-      
+
       default:
 
       return response()->json([

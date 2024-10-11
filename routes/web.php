@@ -226,6 +226,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('notifications', [UserController::class, 'notifications']);
     Route::post('notifications/settings', [UserController::class, 'settingsNotifications']);
     Route::post('notifications/delete', [UserController::class, 'deleteNotifications']);
+    Route::get('notifications/delete-notification/{id}', [UserController::class, 'deleteNotification']);
 
     // Messages
     Route::get('messages',  [MessagesController::class, 'inbox']);
