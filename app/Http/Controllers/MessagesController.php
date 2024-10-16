@@ -227,7 +227,7 @@ class MessagesController extends Controller
       } else {
         $userOnlineStatus = null;
       }
-      
+
       return response()->json([
         'total'    => $count,
         'messages' => $_array,
@@ -276,7 +276,7 @@ class MessagesController extends Controller
     if (! auth()->check()) {
       return response()->json(['session_null' => true]);
     }
-    
+
     // PATHS
     $path = config('path.messages');
 
@@ -393,7 +393,7 @@ class MessagesController extends Controller
     $getPushNotificationDevices = $user->oneSignalDevices->pluck('player_id')->all();
 
     if (config('settings.push_notification_status') && $getPushNotificationDevices && $diffInMinutes > 10 && $diffInMinutes < 1000) {
-      
+
       app()->setLocale($user->language);
 
       $messagePush = __('general.new_msg_from').' @'.auth()->user()->username;
@@ -576,7 +576,27 @@ class MessagesController extends Controller
         return redirect('messages');
       }
     }//<--- End Method delete
-
+public function desactivateChat(Request $request){
+  $message_id = $request->get('message_id');
+  $message = Messages::where('id', $message_id)->first();
+  $message->active_status = false;
+  $message->save();
+  $data = Messages::where('from_user_id', auth()->id())
+  ->where('id', $message_id)
+  ->orWhere('to_user_id', auth()->id())
+  ->where('id', $message_id)->first();
+  $countMessages = Messages::where('from_user_id', $data->from_user_id)
+     ->where('to_user_id', $data->to_user_id)
+     ->where('id', '<>', '$message_id')
+     ->orWhere('from_user_id', $data->to_user_id)
+     ->where('to_user_id', $data->from_user_id)
+     ->where('id', '<>', '$message_id')
+     ->count();
+     return response()->json([
+        'success' => true,
+        'total' => $countMessages
+      ]);
+}
     // Download File
     public function downloadFileZip($id)
    {

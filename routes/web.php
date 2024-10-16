@@ -236,6 +236,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('message/send',  [MessagesController::class, 'send']);
     Route::get('messages/search/creator',  [MessagesController::class, 'searchCreator']);
     Route::post('message/delete',  [MessagesController::class, 'delete']);
+    Route::post('message/desactivate',  [MessagesController::class, 'desactivateChat']);
     Route::get('messages/ajax/chat',  [MessagesController::class, 'ajaxChat']);
     Route::post('conversation/delete/{id}',  [MessagesController::class, 'deleteChat']);
     Route::get('load/chat/ajax/{id}',  [MessagesController::class, 'loadAjaxChat']);

@@ -324,6 +324,70 @@
 	  });
 	});//<---- * End Remove Message * ---->
 
+	//<---------- * Desactivar Message * ---------->
+    $(document).on('click','.removeMsgPersonal',function(){
+
+        var element   = $(this);
+        var data      = element.attr('data');
+        var deleteMsg = element.attr('data-delete');
+        var query     = 'message_id='+data;
+
+        swal(
+            {
+           title: delete_confirm,
+               text: confirm_delete_message,
+                type: "error",
+                showLoaderOnConfirm: true,
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                   confirmButtonText: yes_confirm,
+                   cancelButtonText: cancel_confirm,
+                    closeOnConfirm: false,
+                    },
+                    function(isConfirm){
+               if (isConfirm) {
+                 console.log('url', URL_BASE+'/message/desactivate')
+       $.ajax({
+          headers: {
+              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+          type : 'POST',
+          url  : URL_BASE+'/message/desactivate',
+          dataType: 'json',
+          data : query,
+
+        }).done(function(data) {
+            console.log('respuesta',data)
+          if (! data.success) {
+                  swal.close();
+            $('.popout').removeClass('popout-success').addClass('popout-error').html(error_occurred).slideDown('500').delay('5000').slideUp('500');
+            return false;
+          } else {
+              element.parents('div.chatlist').fadeTo( 200,0.00, function(){
+                       element.parents('div.chatlist').slideUp( 200, function(){
+                         element.parents('div.chatlist').remove();
+                        });
+                     });
+
+                  swal.close();
+              }
+
+          if (data.session_null) {
+          window.location.reload();
+        }
+        })
+        .fail(function(xhr, status, error) {
+            console.log('Error:', error);
+            console.error('Error details:', xhr.responseText);
+            // Aquí puedes manejar el error de manera más específica
+        });//<--- Done
+
+          }
+        });
+      });//<---- * End Remove Message * ---->
+
+
+
 	//<<==================== PAGINATOR Messages Chat
 	$(document).on('click','.loadMoreMessages', function(e) {
 

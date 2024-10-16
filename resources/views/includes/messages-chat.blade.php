@@ -75,6 +75,11 @@
   <img src="{{Helper::getFile(config('path.avatar').$msg->sender->avatar)}}" class="rounded-circle avatar-chat" width="50" height="50">
 </a>
 <div class="media-body position-relative">
+    @if ($msg->tip == 'no')
+    <a href="javascript:void(0);" class="btn-removeMsg removeMsgPersonal" data="{{$msg->id}}" title="{{__('general.delete')}}">
+      <i class="fa fa-trash-alt"></i>
+      </a>
+    @endif
   @if ($msg->price != 0.00 && ! auth()->user()->checkPayPerViewMsg($msg->id))
     <div class="btn-block p-sm text-center content-locked mb-2 pt-lg pb-lg px-3 {{$textWhite}} custom-rounded float-left" style="{{$backgroundPostLocked}}">
     		<span class="btn-block text-center mb-3">
