@@ -18,6 +18,7 @@ use App\Jobs\EncodeVideoMessages;
 use App\Http\Controllers\Traits\PushNotificationTrait;
 use Image;
 use Cache;
+use Illuminate\Support\Facades\Log;
 
 class MessagesController extends Controller
 {
@@ -152,7 +153,7 @@ class MessagesController extends Controller
 
     $user = User::whereId($id)->where('id', '<>', auth()->id())->firstOrFail();
 
- 		$messages = Messages::getMessageChat($id);
+ 		$messages = Messages::where('active_status',1)->getMessageChat($id);
 
  		$data = [];
 
@@ -163,7 +164,6 @@ class MessagesController extends Controller
  		}
 
  		$messages = $data['reverse'];
-
  		return view('includes.messages-chat', [
       'messages' => $messages,
  			'user' => $user,
@@ -184,6 +184,7 @@ class MessagesController extends Controller
 
       $message = Messages::where('to_user_id', auth()->id())
         ->where('from_user_id', $request->get('user_id'))
+        ->where('active_status',1)
         ->where('id', $_sql, $request->get('last_id'))
         ->whereMode('active')
         ->orWhere('from_user_id', auth()->id() )
@@ -203,6 +204,7 @@ class MessagesController extends Controller
             if ($msg->to_user_id == auth()->id()) {
                  $readed = Messages::where('id', $msg->id)
                  ->where('to_user_id', auth()->id())
+                 ->where('active_status',1)
                  ->where('status', 'new')
                  ->update(['status' => 'readed'], ['updated_at' => false]);
             }
@@ -251,7 +253,7 @@ class MessagesController extends Controller
 		$skip = $request->input('skip');
     $user = User::whereId($id)->where('id', '<>', auth()->id())->firstOrFail();
 
-    $messages = Messages::getMessageChat($id, $skip);
+    $messages = Messages::where('active_status',1)->getMessageChat($id, $skip);
 
     $data = [];
 

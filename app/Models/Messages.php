@@ -4,12 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use DB;
+use Illuminate\Support\Facades\Log;
 
 class Messages extends Model
 {
   protected $guarded = [];
 
-  public static function conversations() 
+  public static function conversations()
   {
     $fields = 'id,avatar,name,username,hide_name,verified_id,active_status_online';
 
@@ -52,15 +53,15 @@ class Messages extends Model
   {
     if ($this->from_user_id == auth()->id()) {
       return $this->receiver;
-    } 
+    }
 
     return $this->sender;
   }
 
   public function remitterName()
   {
-    return $this->remitter()->hide_name == 'yes' 
-      ? $this->remitter()->username 
+    return $this->remitter()->hide_name == 'yes'
+      ? $this->remitter()->username
       : $this->remitter()->name;
   }
 
@@ -84,7 +85,7 @@ class Messages extends Model
     $this->save();
   }
 
-  public function media() 
+  public function media()
   {
 		return $this->hasMany(MediaMessages::class)->where('status', 'active')->orderBy('id','asc');
 	}
@@ -99,16 +100,15 @@ class Messages extends Model
       ->orWhere( 'from_user_id', auth()->id() )
       ->where('to_user_id', $id)
       ->whereMode('active');
-
-      $query->when($skip, fn ($q) => 
+      $query->when($skip, fn ($q) =>
   			$q->skip($skip)
   		);
 
       $query = $query->take(10)
       ->orderBy('messages.id', 'DESC')
+      ->where('active_status',true)
       ->with(['sender:'.$fields, 'receiver:'.$fields, 'media'])
       ->get();
-
       return $query;
   }
 }
