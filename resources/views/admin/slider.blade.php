@@ -100,12 +100,18 @@
                                     </div>
                                 </div>
                                 <div class="row mb-3">
-                                    <label
-                                        class="col-sm-2 col-form-label text-lg-end">{{ trans('admin.estado') }}</label>
+                                    <label class="col-sm-2 col-form-label text-lg-end">{{ trans('admin.estado') }}</label>
                                     <div class="col-sm-10">
-                                        <input class=" form-control form-check-input" type="checkbox"
-                                            id="estado">
                                         <p id="status_slider">Banner</p>
+
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="estado" id="optionLogin" value="banner" checked>
+                                            <label class="form-check-label" for="optionLogin">Login</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="estado" id="optionBanner" value="social">
+                                            <label class="form-check-label" for="optionBanner">Banner Home</label>
+                                        </div>
                                         <input class=" form-control" type="hidden" name="estado" id="estado_slider">
                                     </div>
                                 </div>
@@ -211,11 +217,13 @@
     var checkbox = document.getElementById('estado');
 
     // Agregar un event listener para el evento 'change'
-    checkbox.addEventListener('change', function() {
-        // Verificar si el checkbox está marcado o no
-        document.getElementById('status_slider').innerText = checkbox.checked ? "Banner" : "Social";
-        document.getElementById('estado_slider').value = checkbox.checked ? "banner" : "social";
+    document.querySelectorAll('input[name="estado"]').forEach((radio) => {
+        radio.addEventListener('change', function () {
+            document.getElementById('status_slider').innerText =  this.value;
+            document.getElementById('estado_slider').value =  this.value;
+        });
     });
+
     async function edit(id) {
         const url = "/panel/admin/settings/sliders/" + id;
         try {
@@ -230,7 +238,7 @@
             document.getElementById('previewImage').src = modelo.image_slider;
             document.getElementById('link_1').value = modelo.link_1;
             document.getElementById('link_2').value = modelo.link_2;
-            checkbox.checked = modelo.estado == 'banner' ? true : false;
+            document.querySelector(`input[name="estado"][value="${modelo.estado}"]`).checked = true;
             document.getElementById('status_slider').innerText = modelo.estado == 'banner' ? "Banner" : "Social";
             document.getElementById('estado_slider').value = modelo.estado == 'banner' ? true : false;
             const tabId = 'home'
