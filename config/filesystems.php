@@ -47,7 +47,7 @@ return [
         'default' => [
             'driver' => 'local',
             'root' => public_path(),
-            'url' => env('APP_URL').'/public',
+            'url' => env('APP_URL'),
             'visibility' => 'public',
        ],
 
@@ -72,7 +72,7 @@ return [
             'visibility' => 'public',
             'endpoint' => 'https://'.env('DOS_DEFAULT_REGION').'.digitaloceanspaces.com',
         ],
-  
+
         'wasabi' => [
             'driver' => 's3',
             'key' => env('WAS_ACCESS_KEY_ID'),
@@ -82,7 +82,7 @@ return [
             'visibility' => 'public',
             'endpoint' => 'https://s3.'.env('WAS_DEFAULT_REGION').'.wasabisys.com'
         ],
-  
+
         'backblaze' => [
             'driver'         => 'b2',
             'accountId'      => env('BACKBLAZE_ACCOUNT_ID'),
@@ -90,7 +90,7 @@ return [
             'bucketName'     => env('BACKBLAZE_BUCKET'),
             'bucketId'       => env('BACKBLAZE_BUCKET_ID'),
         ],
-  
+
         'vultr' => [
             'driver' => 's3',
             'key'=> env('VULTR_ACCESS_KEY'),
