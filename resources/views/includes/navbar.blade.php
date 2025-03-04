@@ -317,7 +317,7 @@
 
                         <li class="nav-item dropdown d-lg-block d-none">
                             <a class="nav-link px-2" href="{{ url('/') }}" title="{{ trans('admin.home') }}">
-                                <img src="{{ auth()->user()->dark_mode == 'off' ? asset('img/icons/home.svg') : asset('img/icons/home-light.svg') }}"
+                                <img src="{{ auth()->user()->dark_mode == 'off' ? asset('img/icons/home.svg') : asset('img/icons/home-light.png') }}"
                                     alt="{{ trans('admin.home') }}" class="ico">
                                 <span class="d-lg-none align-middle ml-1">{{ trans('admin.home') }}</span>
                             </a>
@@ -326,7 +326,7 @@
                         <li class="nav-item dropdown d-lg-block d-none">
                             <a class="nav-link px-2" href="{{ url('creators') }}"
                                 title="{{ trans('general.explore_creators') }}">
-                                <img src="{{ auth()->user()->dark_mode == 'off' ? asset('img/icons/compass.svg') : asset('img/icons/compass-light.svg') }}"
+                                <img src="{{ auth()->user()->dark_mode == 'off' ? asset('img/icons/compass.svg') : asset('img/icons/compass-light.png') }}"
                                     alt="{{ trans('admin.home') }}" class="ico">
                                 <span class="d-lg-none align-middle ml-1">{{ trans('general.explore') }}</span>
                             </a>
@@ -336,7 +336,7 @@
                             <li class="nav-item dropdown d-lg-block d-none">
                                 <a class="nav-link px-2" href="{{ url('shop') }}"
                                     title="{{ trans('general.shop') }}">
-                                    <img src="{{ auth()->user()->dark_mode == 'off' ? asset('img/icons/bag.png') : asset('img/icons/bag.png') }}"
+                                    <img src="{{ auth()->user()->dark_mode == 'off' ? asset('img/icons/bag.png') : asset('img/icons/bag-light.png') }}"
                                         alt="{{ trans('admin.home') }}" class="icoo">
                                     <span class="d-lg-none align-middle ml-1">{{ trans('general.shop') }}</span>
                                 </a>
@@ -351,7 +351,7 @@
                                     {{ auth()->user()->messagesInbox() }}
                                 </span>
 
-                                <img src="{{ auth()->user()->dark_mode == 'off' ? asset('img/icons/paper.svg') : asset('img/icons/paper-light.svg') }}"
+                                <img src="{{ auth()->user()->dark_mode == 'off' ? asset('img/icons/paper.svg') : asset('img/icons/paper-light.png') }}"
                                     alt="{{ trans('admin.home') }}" class="ico">
                                 <span class="d-lg-none align-middle ml-1">{{ trans('general.messages') }}</span>
                             </a>
@@ -365,7 +365,7 @@
                                     {{ auth()->user()->unseenNotifications() }}
                                 </span>
 
-                                <img src="{{ auth()->user()->dark_mode == 'off' ? asset('img/icons/bell.svg') : asset('img/icons/bell-light.svg') }}"
+                                <img src="{{ auth()->user()->dark_mode == 'off' ? asset('img/icons/bell.svg') : asset('img/icons/bell-light.png') }}"
                                     alt="{{ trans('admin.home') }}" class="ico">
                                 <span class="d-lg-none align-middle ml-1">{{ trans('general.notifications') }}</span>
                             </a>
