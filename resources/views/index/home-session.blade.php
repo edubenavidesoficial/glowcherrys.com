@@ -391,6 +391,73 @@
             /* Evita que el carrusel tenga una altura fija innecesaria */
         }
 
+        #sugerenciasCarousel {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px 0;
+}
+
+.carousel-inner {
+    position: relative;
+    overflow: hidden;
+}
+
+.carousel-item {
+    transition: transform 0.5s ease;
+}
+
+.card {
+    border: none;
+    border-radius: 12px;
+}
+
+.card-header {
+    background-color: transparent;
+    border-bottom: none;
+    display: flex;
+    justify-content: space-between;
+    padding: 15px;
+}
+
+.card-body {
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    padding: 15px;
+}
+
+.card-body h6 {
+    margin-bottom: 5px;
+    font-size: 16px;
+}
+
+.card-body p {
+    font-size: 14px;
+    margin: 0;
+}
+
+.position-relative img.card-img-top {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+.position-absolute img {
+    border-radius: 50%;
+    border: 2px solid #fff;
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 50%;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    filter: invert(1);
+}
+
         .card {
             height: auto !important;
             /* Asegura que la tarjeta solo mida lo necesario */
