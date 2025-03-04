@@ -13,7 +13,7 @@
         <li class="flex-fill bd-highlight">
             <a class="p-3 btn-mobile" href="{{url('/')}}" title="{{trans('admin.home')}}">
                 <img
-                    src="{{ auth()->user()->dark_mode == 'off' ? asset('img/icons/home.svg') : asset('img/icons/home-light.svg') }}"
+                    src="{{ auth()->user()->dark_mode == 'off' ? asset('img/icons/home.svg') : asset('img/icons/home-light.png') }}"
                     alt="{{ trans('admin.home') }}"
                     class="ico">
             </a>
@@ -21,7 +21,7 @@
 
         <li class="flex-fill bd-highlight">
             <img
-                src="{{ auth()->user()->dark_mode == 'off' ? asset('img/icons/compass.svg') : asset('img/icons/compass-light.svg') }}"
+                src="{{ auth()->user()->dark_mode == 'off' ? asset('img/icons/compass.svg') : asset('img/icons/compass-light.png') }}"
                 alt="{{ trans('admin.home') }}"
                 class="ico">
         </li>
@@ -30,7 +30,7 @@
         <li class="flex-fill bd-highlight">
             <a class="p-3 btn-mobile" href="{{url('shop')}}" title="{{trans('general.shop')}}">
                 <img
-                    src="{{ auth()->user()->dark_mode == 'off' ? asset('img/icons/bag.png') : asset('img/icons/bag.png') }}"
+                    src="{{ auth()->user()->dark_mode == 'off' ? asset('img/icons/bag.png') : asset('img/icons/bag-light.png') }}"
                     alt="{{ trans('admin.home') }}"
                     class="icoo">
             </a>
@@ -45,7 +45,7 @@
                 </span>
 
                 <img
-                    src="{{ auth()->user()->dark_mode == 'off' ? asset('img/icons/paper.svg') : asset('img/icons/paper-light.svg') }}"
+                    src="{{ auth()->user()->dark_mode == 'off' ? asset('img/icons/paper.svg') : asset('img/icons/paper-light.png') }}"
                     alt="{{ trans('admin.home') }}"
                     class="ico">
             </a>
@@ -57,7 +57,7 @@
                     {{ auth()->user()->unseenNotifications() }}
                 </span>
                 <img
-                    src="{{ auth()->user()->dark_mode == 'off' ? asset('img/icons/bell.svg') : asset('img/icons/bell-light.svg') }}"
+                    src="{{ auth()->user()->dark_mode == 'off' ? asset('img/icons/bell.svg') : asset('img/icons/bell-light.png') }}"
                     alt="{{ trans('admin.home') }}"
                     class="ico">
             </a>
