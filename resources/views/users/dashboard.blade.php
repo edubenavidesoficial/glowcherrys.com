@@ -34,7 +34,7 @@
                     <h4><i class="fas fa-wallet mr-2 text-primary icon-dashboard"></i> {{ Helper::amountFormatDecimal(auth()->user()->balance) }}</h4>
                     <small>{{ __('general.balance') }}
                       @if (auth()->user()->balance >= $settings->amount_min_withdrawal)
-                      <a href="{{ url('settings/withdrawals')}}" class="link-border"> {{ __('general.make_withdrawal') }}</a>
+                      <a href="{{ url('settings/withdrawals')}}" class="link-border">  {{ __('general.make_withdrawal') }}</a>
                     @endif
                     </small>
 
@@ -148,10 +148,10 @@
                      <select class="custom-select mb-4 mb-lg-0 w-auto d-block filterEarnings">
                       <option selected="" value="month">{{ __('general.this_month') }}</option>
                       <option value="last-month">{{ __('general.last_month') }}</option>
-                      <option value="year">{{ __('general.this_year') }}</option>       
+                      <option value="year">{{ __('general.this_year') }}</option>
                     </select>
                     </div>
-                     
+
                      <div class="d-block position-relative" style="height: 350px">
                         <div class="blocked display-none" id="loadChart">
                           <span class="d-flex justify-content-center align-items-center text-center w-100 h-100">
@@ -318,7 +318,7 @@ $(document).on('change','.filterEarnings', function(e) {
   var range = $(this).val();
 
   $(this).blur();
-  
+
   $('#loadChart').show();
 
   $.ajax({
@@ -327,7 +327,7 @@ $(document).on('change','.filterEarnings', function(e) {
       // Empty any previous chart data
       ChartArea.data.labels = [];
       ChartArea.data.datasets[0].data = [];
-      
+
       ChartArea.data.labels = data.labels;
       ChartArea.data.datasets.forEach((dataset) => {
           dataset.data = data.datasets;

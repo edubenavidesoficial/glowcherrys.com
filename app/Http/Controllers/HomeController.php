@@ -107,10 +107,11 @@ class HomeController extends Controller
           return view('index.'.$home, [
               'users' => $users ?? null,
               'usersTotal' => $usersTotal,
-              'sliders' => $sliders
+              'sliders' => $sliders,
             ]);
 
         } else {
+            $sugerencias = User::where('status', 'active')->limit(10)->get();
 
           $users = $this->userExplore();
 
@@ -137,6 +138,8 @@ class HomeController extends Controller
             'hasPages' => $updates->hasPages(),
             'stories' => $stories,
             'fonts' => $fonts ?? null,
+            'sugerencias' => $sugerencias,
+
             'payPerViewsUser' => $payPerViewsUser ?? null
           ]);
 
