@@ -103,7 +103,7 @@
                                 <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
                                     <div class="card shadow-sm rounded-lg border-0 w-100">
                                         <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center px-3 pt-3">
-                                            <span class="text-muted fw-bold">SUGERENCIAS</span>
+                                            <span class="text-muted fw-bold">SUGGESTIONS</span>
                                             <div class="d-flex gap-2 text-muted align-items-center">
                                                 <i class="bi bi-eye-slash cursor-pointer"></i>
                                                 <i class="bi bi-arrow-clockwise cursor-pointer"></i>
@@ -122,7 +122,7 @@
                                         <div class="position-relative">
                                             <!-- Imagen de fondo con altura fija -->
                                             <img src="{{ $sugerencia['cover'] ? 'uploads/cover/' . $sugerencia['cover'] : 'https://picsum.photos/300/150?random=' . $index }}"
-                                                 class="card-img-top rounded-3"
+                                                 class="card-img-top rounded-3" style="height: 300px;"
                                                  alt="Fondo"
                                                  >
 
@@ -136,7 +136,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="card-body bg-dark text-white rounded-bottom p-3">
+                                        <div class="card-body bg-dark text-white rounded-bottom" style="padding-left: 18%;">
                                             <h6 class="fw-bold mb-0">{{ $sugerencia['name'] }}</h6>
                                             <p class="text-muted mb-0">{{ $sugerencia['username'] }}</p>
                                         </div>
@@ -391,76 +391,14 @@
             /* Evita que el carrusel tenga una altura fija innecesaria */
         }
 
-        #sugerenciasCarousel {
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 20px 0;
-}
-
-.carousel-inner {
-    position: relative;
-    overflow: hidden;
-}
-
-.carousel-item {
-    transition: transform 0.5s ease;
-}
-
-.card {
-    border: none;
-    border-radius: 12px;
-}
-
-.card-header {
-    background-color: transparent;
-    border-bottom: none;
-    display: flex;
-    justify-content: space-between;
-    padding: 15px;
-}
-
-.card-body {
-    background-color: rgba(0, 0, 0, 0.5);
-    color: #fff;
-    padding: 15px;
-}
-
-.card-body h6 {
-    margin-bottom: 5px;
-    font-size: 16px;
-}
-
-.card-body p {
-    font-size: 14px;
-    margin: 0;
-}
-
-.position-relative img.card-img-top {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-    border-radius: 12px;
-}
-
-.position-absolute img {
-    border-radius: 50%;
-    border: 2px solid #fff;
-}
-
-.carousel-control-prev,
-.carousel-control-next {
-    background-color: rgba(0, 0, 0, 0.3);
-    border-radius: 50%;
-}
-
-.carousel-control-prev-icon,
-.carousel-control-next-icon {
-    filter: invert(1);
-}
-
         .card {
             height: auto !important;
             /* Asegura que la tarjeta solo mida lo necesario */
         }
+
+        .carousel-item {
+    height: 38rem;
+    background-color: #ffffff;
+}
     </style>
 @endsection
