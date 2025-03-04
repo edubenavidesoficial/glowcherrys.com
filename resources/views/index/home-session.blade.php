@@ -398,7 +398,7 @@
 
         .carousel-item {
     height: 38rem;
-    background-color: #ffffff;
+    background-color: #ffffff00;
 }
     </style>
 @endsection
