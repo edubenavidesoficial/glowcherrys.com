@@ -10,6 +10,7 @@
 
                 <div class="col-md-6 p-0 second wrap-post">
                     <div>
+                        slider
                         @foreach ($sliders as $index => $slider)
                             @if (strtolower($slider->estado) === 'social')
                                 <div class="{{ $index == 0 ? 'active' : '' }}">
