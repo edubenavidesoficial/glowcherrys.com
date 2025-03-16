@@ -112,7 +112,6 @@
                                             <input class="form-check-input" type="radio" name="estado" id="optionBanner" value="social">
                                             <label class="form-check-label" for="optionBanner">Banner Home</label>
                                         </div>
-                                        <input class=" form-control" type="hidden" name="estado" id="estado_slider">
                                     </div>
                                 </div>
                                 <div class="row mb-3" id="createSlider">
@@ -220,7 +219,6 @@
     document.querySelectorAll('input[name="estado"]').forEach((radio) => {
         radio.addEventListener('change', function () {
             document.getElementById('status_slider').innerText =  this.value;
-            document.getElementById('estado_slider').value =  this.value;
         });
     });
 
@@ -240,7 +238,6 @@
             document.getElementById('link_2').value = modelo.link_2;
             document.querySelector(`input[name="estado"][value="${modelo.estado}"]`).checked = true;
             document.getElementById('status_slider').innerText = modelo.estado == 'banner' ? "Banner" : "Social";
-            document.getElementById('estado_slider').value = modelo.estado == 'banner' ? true : false;
             const tabId = 'home'
             const tabTrigger = document.querySelector(`button[data-bs-target="#${tabId}"]`);
 

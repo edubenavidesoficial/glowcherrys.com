@@ -27,6 +27,7 @@ class SliderRequest extends FormRequest
             'title_slider' => 'required|string|max:255',
             'description_slider' => 'required|string',
             'image_slider' => 'required|string',
+            'estado' => 'required|string',
             'link_1' => 'nullable|string|max:255',
             'link_2' => 'nullable|string|max:255',
         ];
