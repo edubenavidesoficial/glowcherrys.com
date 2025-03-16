@@ -3,7 +3,8 @@
     <style>
         .balance-external {
             padding-right: 1.5%;
-            font-size: 2rem;
+            font-size: 1.6rem;
+            color: #ff0000;
         }
 
         @media(max-width: 767.98px) {
@@ -26,9 +27,11 @@
                 top: 18px !important;
             }
             .balance-external {
-            padding-right: 24%;
+            padding-right: 40%;
             padding-bottom: 6%;
-            font-size: 2rem;
+            font-size: 1.5rem;
+            color: #ff0000;
+            margin-top: -7.2px; 
         }
 
         }
@@ -52,7 +55,14 @@
         class="navbar navbar-expand-lg navbar-inverse fixed-top p-nav @if (auth()->guest() && request()->path() == '/') scroll @else p-3 @if (request()->is('live/*')) d-none @endif  @if (request()->is('messages/*')) d-none d-lg-block shadow-sm @elseif(request()->is('messages')) shadow-sm @else shadow-custom @endif {{ auth()->check() && auth()->user()->dark_mode == 'on' ? 'bg-white' : 'navbar_background_color' }} link-scroll @endif">
         <div class="container-fluid d-flex position-relative">
             @auth
-                <div class="buttons-mobile-nav d-lg-none">
+            <div class="buttons-mobile-nav d-lg-none">     
+                <div class="balance-external">
+                    @if (!is_null(auth()->user()))
+                        {{ Helper::amountFormatDecimal(auth()->user()->balance) }}
+                    @endif
+                </div>  
+            </div> 
+                <div class="buttons-mobile-nav d-lg-none">     
                     <a class="btn-mobile-nav navbar-toggler-mobile" href="#" data-toggle="collapse"
                         data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" role="button">
                         <i class="feather icon-menu icon-navbar"></i>
@@ -72,11 +82,6 @@
                         alt="{{ $settings->title }}" class="logo align-bottom max-w-100" />
                 @endif
             </a>
-            <div class="balance-external">
-                @if (!is_null(auth()->user()))
-                    {{ Helper::amountFormatDecimal(auth()->user()->balance) }}
-                @endif
-            </div>
 
             @guest
                 <button id="button-menu-burger" class="navbar-toggler @if (auth()->guest() && request()->path() == '/') text-white @endif"
@@ -163,7 +168,6 @@
                         @endif
                     @else
                         <!-- ============ Menu Mobile ============-->
-
                         @if (auth()->user()->role == 'admin')
                             <li class="nav-item dropdown d-lg-none mt-2 border-bottom">
                                 <a href="{{ url('panel/admin') }}" class="nav-link px-2 link-menu-mobile py-1">
@@ -461,6 +465,11 @@
                                         class="feather icon-log-out mr-2"></i> {{ trans('auth.logout') }}</a>
                             </div>
                         </li>
+                        <div class="balance-external">
+                            @if (!is_null(auth()->user()))
+                                {{ Helper::amountFormatDecimal(auth()->user()->balance) }}
+                            @endif
+                        </div>
 
                         <li class="nav-item">
                             <a class="nav-link btn-arrow btn-arrow-sm btn btn-main btn-primary pr-3 pl-3"

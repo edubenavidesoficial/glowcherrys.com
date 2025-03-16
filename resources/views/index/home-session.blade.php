@@ -10,7 +10,6 @@
 
                 <div class="col-md-6 p-0 second wrap-post">
                     <div>
-                        slider
                         @foreach ($sliders as $index => $slider)
                             @if (strtolower($slider->estado) === 'social')
                                 <div class="{{ $index == 0 ? 'active' : '' }}">
@@ -102,8 +101,9 @@
                         <div class="carousel-inner">
                             @foreach($sugerencias as $index => $sugerencia)
                                 <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
-                                    <div class="card shadow-sm rounded-lg border-0 w-100">
-                                        <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center px-3 pt-3">
+                                    <a href="{{ url($sugerencia->username) }}" class="text-decoration-none text-reset">
+                                    <div>
+                                        <div class="card-im card-header bg-white border-0 d-flex justify-content-between align-items-center px-3 pt-3">
                                             <span class="text-muted fw-bold">SUGGESTIONS</span>
                                             <div class="d-flex gap-2 text-muted align-items-center">
                                                 <i class="bi bi-eye-slash cursor-pointer"></i>
@@ -128,7 +128,7 @@
                                                  >
 
                                             <!-- Imagen de perfil -->
-                                            <div class="position-absolute start-0 bottom-0 translate-middle-x ms-3 mb-2">
+                                            <div class="position-absolute start-0 bottom-0 translate-middle-x ms-3 mb-2 image-sg">
                                                 <img src="{{ $sugerencia['avatar'] ? 'uploads/avatar/' . $sugerencia['avatar'] : 'https://i.pravatar.cc/50?img=' . $index }}"
                                                      class="rounded-circle border border-white"
                                                      width="50" height="50"
@@ -142,12 +142,11 @@
                                             <p class="text-muted mb-0">{{ $sugerencia['username'] }}</p>
                                         </div>
                                     </div>
+                                </a>
                                 </div>
                             @endforeach
                         </div>
                     </div>
-
-
 
                 </div><!-- end col-md-12 -->
 
@@ -383,7 +382,7 @@
             width: 100%;
             height: 180px;
             object-fit: cover;
-            border-radius: 23px;
+            border-radius: 13px;
         }
 
         /* Asegurar que el carrusel y los elementos ocupen solo el espacio necesario */
@@ -399,7 +398,15 @@
 
         .carousel-item {
     height: 38rem;
-    background-color: #ffffff00;
-}
+    background-color: #ffffff00;}
+
+    .image-sg{
+        padding-left: 1rem;
+        padding-top: 1rem;
+    }
+    .card-im{
+        border-radius: calc(1.25rem - 1px) calc(1.25rem - 1px) 0 0 !important;
+    }
+
     </style>
 @endsection
