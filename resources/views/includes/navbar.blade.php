@@ -1,11 +1,7 @@
 <header>
 
     <style>
-        .balance-external {
-            padding-right: 1.5%;
-            font-size: 1.6rem;
-            color: #ff0000;
-        }
+       
 
         @media(max-width: 767.98px) {
 
@@ -27,11 +23,11 @@
                 top: 18px !important;
             }
             .balance-external {
-            padding-right: 40%;
+            padding-right: 3rem;
             padding-bottom: 6%;
             font-size: 1.5rem;
             color: #ff0000;
-            margin-top: -7.2px; 
+            margin-top: -7px; 
         }
 
         }
