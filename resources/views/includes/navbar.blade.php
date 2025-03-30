@@ -1,7 +1,11 @@
 <header>
 
     <style>
-       
+        .balance-external {
+            padding-right: 1.5%;
+            font-size: 1.6rem;
+            color: #ff0000;
+        }
 
         @media(max-width: 767.98px) {
 
@@ -463,12 +467,12 @@
                                         class="feather icon-log-out mr-2"></i> {{ trans('auth.logout') }}</a>
                             </div>
                         </li>
-                        <div class="balance-external">
+                        <div class="balance-external d-none d-md-block">
                             @if (!is_null(auth()->user()))
                                 {{ Helper::amountFormatDecimal(auth()->user()->balance) }}
                             @endif
                         </div>
-
+                        
                         <li class="nav-item">
                             <a class="nav-link btn-arrow btn-arrow-sm btn btn-main btn-primary pr-3 pl-3"
                                 href="{{ url('settings/page') }}">
