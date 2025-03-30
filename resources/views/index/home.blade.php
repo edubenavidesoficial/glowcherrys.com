@@ -13,6 +13,34 @@
   </ol>
 
   <!-- Elementos del carrusel -->
+  <style>
+    @media (max-width: 768px) {
+    .carousel-caption {
+        position: absolute;
+        bottom: 10%; /* Ajusta la posición */
+        left: 50%;
+        transform: translateX(-50%);
+        width: 90%;
+        text-align: center;
+        background: rgba(181, 8, 5, 0.14); /* Agrega fondo para mejor visibilidad */
+        padding: 10px;
+        border-radius: 10px;
+    }
+    
+    .carousel-caption h1 {
+        font-size: 1.5rem;
+    }
+
+    .carousel-caption p {
+        font-size: 1rem;
+    }
+
+    .carousel-caption .btn {
+        font-size: 0.9rem;
+        padding: 8px 12px;
+    }
+}
+</style>
   <div class="carousel-inner">
     @foreach($sliders as $index => $slider)
     @if(strtolower($slider->estado) === 'banner')
@@ -21,7 +49,7 @@
         <img src="{{ url($slider->image_slider) }}" class="d-block w-100 img-fluid" alt="Slide {{ $index + 1 }}">
 
         <!-- Contenido del slider -->
-        <div class="carousel-caption d-none d-md-block">
+        <div class="carousel-caption d-block d-sm-block text-center">
             <div class="row">
               <div class="col-lg-5 second">
                 <h1 class="display-4 pt-5 mb-3 text-white text-center-sm">{{ trans('general.welcome_title') }}</h1>

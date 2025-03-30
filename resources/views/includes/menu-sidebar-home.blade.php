@@ -49,5 +49,68 @@
 			<span class="ml-2">{{ trans('general.bookmarks') }}</span>
 		</a>
 	</li>
-
+	<li>
+		@if ($settings->live_streaming_status == 'on')
+              <button type="button" data-toggle="tooltip" data-placement="top" title="{{trans('general.stream_live')}}" class="btn btn-upload p-bottom-8 btn-tooltip-form e-none align-bottom btnCreateLive @if (auth()->user()->dark_mode == 'off') text-primary @else text-white @endif rounded-pill">
+                  <i class="bi bi-broadcast f-size-25"></i>
+				  <span class="ml-1">{{ trans('general.stream_live_home') }}</span>
+              </button>
+            @endif
+	</li>
 </ul>
+<style>
+.menu-left-home {
+    font-size: 1rem;
+    font-weight: 500;
+    background: rgba(247, 160, 179, 0.315);
+    padding: 5px;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+/* Efecto de "zoom-in" en íconos */
+.menu-left-home a i {
+    font-size: 1.2rem;
+    color: #ff0000;
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+
+/* Animación al pasar el mouse */
+.menu-left-home a {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    border-radius: 8px;
+    color: #333;
+    transition: background 0.3s ease-in-out, transform 0.2s ease-in-out;
+    text-decoration: none;
+}
+
+/* Espaciado mejorado */
+.menu-left-home a span {
+    margin-left: 15px;
+}
+
+/* Efecto al pasar el mouse */
+.menu-left-home a:hover {
+    background: #ff0000;
+    color: #fff;
+    transform: translateX(5px); /* Desplazamiento leve */
+}
+
+/* Ícono crece al pasar el mouse */
+.menu-left-home a:hover i {
+    color: #fff;
+    transform: scale(1.2);
+}
+
+/* Estilo para enlace activo */
+.menu-left-home a.active {
+    background: #b30000;
+    color: #fff;
+    pointer-events: none;
+    opacity: 0.7;
+    transform: scale(1.05); /* Leve agrandamiento */
+}
+
+</style>

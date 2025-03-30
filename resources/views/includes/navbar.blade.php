@@ -38,9 +38,11 @@
 
         @media(min-width: 768px) {
             #navbar-menu-mobile {
-                height: 15% !important
+                height: 11% !important
             }
         }
+        #navbar-menu-mobile #navbar
+       en pantalla normal  quiero que sea height: 10% !important
 
         .ico {
             width: 20px;

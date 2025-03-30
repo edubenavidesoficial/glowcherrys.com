@@ -831,6 +831,7 @@ return array(
 	'live_streaming_min_price' => 'Minimum price Live Streaming',
 	'live_streaming_max_price' => 'Maximum price Live Streaming',
 	'stream_live' => 'Stream Live',
+	'stream_live_home' => 'Live',
 	'create_live_stream' => 'Create Live Stream',
 	'create_live_stream_subtitle' => 'Start a live stream and interact with your subscribers.',
 	'info_price_live' => 'Price to be paid by free subscribers or non-subscribers.',
