@@ -473,11 +473,23 @@
                             @endif
                         </div>
                         
-                        <li class="nav-item">
-                            <a class="nav-link btn-arrow btn-arrow-sm btn btn-main btn-primary pr-3 pl-3"
-                                href="{{ url('settings/page') }}">
-                                {{ auth()->user()->verified_id == 'yes' ? trans('general.edit_my_page') : trans('users.edit_profile') }}</a>
-                        </li>
+                        <li class="nav-item d-flex align-items-center">
+                            
+                            <!-- Botón redondo principal de idiomas -->
+                            <a href="{{ url('settings/page') }}" 
+                               class="nav-link rounded-circle d-flex justify-content-center align-items-center"
+                               style="width: 40px; height: 40px; background-color: #000000; border: 2px solid #ffffff;">
+                               <i class="fas fa-flag text-white"></i> <!-- Ícono de bandera blanco -->
+                            </a>
+                            
+                            <!-- Botón redondo principal -->
+                            <a href="{{ url('settings/page') }}" 
+                               class="nav-link btn btn-primary rounded-circle d-flex justify-content-center align-items-center"
+                               style="width: 40px; height: 40px;">
+                                <i class="fas fa-cog"></i> <!-- Puedes cambiar el ícono si deseas -->
+                            </a>
+                        
+                        </li>                        
 
                     @endguest
 
