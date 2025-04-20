@@ -59,9 +59,11 @@
             @auth
             <div class="buttons-mobile-nav d-lg-none">     
                 <div class="balance-external">
-                    @if (!is_null(auth()->user()))
-                        {{ Helper::amountFormatDecimal(auth()->user()->balance) }}
-                    @endif
+                    <a href="/my/wallet" class="d-flex">
+                               @if (!is_null(auth()->user()))
+                                    {{ Helper::amountFormatDecimal(auth()->user()->balance) }}
+                                @endif
+                            </a> 
                 </div>  
             </div> 
                 <div class="buttons-mobile-nav d-lg-none">     
@@ -467,21 +469,64 @@
                                         class="feather icon-log-out mr-2"></i> {{ trans('auth.logout') }}</a>
                             </div>
                         </li>
-                        <div class="balance-external d-none d-md-block">
-                            @if (!is_null(auth()->user()))
-                                {{ Helper::amountFormatDecimal(auth()->user()->balance) }}
-                            @endif
-                        </div>
-                        
+                        <div class="balance-external d-none d-md-block dropdown">
+                            <a href="#" id="nav-inner-success_dropdown_4" role="button"
+                            data-toggle="dropdown" class="d-flex">
+                               @if (!is_null(auth()->user()))
+                                    {{ Helper::amountFormatDecimal(auth()->user()->balance) }}
+                                @endif
+                            </a> 
+                            <div class="dropdown-menu dropdown-menu-end dd-menu-user p-3" 
+                            aria-labelledby="nav-inner-success_dropdown_4"
+                            style="min-width: 250px; left: -140%;">
+                       
+                           <div class="wallet-option d-flex justify-content-between align-items-center mb-3">
+                               <span>$10 Wallet Balance</span>
+                               <a href="/my/wallet" class="btn btn-sm btn-outline-primary px-3">$10</a>
+                           </div>
+                       
+                           <div class="wallet-option d-flex justify-content-between align-items-center mb-3">
+                               <span>$25 Wallet Balance</span>
+                               <a href="/my/wallet" class="btn btn-sm btn-outline-primary px-3">$25</a>
+                           </div>
+                       
+                           <div class="wallet-option d-flex justify-content-between align-items-center mb-3">
+                               <span>$50 Wallet Balance</span>
+                               <a href="/my/wallet" class="btn btn-sm btn-outline-primary px-3">$50</a>
+                           </div>
+                       
+                           <div class="wallet-option d-flex justify-content-between align-items-center mb-3">
+                               <span>$100 Wallet Balance</span>
+                               <a href="/my/wallet" class="btn btn-sm btn-outline-primary px-3">$100</a>
+                           </div>
+                       
+                           <div class="wallet-option d-flex justify-content-between align-items-center">
+                               <span>$500 Wallet Balance</span>
+                               <a href="/my/wallet" class="btn btn-sm btn-outline-primary px-3">$500</a>
+                           </div>
+                       </div>
+                       
+                        </div>                        
+
                         <li class="nav-item d-flex align-items-center">
                             
                             <!-- Botón redondo principal de idiomas -->
-                            <a href="{{ url('settings/page') }}" 
-                               class="nav-link rounded-circle d-flex justify-content-center align-items-center"
+                            <a href="#" id="nav-inner-success_dropdown_2" role="button"
+                            data-toggle="dropdown" class="nav-link rounded-circle d-flex justify-content-center align-items-center"
                                style="width: 40px; height: 40px; background-color: #000000; border: 2px solid #ffffff;">
                                <i class="fas fa-flag text-white"></i> <!-- Ícono de bandera blanco -->
                             </a>
-                            
+                            <div class="dropdown-menu mb-1 dropdown-menu-right dd-menu-user"
+                            aria-labelledby="nav-inner-success_dropdown_2"> 
+
+                            <select name="language" class="form-control custom-select">
+                                <option @if (auth()->user()->language == '') selected="selected" @endif value="">({{trans('general.language')}}) {{ __('general.not_specified') }}</option>
+                                @foreach (Languages::orderBy('name')->get() as $languages)
+                                  <option @if (auth()->user()->language == $languages->abbreviation) selected="selected" @endif value="{{$languages->abbreviation}}">{{ $languages->name }}</option>
+                                @endforeach
+                                </select>
+                        </div>
+
                             <!-- Botón redondo principal -->
                             <a href="{{ url('settings/page') }}" 
                                class="nav-link btn btn-primary rounded-circle d-flex justify-content-center align-items-center"
