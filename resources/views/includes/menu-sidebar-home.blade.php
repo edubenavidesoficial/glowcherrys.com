@@ -19,12 +19,12 @@
 		</a>
 	</li>
 	@endif
-		<li>
-			<a href="{{ url('my/purchases') }}" @if (request()->is('my/purchases')) class="active disabled" @endif>
-				<i class="bi bi-bag-check"></i>
-				<span class="ml-2">{{ trans('general.purchased') }}</span>
-			</a>
-		</li>
+	<li>
+		<a href="{{ url('my/purchases') }}" @if (request()->is('my/purchases')) class="active disabled" @endif>
+			<i class="bi bi-bag-check"></i>
+			<span class="ml-2">{{ trans('general.purchased') }}</span>
+		</a>
+	</li>
 	<li>
 		<a href="{{ url('messages') }}">
 			<i class="feather icon-send"></i>
@@ -51,13 +51,14 @@
 	</li>
 	<li>
 		@if ($settings->live_streaming_status == 'on')
-              <button type="button" data-toggle="tooltip" data-placement="top" title="{{trans('general.stream_live')}}" class="btn btn-upload p-bottom-8 btn-tooltip-form e-none align-bottom btnCreateLive @if (auth()->user()->dark_mode == 'off') text-primary @else text-white @endif rounded-pill">
-                  <i class="bi bi-broadcast f-size-25"></i>
-				  <span class="ml-1">{{ trans('general.stream_live_home') }}</span>
-              </button>
-            @endif
+			<button type="button" data-toggle="tooltip" data-placement="top" title="{{trans('general.stream_live')}}" class="btn btn-upload p-bottom-8 btn-tooltip-form e-none align-bottom btnCreateLive @if (auth()->user()->dark_mode == 'off') text-primary @else text-white @endif rounded-pill">
+				<i class="bi bi-broadcast f-size-25"></i>
+				<span class="ml-1">{{ trans('general.stream_live_home') }}</span>
+			</button>
+		@endif
 	</li>
 </ul>
+
 <style>
 .menu-left-home {
     font-size: 1rem;
@@ -66,6 +67,9 @@
     padding: 5px;
     border-radius: 10px;
     overflow: hidden;
+    backdrop-filter: blur(10px); /* efecto vidrio */
+    -webkit-backdrop-filter: blur(10px); /* soporte Safari */
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2); /* sombra suave */
 }
 
 /* Efecto de "zoom-in" en íconos */
@@ -82,7 +86,7 @@
     padding: 12px 15px;
     border-radius: 8px;
     color: #333;
-    transition: background 0.3s ease-in-out, transform 0.2s ease-in-out;
+    transition: background 0.3s ease-in-out, transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
     text-decoration: none;
 }
 
@@ -95,7 +99,8 @@
 .menu-left-home a:hover {
     background: #ff0000;
     color: #fff;
-    transform: translateX(5px); /* Desplazamiento leve */
+    transform: translateY(-5px); /* efecto flotante hacia arriba */
+    box-shadow: 0 10px 20px rgba(255, 0, 0, 0.4); /* sombra al flotar */
 }
 
 /* Ícono crece al pasar el mouse */
@@ -112,5 +117,4 @@
     opacity: 0.7;
     transform: scale(1.05); /* Leve agrandamiento */
 }
-
 </style>
