@@ -59,6 +59,7 @@
 	</li>
 </ul>
 <style>
+
 .menu-left-home {
     font-size: 1rem;
     font-weight: 500;
@@ -66,6 +67,10 @@
     padding: 5px;
     border-radius: 10px;
     overflow: hidden;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); /* Sombra profunda */
+    transform: translateY(-5px); /* Flotando siempre */
 }
 
 /* Efecto de "zoom-in" en íconos */
@@ -75,7 +80,7 @@
     transition: transform 0.3s ease, color 0.3s ease;
 }
 
-/* Animación al pasar el mouse */
+/* Animación en los enlaces */
 .menu-left-home a {
     display: flex;
     align-items: center;
@@ -91,14 +96,14 @@
     margin-left: 15px;
 }
 
-/* Efecto al pasar el mouse */
+/* Hover en los enlaces */
 .menu-left-home a:hover {
     background: #ff0000;
     color: #fff;
-    transform: translateX(5px); /* Desplazamiento leve */
+    transform: translateX(5px); /* Desplazamiento lateral */
 }
 
-/* Ícono crece al pasar el mouse */
+/* Íconos agrandan en hover */
 .menu-left-home a:hover i {
     color: #fff;
     transform: scale(1.2);
@@ -110,7 +115,8 @@
     color: #fff;
     pointer-events: none;
     opacity: 0.7;
-    transform: scale(1.05); /* Leve agrandamiento */
+    transform: scale(1.05); /* Agrandamiento leve */
 }
+
 
 </style>
