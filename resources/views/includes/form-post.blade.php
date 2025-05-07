@@ -1,5 +1,15 @@
 @include('includes.alert-payment-disabled')
 
+<style>
+.card.card-border-0.shadow-large {
+  transition: all 0.4s ease;
+  transform: translateY(-10px);
+  box-shadow: 
+    0 10px 20px rgba(0,0,0,0.2),  
+    0 0 25px rgba(255, 0, 0, 0.5);
+  border-radius: 20px;
+}
+
 <div class="progress-wrapper px-3 px-lg-0 display-none mb-3" id="progress">
     <div class="progress-info">
       <div class="progress-percentage">
