@@ -63,7 +63,7 @@
 .menu-left-home {
     font-size: 1rem;
     font-weight: 500;
-    background: rgba(247, 160, 179, 0.315);
+    background: rgba(255,255,255);
     padding: 5px;
     border-radius: 10px;
     overflow: hidden;
