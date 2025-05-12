@@ -471,6 +471,8 @@ return array(
 	'sms' => 'Text message',
 	'subscription' => 'Subscription',
 	'tip' => 'Tip',
+	'send' => 'Send',
+	'gifts' => 'Gifts',
 	'ppv' => 'Pay Per View',
 	'send_tip' => 'Send tip to',
 	'tip_amount' => 'Tip amount',
