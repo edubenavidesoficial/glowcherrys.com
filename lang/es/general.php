@@ -471,6 +471,7 @@ return array(
 	'sms' => 'Mensaje de texto',
 	'subscription' => 'Suscripción',
 	'tip' => 'Propina',
+	'gif' => 'Regalos',
 	'ppv' => 'Paga por ver',
 	'send_tip' => 'Enviar propina a',
 	'tip_amount' => 'Monto de la propina',
