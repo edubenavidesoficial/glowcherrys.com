@@ -8,6 +8,11 @@
       var user_id_chat = {{ $user->id }};
       var msg_count_chat = {{ $messages->count() }};
   </script>
+  <style>
+   img.ico{
+    height: 1.5rem;
+   }
+  </style>
 @endsection
 
 @section('content')
