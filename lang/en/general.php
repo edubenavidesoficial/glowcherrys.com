@@ -472,6 +472,8 @@ return array(
 	'subscription' => 'Subscription',
 	'tip' => 'Tip',
 	'gif' => 'Gif',
+	'send' => 'Send',
+	'gifts' => 'Gifts',
 	'ppv' => 'Pay Per View',
 	'send_tip' => 'Send tip to',
 	'tip_amount' => 'Tip amount',

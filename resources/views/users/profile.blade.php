@@ -226,6 +226,292 @@
                   <path fill-rule="evenodd" d="M8 13.5a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11zm0 .5A6 6 0 1 0 8 2a6 6 0 0 0 0 12z"/>
                 </svg> {{trans('general.tip')}}
               </a>
+               <!-- Tips modal -->
+     <div class="checkout-popup modal fade show" id="tipForm" tabindex="-1" role="dialog" aria-labelledby="checkout" aria-modal="true" style="display: none;">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="payment-title">Send a tip</h5>
+                  <div class="modal-header border-bottom-0">
+                    <button type="button" class="close close-inherit" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true"><i class="bi bi-x-lg"></i></span>
+                    </button>
+                  </div>
+              </div>
+              <div class="modal-body">
+                  <div class="payment-body">
+                      <div class="d-flex flex-row">
+                          <div class="ml-0 ml-md-2 mb-2">
+                              <img src="{{Helper::getFile(config('path.avatar').$user->avatar)}}" class="rounded-circle user-avatar">
+                          </div>
+                          <div class="d-lg-block">
+                              <div class="pl-2 d-flex justify-content-center flex-column">
+                                  <div class="ml-2 ">
+                                      <div class="text-bold text-dark name"> {{$user->hide_name == 'yes' ? $user->username : $user->name}}</div>
+                                   </div>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="payment-description mb-3">Send a tip to this user</div>
+                      <div class="input-group mb-3 checkout-amount-input">
+                          <div class="input-group-prepend">
+                      <span class="input-group-text" id="amount-label">
+                          <div class="ion-icon-wrapper  icon-medium">
+      <div class="ion-icon-inner">
+      <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512"><rect x="32" y="80" width="448" height="256" rx="16" ry="16" transform="rotate(180 256 208)" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="32"></rect><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="M64 384h384M96 432h320"></path><circle cx="256" cy="208" r="80" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"></circle><path d="M480 160a80 80 0 01-80-80M32 160a80 80 0 0080-80M480 256a80 80 0 00-80 80M32 256a80 80 0 0180 80" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"></path></svg>
+      </div>
+      </div>
+                      </span>
+                          </div>
+                          <input class="form-control uifield-amount" placeholder="Amount ($1 min, $500 max)" aria-label="Username" aria-describedby="amount-label" id="checkout-amount" type="number" min="0" step="1" max="500">
+                          <div class="invalid-feedback">Please enter a valid amount.</div>
+                      </div>
+                  </div>
+
+                  <div id="accordion" class="mb-3">
+                      <div class="card">
+                          <div class="card-header d-flex justify-content-between collapsed" id="headingOne" data-toggle="collapse" data-target="#billingInformation" aria-expanded="false" aria-controls="billingInformation">
+                              <h6 class="mb-0">
+                                  Billing agreement details
+                              </h6>
+                              <div class="ml-1 label-icon">
+                                  <div class="ion-icon-wrapper ">
+      <div class="ion-icon-inner">
+      <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 184l144 144 144-144"></path></svg>
+      </div>
+      </div>
+                              </div>
+                          </div>
+                          <div id="billingInformation" class="collapse" aria-labelledby="headingOne" data-parent="#accordion" style="">
+                              <div class="card-body">
+                                  <form id="billing-agreement-form">
+                                      <div class="tab-content">
+                                          <!-- credit card info-->
+                                          <div id="individual" class="tab-pane fade show active pt-1">
+                                              <div class="row form-group">
+                                                  <div class="col-sm-6 col-6">
+                                                      <div class="form-group">
+                                                          <label for="firstName">
+                                                              <span>First name</span>
+                                                          </label>
+                                                          <input type="text" name="firstName" placeholder="First name" onchange="checkout.validateFirstNameField();" required="" class="form-control uifield-first_name">
+                                                      </div>
+
+                                                  </div>
+                                                  <div class="col-sm-6 col-6">
+                                                      <div class="form-group">
+                                                          <label for="lastName">
+                                                              <span>Last name</span>
+                                                          </label>
+                                                          <input type="text" name="lastName" placeholder="Last name" onblur="checkout.validateLastNameField()" required="" class="form-control uifield-last_name">
+                                                      </div>
+                                                  </div>
+                                              </div>
+                                              <div class="form-group">
+                                                  <label for="countrySelect">
+                                                      <span>Country</span>
+                                                  </label>
+                                                  <select class="country-select form-control input-sm uifield-country" id="countrySelect" required="" onchange="checkout.validateCountryField()"><option value="">Select a country</option><option value="2">Afghanistan</option><option value="3">Albania</option><option value="4">Algeria</option><option value="5" selected="selected">American Samoa</option><option value="6">Andorra</option><option value="7">Angola</option><option value="8">Anguilla</option><option value="9">Antarctica</option><option value="10">Antigua and Barbuda</option><option value="11">Argentina</option><option value="12">Armenia</option><option value="13">Aruba</option><option value="14">Australia</option><option value="15">Austria</option><option value="16">Azerbaijan</option><option value="17">Bahamas (the)</option><option value="18">Bahrain</option><option value="19">Bangladesh</option><option value="20">Barbados</option><option value="21">Belarus</option><option value="22">Belgium</option><option value="23">Belize</option><option value="24">Benin</option><option value="25">Bermuda</option><option value="26">Bhutan</option><option value="27">Bolivia (Plurinational State of)</option><option value="28">Bonaire, Sint Eustatius and Saba</option><option value="29">Bosnia and Herzegovina</option><option value="30">Botswana</option><option value="31">Bouvet Island</option><option value="32">Brazil</option><option value="33">British Indian Ocean Territory (the)</option><option value="34">Brunei Darussalam</option><option value="35">Bulgaria</option><option value="36">Burkina Faso</option><option value="37">Burundi</option><option value="38">Cabo Verde</option><option value="39">Cambodia</option><option value="40">Cameroon</option><option value="41">Canada</option><option value="42">Cayman Islands (the)</option><option value="43">Central African Republic (the)</option><option value="44">Chad</option><option value="45">Chile</option><option value="46">China</option><option value="47">Christmas Island</option><option value="48">Cocos (Keeling) Islands (the)</option><option value="49">Colombia</option><option value="50">Comoros (the)</option><option value="51">Congo (the Democratic Republic of the)</option><option value="52">Congo (the)</option><option value="53">Cook Islands (the)</option><option value="54">Costa Rica</option><option value="55">Croatia</option><option value="56">Cuba</option><option value="57">Curaçao</option><option value="58">Cyprus</option><option value="59">Czechia</option><option value="60">Côte d'Ivoire</option><option value="61">Denmark</option><option value="62">Djibouti</option><option value="63">Dominica</option><option value="64">Dominican Republic (the)</option><option value="65">Ecuador</option><option value="66">Egypt</option><option value="67">El Salvador</option><option value="68">Equatorial Guinea</option><option value="69">Eritrea</option><option value="70">Estonia</option><option value="71">Eswatini</option><option value="72">Ethiopia</option><option value="73">Falkland Islands (the) [Malvinas]</option><option value="74">Faroe Islands (the)</option><option value="75">Fiji</option><option value="76">Finland</option><option value="77">France</option><option value="78">French Guiana</option><option value="79">French Polynesia</option><option value="80">French Southern Territories (the)</option><option value="81">Gabon</option><option value="82">Gambia (the)</option><option value="83">Georgia</option><option value="84">Germany</option><option value="85">Ghana</option><option value="86">Gibraltar</option><option value="87">Greece</option><option value="88">Greenland</option><option value="89">Grenada</option><option value="90">Guadeloupe</option><option value="91">Guam</option><option value="92">Guatemala</option><option value="93">Guernsey</option><option value="94">Guinea</option><option value="95">Guinea-Bissau</option><option value="96">Guyana</option><option value="97">Haiti</option><option value="98">Heard Island and McDonald Islands</option><option value="99">Holy See (the)</option><option value="100">Honduras</option><option value="101">Hong Kong</option><option value="102">Hungary</option><option value="103">Iceland</option><option value="104">India</option><option value="105">Indonesia</option><option value="106">Iran (Islamic Republic of)</option><option value="107">Iraq</option><option value="108">Ireland</option><option value="109">Isle of Man</option><option value="110">Israel</option><option value="111">Italy</option><option value="112">Jamaica</option><option value="113">Japan</option><option value="114">Jersey</option><option value="115">Jordan</option><option value="116">Kazakhstan</option><option value="117">Kenya</option><option value="118">Kiribati</option><option value="119">Korea (the Democratic People's Republic of)</option><option value="120">Korea (the Republic of)</option><option value="121">Kuwait</option><option value="122">Kyrgyzstan</option><option value="123">Lao People's Democratic Republic (the)</option><option value="124">Latvia</option><option value="125">Lebanon</option><option value="126">Lesotho</option><option value="127">Liberia</option><option value="128">Libya</option><option value="129">Liechtenstein</option><option value="130">Lithuania</option><option value="131">Luxembourg</option><option value="132">Macao</option><option value="133">Madagascar</option><option value="134">Malawi</option><option value="135">Malaysia</option><option value="136">Maldives</option><option value="137">Mali</option><option value="138">Malta</option><option value="139">Marshall Islands (the)</option><option value="140">Martinique</option><option value="141">Mauritania</option><option value="142">Mauritius</option><option value="143">Mayotte</option><option value="144">Mexico</option><option value="145">Micronesia (Federated States of)</option><option value="146">Moldova (the Republic of)</option><option value="147">Monaco</option><option value="148">Mongolia</option><option value="149">Montenegro</option><option value="150">Montserrat</option><option value="151">Morocco</option><option value="152">Mozambique</option><option value="153">Myanmar</option><option value="154">Namibia</option><option value="155">Nauru</option><option value="156">Nepal</option><option value="157">Netherlands (the)</option><option value="158">New Caledonia</option><option value="159">New Zealand</option><option value="160">Nicaragua</option><option value="161">Niger (the)</option><option value="162">Nigeria</option><option value="163">Niue</option><option value="164">Norfolk Island</option><option value="165">Northern Mariana Islands (the)</option><option value="166">Norway</option><option value="167">Oman</option><option value="168">Pakistan</option><option value="169">Palau</option><option value="170">Palestine, State of</option><option value="171">Panama</option><option value="172">Papua New Guinea</option><option value="173">Paraguay</option><option value="174">Peru</option><option value="175">Philippines (the)</option><option value="176">Pitcairn</option><option value="177">Poland</option><option value="178">Portugal</option><option value="179">Puerto Rico</option><option value="180">Qatar</option><option value="181">Republic of North Macedonia</option><option value="182">Romania</option><option value="183">Russian Federation (the)</option><option value="184">Rwanda</option><option value="185">Réunion</option><option value="186">Saint Barthélemy</option><option value="187">Saint Helena, Ascension and Tristan da Cunha</option><option value="188">Saint Kitts and Nevis</option><option value="189">Saint Lucia</option><option value="190">Saint Martin (French part)</option><option value="191">Saint Pierre and Miquelon</option><option value="192">Saint Vincent and the Grenadines</option><option value="193">Samoa</option><option value="194">San Marino</option><option value="195">Sao Tome and Principe</option><option value="196">Saudi Arabia</option><option value="197">Senegal</option><option value="198">Serbia</option><option value="199">Seychelles</option><option value="200">Sierra Leone</option><option value="201">Singapore</option><option value="202">Sint Maarten (Dutch part)</option><option value="203">Slovakia</option><option value="204">Slovenia</option><option value="205">Solomon Islands</option><option value="206">Somalia</option><option value="207">South Africa</option><option value="208">South Georgia and the South Sandwich Islands</option><option value="209">South Sudan</option><option value="210">Spain</option><option value="211">Sri Lanka</option><option value="212">Sudan (the)</option><option value="213">Suriname</option><option value="214">Svalbard and Jan Mayen</option><option value="215">Sweden</option><option value="216">Switzerland</option><option value="217">Syrian Arab Republic</option><option value="218">Taiwan</option><option value="219">Tajikistan</option><option value="220">Tanzania, United Republic of</option><option value="221">Thailand</option><option value="222">Timor-Leste</option><option value="223">Togo</option><option value="224">Tokelau</option><option value="225">Tonga</option><option value="226">Trinidad and Tobago</option><option value="227">Tunisia</option><option value="228">Turkey</option><option value="229">Turkmenistan</option><option value="230">Turks and Caicos Islands (the)</option><option value="231">Tuvalu</option><option value="232">Uganda</option><option value="233">Ukraine</option><option value="234">United Arab Emirates (the)</option><option value="235">United Kingdom of Great Britain and Northern Ireland (the)</option><option value="236">United States Minor Outlying Islands (the)</option><option value="237">United States of America (the)</option><option value="238">Uruguay</option><option value="239">Uzbekistan</option><option value="240">Vanuatu</option><option value="241">Venezuela (Bolivarian Republic of)</option><option value="242">Viet Nam</option><option value="243">Virgin Islands (British)</option><option value="244">Virgin Islands (U.S.)</option><option value="245">Wallis and Futuna</option><option value="246">Western Sahara</option><option value="247">Yemen</option><option value="248">Zambia</option><option value="249">Zimbabwe</option><option value="250">Åland Islands</option></select>
+                                              </div>
+                                              <div class="form-group">
+                                                  <label for="billingCity">
+                                                      <span>City</span>
+                                                  </label>
+                                                  <input type="text" name="billingCity" placeholder="City" onblur="checkout.validateCityField()" required="" class="form-control uifield-city">
+                                              </div>
+                                              <div class="row">
+                                                  <div class="col-sm-6 col-6">
+                                                      <div class="form-group">
+                                                          <label for="billingState">
+                                                              <span>State</span>
+                                                          </label>
+                                                          <input type="text" name="billingState" placeholder="State" onblur="checkout.validateStateField()" required="" class="form-control uifield-state">
+                                                      </div>
+
+                                                  </div>
+                                                  <div class="col-sm-6 col-6">
+                                                      <div class="form-group">
+                                                          <label for="billingPostcode">
+                                                              <span>Postcode</span>
+                                                          </label>
+                                                          <input type="text" name="billingPostcode" placeholder="Postcode" onblur="checkout.validatePostcodeField()" required="" class="form-control uifield-postcode">
+                                                      </div>
+                                                  </div>
+                                              </div>
+                                              <div class="form-group">
+                                                  <label for="cardNumber">
+                                                      <span>Address</span>
+                                                  </label>
+                                                  <textarea rows="2" type="text" name="billingAddress" onblur="checkout.validateBillingAddressField()" placeholder="Street address, apartment, suite, unit" class="form-control w-100 uifield-billing_address" required=""></textarea>
+                                              </div>
+                                          </div>
+                                          <div class="billing-agreement-error error text-danger d-none">Please complete all billing details</div>
+                                      </div>
+                                  </form>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+
+                  <div class="mb-3">
+                      <h6 class="font-weight-bolder">Payment summary</h6>
+                      <div class="subtotal row mb-1">
+                          <span class="col-sm left ">Subtotal:</span>
+                          <span class="subtotal-amount col-sm right text-right">
+                                  <b>$0.00</b>
+                              </span>
+                      </div>
+                      <div class="taxes row mb-1">
+                          <span class="col-sm left ">Taxes</span>
+                      </div>
+                      <div class="taxes-details mb-1"></div>
+                      <div class="total row">
+                          <span class="col-sm left ">Total:</span>
+                          <span class="total-amount col-sm right text-right">
+                                  <b>$0.00</b>
+                              </span>
+                      </div>
+                  </div>
+
+                  <div>
+                      <h6 class="font-weight-bolder d-flex align-items-center">
+                          Payment method
+                      </h6>
+                      <style>
+                        .checkout-payment-provider {
+                          border: 2px solid transparent;
+                          border-radius: 8px;
+                          transition: border-color 0.3s, transform 0.2s;
+                          padding: 10px;
+                          height: 100%;
+                          cursor: pointer;
+                        }
+                      
+                        .checkout-payment-provider:hover {
+                          border-color: #007bff;
+                          transform: scale(1.03);
+                        }
+                      
+                        .checkout-payment-provider img {
+                          max-width: 80px;
+                          max-height: 40px;
+                          object-fit: contain;
+                        }
+                      
+                        .credit-provider-text {
+                          text-align: center;
+                          font-size: 14px;
+                        }
+                      
+                        .available-credit {
+                          font-size: 12px;
+                          color: gray;
+                        }
+                      
+                        @media (max-width: 576px) {
+                          .checkout-payment-provider img {
+                            max-width: 60px;
+                            max-height: 30px;
+                          }
+                      
+                          .credit-provider-text b {
+                            font-size: 13px;
+                          }
+                        }
+                      </style>
+                      
+                      <div class="row g-2 px-2 my-2">
+                        <div class="col-6 col-sm-6 col-md-3">
+                          <div class="radio checkout-payment-provider d-flex align-items-center justify-content-center" data-value="stripe">
+                            <img src="https://justfans.qdev.tech/img/logos/stripe.svg" alt="Stripe">
+                          </div>
+                        </div>
+                        <div class="col-6 col-sm-6 col-md-3">
+                          <div class="radio checkout-payment-provider d-flex align-items-center justify-content-center" data-value="paypal">
+                            <img src="https://justfans.qdev.tech/img/logos/paypal.svg" alt="PayPal">
+                          </div>
+                        </div>
+                        <div class="col-6 col-sm-6 col-md-3">
+                          <div class="radio checkout-payment-provider d-flex align-items-center justify-content-center" data-value="coinbase">
+                            <img src="https://justfans.qdev.tech/img/logos/coinbase.svg" alt="Coinbase">
+                          </div>
+                        </div>
+                        <div class="col-6 col-sm-6 col-md-3">
+                          <div class="radio checkout-payment-provider d-flex align-items-center justify-content-center" data-value="nowpayments">
+                            <img src="https://justfans.qdev.tech/img/logos/nowpayments.svg" alt="NowPayments">
+                          </div>
+                        </div>
+                        <div class="col-6 col-sm-6 col-md-3">
+                          <div class="radio checkout-payment-provider d-flex align-items-center justify-content-center" data-value="credit" title="You can use the wallet deposit page to add credit.">
+                            <div class="credit-provider-text">
+                              <b>Credit</b>
+                              <div class="available-credit">(00.00)</div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                  </div>
+                  <div class="payment-error error text-danger text-bold d-none mb-1">Please select your payment method</div>
+                  <p class="text-muted mt-1 small mb-0"> After clicking the button, you’ll be taken to a secure payment page and then redirected back to the website once payment is complete. </p>
+              </div>
+              <div class="modal-footer">
+
+                  <button type="submit" class="btn btn-primary checkout-continue-btn">Continue
+                      <div class="spinner-border spinner-border-sm ml-2 d-none" role="status">
+                          <span class="sr-only">Loading...</span>
+                      </div>
+                  </button>
+              </div>
+          </div>
+      </div>
+  </div>
+  <a href="javascript:void(0);" 
+   data-toggle="modal" 
+   title="{{ trans('general.gifts') }}" 
+   data-target="#giftsForm" 
+   class="btn btn-google btn-profile mr-1" 
+   data-cover="{{ Helper::getFile(config('path.cover').$user->cover) }}" 
+   data-avatar="{{ Helper::getFile(config('path.avatar').$user->avatar) }}" 
+   data-name="{{ $user->hide_name == 'yes' ? $user->username : $user->name }}" 
+   data-userid="{{ $user->id }}">
+
+   <!-- SVG ícono de regalo -->
+   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-gift" viewBox="0 0 16 16">
+     <path d="M4 2a2 2 0 0 1 4 0v1H4V2zM8 2a2 2 0 0 1 4 0v1H8V2z"/>
+     <path d="M3 5h10v2H3V5zm0 3h10v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8z"/>
+   </svg> {{ trans('general.gifts') }}
+</a>
+<div class="modal fade" id="giftsForm" tabindex="-1" role="dialog" aria-labelledby="giftsModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title" id="giftsModalLabel">{{ trans('general.gifts') }}</h5>
+        <div class="modal-header border-bottom-0">
+          <button type="button" class="close close-inherit" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true"><i class="bi bi-x-lg"></i></span>
+          </button>
+        </div>
+      </div>
+
+      <div class="modal-body">
+        <div class="row">
+          @for ($i = 1; $i <= 10; $i++)
+            <div class="col-6 col-sm-4 col-md-3 text-center mb-3">
+              <div class="gift-item border rounded p-2 h-100 d-flex flex-column justify-content-between align-items-center">
+                <img src="{{ asset('img/gifts/gift' . $i . '.gif') }}" class="img-fluid mb-2" alt="Gift {{ $i }}">
+                <span class="badge badge-primary">+{{ $i }} 💎</span>
+                <button class="btn btn-sm btn-success mt-2">{{ trans('general.send') }}</button>
+              </div>
+            </div>
+          @endfor
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
             @elseif (auth()->guest() && $totalPosts <> 0)
               <a href="{{url('login')}}" data-toggle="modal" data-target="#loginFormModal" class="btn btn-google btn-profile mr-1" title="{{trans('general.tip')}}">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-coin" viewBox="0 0 16 16">
@@ -992,6 +1278,7 @@
         </div>
       </div>
     </div><!-- End Modal Subscription Free -->
+    
   @endif
 @endsection
 
