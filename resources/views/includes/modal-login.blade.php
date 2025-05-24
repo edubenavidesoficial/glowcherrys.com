@@ -103,8 +103,15 @@
                         			{{ __('general.and') }}
 									<a href="{{$settings->link_privacy}}" target="_blank">{{__('admin.privacy_policy')}}</a>
 								</span>
-							</label>
-					</div>
+								</label>
+								<input class="custom-control-input" id="customCheckAge" type="checkbox" name="agree_gdpr">
+								<label class="custom-control-label" for="customCheckAge">
+									<span>
+										Acepto que soy mayor de edad y autorizo mi verificación posterior.
+									</span>
+								</label>
+								<p id="error-msg" style="color:red; display:none;">d</p>
+							</div>
 
 					<div class="alert alert-danger display-none mb-0 mt-3" id="errorLogin">
 							<ul class="list-unstyled m-0" id="showErrorsLogin"></ul>
@@ -157,3 +164,58 @@
 	</div>
  </div>
 </div>
+
+<script>
+  const blockedRegions = [
+    'alabama', 'virginia', 'utah', 'arkansas', 'louisiana', 'montana',
+    'texas', 'mississippi', 'california',
+    'europe', 'india', 'china', 'south korea', 'indonesia',
+    'united arab emirates', 'egypt', 'turkey', 'iran'
+  ];
+
+  async function getLocationData() {
+    try {
+      const res = await fetch('https://ipapi.co/json/');
+      return await res.json();
+    } catch (error) {
+      console.error('Error al obtener la ubicación:', error);
+      return null;
+    }
+  }
+
+  function isBlockedLocation(location) {
+    const region = (location.region || '').toLowerCase();
+    const country = (location.country_name || '').toLowerCase();
+    const continent = (location.continent_code || '').toLowerCase();
+
+    return blockedRegions.some(blocked => 
+      region.includes(blocked) || 
+      country.includes(blocked) ||
+      (blocked === 'europe' && continent === 'eu')
+    );
+  }
+
+  document.getElementById('formLoginRegister').addEventListener('submit', async function (e) {
+    e.preventDefault();
+    const checkbox = document.getElementById('customCheckAge');
+    const errorMsg = document.getElementById('error-msg');
+
+    if (!checkbox.checked) {
+      errorMsg.textContent = 'Debes aceptar que eres mayor de edad.';
+      errorMsg.style.display = 'block';
+      return;
+    }
+
+    const location = await getLocationData();
+
+    if (location && isBlockedLocation(location)) {
+      errorMsg.textContent = 'El acceso está restringido en tu ubicación.';
+      errorMsg.style.display = 'block';
+      return;
+    }
+
+    // Si todo está bien
+    errorMsg.style.display = 'none';
+    alert('Acceso concedido. Puedes continuar.');
+  });
+</script>
