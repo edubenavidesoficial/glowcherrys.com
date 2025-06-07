@@ -144,7 +144,7 @@ return array(
 		'terms_conditions'         =>      'Términos y Condiciones',
 		'privacy_policy'            =>      'Política de Privacidad',
 		'i_agree_gdpr' => 'Estoy de acuerdo con el tratamiento de datos personales',
-
+		'age' => 'Acepto que soy mayor de edad y autorizo mi verificación posterior.',
 		'method' => 'Método',
 		'currency_position' => 'Posición del código de la moneda',
 		'right' => 'Derecha',

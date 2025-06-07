@@ -107,10 +107,10 @@
 								<input class="custom-control-input" id="customCheckAge" type="checkbox" name="agree_gdpr">
 								<label class="custom-control-label" for="customCheckAge">
 									<span>
-										Acepto que soy mayor de edad y autorizo mi verificación posterior.
+										{{__('admin.age')}}
 									</span>
 								</label>
-								<p id="error-msg" style="color:red; display:none;">d</p>
+								<p id="error-msg" style="color:red; display:none;"></p>
 							</div>
 
 					<div class="alert alert-danger display-none mb-0 mt-3" id="errorLogin">

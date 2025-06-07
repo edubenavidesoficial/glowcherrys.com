@@ -143,6 +143,7 @@ return array(
 		'terms_conditions'         =>      'Terms and Conditions',
 	  'privacy_policy'            =>      'Privacy Policy',
 		'i_agree_gdpr' => 'I agree with the processing of personal data',
+		'age' => 'I accept that I am of legal age',
 		'method' => 'Method',
 		'currency_position' => 'Currency Position',
 		'right' => 'Right',
