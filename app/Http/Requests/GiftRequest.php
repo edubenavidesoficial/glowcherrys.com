@@ -25,7 +25,7 @@ class GiftRequest extends FormRequest
             'price' => 'required|numeric|min:0|max:9999.99',
             'diamonds' => 'required|integer|min:1|max:1000',
             'is_active' => 'sometimes|boolean',
-            'image' => 'required|string' // Acepta base64 o URL existente
+            'image_path' => 'required|string' // Acepta base64 o URL existente
         ];
 
         if ($this->isMethod('patch') || $this->isMethod('put')) {

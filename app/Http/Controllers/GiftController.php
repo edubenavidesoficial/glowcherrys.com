@@ -2,29 +2,43 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\GiftRequest;
 use App\Http\Requests\SliderRequest;
+use App\Http\Resources\GiftResource;
 use App\Models\Gift;
-use Illuminate\Http\Request;
+use Exception;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
+use Razorpay\Api\Resource;
 
 class GiftController extends Controller
 {
-     public function index()
+    public function index()
     {
-        $gifts = Gift::active()->ordered()->get();
-         return response()->json([
-            'success' => true,
-            'data' => $gifts
-        ]);
+        $gifts_data = Gift::active()->ordered()->get();
+        $results =  GiftResource::collection($gifts_data );
+        return response()->json(compact('results'));
+
     }
 
-    public function store(SliderRequest $request)
+    public function store(GiftRequest $request)
     {
-        $data = $request->validate();
-        Gift::create($data);
 
-return response()->json([
-            'message' => "GIF registrado satisfactoriamente",
-        ]);    }
+try {
+            DB::beginTransaction();
+            $slider = Gift::create($request->validated());
+            DB::commit();
+            //$mensaje = Utils::obtenerMensaje($this->entidad, 'store');
+            \Session::flash('success_message', trans('admin.success_add'));
+
+            return redirect('panel/admin/settings/gift');
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw ValidationException::withMessages([
+                'Error al insertar' => [$e->getMessage()],
+            ]);
+        }
+    }
 
     public function send(Gift $gift)
     {

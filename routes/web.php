@@ -36,6 +36,7 @@ use App\Http\Controllers\TwoFactorAuthController;
 use App\Http\Controllers\LiveStreamingsController;
 use App\Http\Controllers\TaxRatesController;
 use App\Http\Controllers\CountriesStatesController;
+use App\Http\Controllers\GiftController;
 use App\Http\Controllers\UploadMediaPreviewShopController;
 use App\Http\Controllers\UploadMediaFileShopController;
 use App\Http\Controllers\StripeConnectController;
@@ -503,8 +504,9 @@ Route::group(['middleware' => 'role'], function () {
     Route::get('panel/admin/settings/slider', [AdminController::class, 'settingsSlider'])->name('general');
     Route::post('panel/admin/settings/slider', [AdminController::class, 'saveSettingsSlider']);
     Route::get('/panel/admin/sliders/delete/{id}', [SliderController::class, 'destroy']);
-
-
+      //Gift
+    Route::get('panel/admin/settings/gift', [AdminController::class, 'settingsGift'])->name('general');
+    Route::post('panel/admin/settings/gifts', [GiftController::class, 'store']);
 
 
     // BILLING

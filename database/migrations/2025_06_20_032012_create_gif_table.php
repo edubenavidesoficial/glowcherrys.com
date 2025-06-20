@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('gif', function (Blueprint $table) {
+        Schema::create('gifts', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('image_path');
