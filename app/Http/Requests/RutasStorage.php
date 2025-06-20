@@ -5,4 +5,5 @@ enum RutasStorage: string
 {
         // Public
     case SLIDER = 'public/slider';
+    case GIFTS = 'public/gift';
 }
