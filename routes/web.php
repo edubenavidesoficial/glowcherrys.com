@@ -505,6 +505,7 @@ Route::group(['middleware' => 'role'], function () {
     Route::post('panel/admin/settings/slider', [AdminController::class, 'saveSettingsSlider']);
     Route::get('/panel/admin/sliders/delete/{id}', [SliderController::class, 'destroy']);
       //Gift
+
     Route::get('panel/admin/settings/gift', [AdminController::class, 'settingsGift'])->name('general');
     Route::post('panel/admin/settings/gifts', [GiftController::class, 'store']);
     Route::post('panel/admin/settings/gifts/update/{gift}', [GiftController::class, 'update']);

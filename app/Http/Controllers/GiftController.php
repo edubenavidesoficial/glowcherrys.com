@@ -18,7 +18,7 @@ class GiftController extends Controller
 {
     public function index()
     {
-        $gifts_data = Gift::active()->ordered()->get();
+        $gifts_data = Gift::active()->get();
         $results =  GiftResource::collection($gifts_data);
         return response()->json(compact('results'));
     }
