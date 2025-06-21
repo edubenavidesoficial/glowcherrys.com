@@ -36,6 +36,7 @@ return array(
     'title_slider'              =>      'Titulo de Slider',
 	'description_slider'        =>      'Descripcion Slider',
 	'image_slider'              =>      'Imagen de Slider',
+    'gift'                     =>      'Regalos',
     'link_1'                    =>      'Accion 1',
 	'link_2'                    =>      'Accion 2',
 	'welcome_text'              =>      'Texto de Bienvenida',

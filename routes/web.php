@@ -507,6 +507,9 @@ Route::group(['middleware' => 'role'], function () {
       //Gift
     Route::get('panel/admin/settings/gift', [AdminController::class, 'settingsGift'])->name('general');
     Route::post('panel/admin/settings/gifts', [GiftController::class, 'store']);
+    Route::post('panel/admin/settings/gifts/update/{gift}', [GiftController::class, 'update']);
+    Route::post('gifts/enviar/{gift}', [GiftController::class, 'send']);
+    Route::get('/panel/admin/gifts/delete/{id}', [GiftController::class, 'destroy']);
 
 
     // BILLING
@@ -822,5 +825,6 @@ Route::post('webhook/nowpayments', [AddFundsController::class, 'webhookNowpaymen
 Route::prefix('panel/admin/settings')->group(function () {
     Route::apiResources([
         'sliders' => SliderController::class,
+        'gifts' => GiftController::class,
     ]);
 });

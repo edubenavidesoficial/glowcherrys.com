@@ -107,6 +107,7 @@ return array(
     'general'                   =>      'General',
     'limits'                    =>      'Limits',
     'slider'                    =>      'Slider',
+    'gift'                      =>      'Gift',
     'email_no_reply'            =>      'Email no-reply',
     'email_admin'               =>      'Email Admin',
     'paypal_account'            =>      'PayPal Account',

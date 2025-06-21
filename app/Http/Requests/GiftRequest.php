@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Log;
 
 class GiftRequest extends FormRequest
 {
-     /**
+    /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
@@ -20,6 +20,7 @@ class GiftRequest extends FormRequest
      */
     public function rules(): array
     {
+        $methodName = $this->route()->getActionMethod(); // Obtiene 'store' o 'update'
         $rules = [
             'name' => 'required|string|max:255|unique:gifts,name',
             'price' => 'required|numeric|min:0|max:9999.99',
@@ -28,8 +29,8 @@ class GiftRequest extends FormRequest
             'image_path' => 'required|string' // Acepta base64 o URL existente
         ];
 
-        if ($this->isMethod('patch') || $this->isMethod('put')) {
-            $rules['name'] = 'required|string|max:255|unique:gifts,name,'.$this->route('gift')->id;
+        if ($this->isMethod('patch') || $this->isMethod('put') || $methodName === 'update') {
+            $rules['name'] = 'required|string|max:255';
             $rules['image'] = 'sometimes|string';
         }
 
@@ -64,7 +65,6 @@ class GiftRequest extends FormRequest
 
             // Guardar nueva imagen (para create o update con nueva imagen)
             return (new GuardarImagenIndividual($imagen, RutasStorage::GIFTS))->execute();
-
         } catch (\Throwable $th) {
             Log::error('Error al procesar imagen: ' . $th->getMessage());
             throw new \Exception('Error al procesar la imagen del regalo');

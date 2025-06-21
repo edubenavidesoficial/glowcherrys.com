@@ -62,7 +62,7 @@
                                         </div>
                                         <div class="input-group mb-1">
                                             <input id="image_path" type="file" class="form-control custom-file rounded-pill">
-                                            <input type="hidden" name="image" id="base64Image">
+                                            <input type="hidden"  name="image" id="base64Image">
                                         </div>
                                         <small class="d-block">{{ __('general.recommended_size') }} 500x500 px</small>
                                     </div>
@@ -163,79 +163,136 @@
 
 @section('javascript')
 <script>
+    // Variable global para almacenar el ID del gift
+    let gift_id = 0;
+
+    // Manejo de la imagen
     document.getElementById('image_path').addEventListener('change', function() {
         const file = this.files[0];
+        if (!file) return;
+
         const reader = new FileReader();
-
         reader.onloadend = () => {
-            const base64String = reader.result;
-            document.getElementById('base64Image').value = base64String;
-            document.getElementById('previewImage').src = base64String;
+            document.getElementById('base64Image').value = reader.result;
+            document.getElementById('previewImage').src = reader.result;
         };
-
-        if (file) {
-            reader.readAsDataURL(file);
-        }
+        reader.readAsDataURL(file);
     });
 
+    // Función para editar un gift
     async function editGift(id) {
         try {
-            const response = await fetch(`/panel/admin/gifts/${id}/edit`);
-            if (!response.ok) {
-                throw new Error(`Response status: ${response.status}`);
-            }
-            const gift = await response.json();
+            const response = await fetch(`/panel/admin/settings/gifts/${id}`);
+            if (!response.ok) throw new Error(`Error: ${response.status}`);
 
-            // Rellenar el formulario
-            document.getElementById('gift_id').value = gift.id;
-            document.getElementById('name').value = gift.name;
-            document.getElementById('price').value = gift.price;
-            document.getElementById('diamonds').value = gift.diamonds;
-            document.getElementById('is_active').checked = gift.is_active == 1;
-            document.getElementById('previewImage').src = gift.image_path;
+            const { modelo } = await response.json();
 
-            // Mostrar botón de actualización y ocultar el de crear
+            // Rellenar formulario
+            document.getElementById('gift_id').value = modelo.id;
+            document.getElementById('name').value = modelo.name;
+            document.getElementById('price').value = modelo.price;
+            document.getElementById('diamonds').value = modelo.diamonds;
+            document.getElementById('is_active').checked = modelo.is_active == 1;
+            document.getElementById('previewImage').src = modelo.image_path;
+            document.getElementById('base64Image').value = modelo.image_path;
+
+            // Mostrar pestaña de formulario
+            new bootstrap.Tab(document.querySelector('#form-tab')).show();
+
+            // Cambiar a modo edición
             document.getElementById('updateGift').style.visibility = 'visible';
             document.getElementById('createGift').style.visibility = 'hidden';
-
-            // Cambiar a la pestaña de formulario
-            const tabTrigger = document.querySelector('#form-tab');
-            const tab = new bootstrap.Tab(tabTrigger);
-            tab.show();
+            gift_id = modelo.id;
 
         } catch (error) {
-            console.error('Error:', error);
+            console.error('Error al editar:', error);
             alert('Error al cargar el regalo: ' + error.message);
         }
     }
 
+    // Función para actualizar un gift
     async function updateGift() {
         const form = document.getElementById('giftForm');
         const formData = new FormData(form);
-        const id = document.getElementById('gift_id').value;
+        const updateBtn = document.querySelector('#updateGift button');
+
+        // Deshabilitar botón durante la operación
+        updateBtn.disabled = true;
+        updateBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Actualizando...';
 
         try {
-            const response = await fetch(`/panel/admin/gifts/${id}`, {
+            // Agregar imagen base64 si existe
+            const base64Image = document.getElementById('base64Image').value;
+            if (base64Image) {
+                formData.append('image', base64Image);
+            }
+
+            // Usar POST con método spoofing para PUT
+            const response = await fetch(`/panel/admin/settings/gifts/update/${gift_id}`, {
                 method: 'POST',
                 headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    'X-HTTP-Method-Override': 'PUT'
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
                 },
                 body: formData
             });
 
-            if (!response.ok) {
-                throw new Error(`Error: ${response.statusText}`);
-            }
+            if (!response.ok) throw new Error(`Error: ${response.statusText}`);
 
             const result = await response.json();
             alert(result.message || 'Regalo actualizado correctamente');
             window.location.reload();
 
         } catch (error) {
-            console.error('Error:', error);
-            alert('Error al actualizar el regalo: ' + error.message);
+            console.error('Error al actualizar:', error);
+            alert('Error al actualizar: ' + error.message);
+        } finally {
+            updateBtn.disabled = false;
+            updateBtn.textContent = '{{ __('admin.update') }}';
         }
     }
+
+    // Manejar el envío del formulario para creación
+    document.getElementById('giftForm').addEventListener('submit', async function(e) {
+        // Solo manejar si es creación (no edición)
+        if (document.getElementById('updateGift').style.visibility !== 'visible') {
+            e.preventDefault();
+            const form = this;
+            const formData = new FormData(form);
+            const submitBtn = form.querySelector('#createGift button');
+
+            // Deshabilitar botón durante la operación
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Guardando...';
+
+            try {
+                // Agregar imagen base64 si existe
+                const base64Image = document.getElementById('base64Image').value;
+                if (base64Image) {
+                    formData.append('image', base64Image);
+                }
+
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: formData
+                });
+
+                if (!response.ok) throw new Error(`Error: ${response.statusText}`);
+
+                const result = await response.json();
+                alert(result.message || 'Regalo creado correctamente');
+                window.location.reload();
+
+            } catch (error) {
+                console.error('Error al crear:', error);
+                alert('Error al crear: ' + error.message);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = '{{ __('admin.save') }}';
+            }
+        }
+    });
 </script>
 @endsection

@@ -91,6 +91,11 @@
                   <i class="bi-chevron-right fs-7 me-1"></i> {{ trans('admin.slider') }}
                   </a>
                 </li>
+                <li>
+                <a class="nav-link text-truncate @if (request()->is('panel/admin/settings/gift')) text-white @endif" href="{{ url('panel/admin/settings/gift') }}">
+                  <i class="bi-chevron-right fs-7 me-1"></i> {{ trans('admin.gift') }}
+                  </a>
+                </li>
               </div><!-- /end collapse settings -->
 
               @if (auth()->user()->hasPermission('withdrawals'))
