@@ -250,49 +250,5 @@
             updateBtn.textContent = '{{ __('admin.update') }}';
         }
     }
-
-    // Manejar el envío del formulario para creación
-    document.getElementById('giftForm').addEventListener('submit', async function(e) {
-        // Solo manejar si es creación (no edición)
-        if (document.getElementById('updateGift').style.visibility !== 'visible') {
-            e.preventDefault();
-            const form = this;
-            const formData = new FormData(form);
-            const submitBtn = form.querySelector('#createGift button');
-
-            // Deshabilitar botón durante la operación
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Guardando...';
-
-            try {
-                // Agregar imagen base64 si existe
-                const base64Image = document.getElementById('base64Image').value;
-                if (base64Image) {
-                    formData.append('image', base64Image);
-                }
-
-                const response = await fetch(form.action, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    body: formData
-                });
-
-                if (!response.ok) throw new Error(`Error: ${response.statusText}`);
-
-                const result = await response.json();
-                alert(result.message || 'Regalo creado correctamente');
-                window.location.reload();
-
-            } catch (error) {
-                console.error('Error al crear:', error);
-                alert('Error al crear: ' + error.message);
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.textContent = '{{ __('admin.save') }}';
-            }
-        }
-    });
 </script>
 @endsection
