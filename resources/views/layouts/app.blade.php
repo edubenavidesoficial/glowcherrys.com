@@ -11,7 +11,7 @@
   <meta name="theme-color" content="{{ config('settings.theme_color_pwa') }}">
   <title>{{ auth()->check() && User::notificationsCount() ? '('.User::notificationsCount().') ' : '' }}@section('title')@show {{$settings->title.' - '.__('seo.slogan')}}</title>
   <!-- Favicon -->
-  <link href="{{ url('public/img', $settings->favicon) }}" rel="icon">
+  <link href="{{ url('img', $settings->favicon) }}" rel="icon">
 
   @if ($settings->google_tag_manager_head != '')
   {!! $settings->google_tag_manager_head !!}
@@ -86,24 +86,24 @@
   <main @if (request()->is('messages/*') || request()->is('live/*')) class="h-100" @endif role="main">
     @yield('content')
 
-    @if (auth()->guest() 
+    @if (auth()->guest()
           && ! request()->route()->named('profile')
           && ! request()->is(['creators', 'category/*', 'creators/*'])
           || auth()->check()
           && request()->path() != '/'
           && ! request()->route()->named('profile')
           && ! request()->is([
-            'my/bookmarks', 
-            'my/likes', 
-            'my/purchases', 
-            'explore', 
-            'messages', 
-            'messages/*', 
-            'creators', 
-            'category/*', 
-            'creators/*', 
+            'my/bookmarks',
+            'my/likes',
+            'my/purchases',
+            'explore',
+            'messages',
+            'messages/*',
+            'creators',
+            'category/*',
+            'creators/*',
             'live/*'
-            ])          
+            ])
           )
 
           @if (auth()->guest() && request()->path() == '/' && $settings->home_style == 0
@@ -156,7 +156,7 @@
     @if ($settings->video_call_status)
       @include('includes.modal-video-call-incoming')
     @endif
-    
+
   @endauth
 
   @guest

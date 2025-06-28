@@ -126,25 +126,25 @@
               } elseif ($payment->type == 'bank') {
                 $paymentName = '<i class="fa fa-university mr-1 icon-sm-radio"></i> '.__('general.bank_transfer');
               } else if ($payment->name == 'PayPal') {
-                $paymentName = '<img src="'.url('public/img/payments', auth()->user()->dark_mode == 'off' ? $payment->logo : 'paypal-white.png').'" width="70"/>';
+                $paymentName = '<img src="'.url('/imgpayments', auth()->user()->dark_mode == 'off' ? $payment->logo : 'paypal-white.png').'" width="70"/>';
               } else if ($payment->name == 'Coinpayments') {
-                $paymentName = '<img src="'.url('public/img/payments', auth()->user()->dark_mode == 'off' ? $payment->logo : 'coinpayments-white.png').'" width="150"/>';
+                $paymentName = '<img src="'.url('/imgpayments', auth()->user()->dark_mode == 'off' ? $payment->logo : 'coinpayments-white.png').'" width="150"/>';
               } else if ($payment->name == 'Coinbase') {
-                $paymentName = '<img src="'.url('public/img/payments', auth()->user()->dark_mode == 'off' ? $payment->logo : 'coinbase-white.png').'" width="110"/>';
+                $paymentName = '<img src="'.url('/imgpayments', auth()->user()->dark_mode == 'off' ? $payment->logo : 'coinbase-white.png').'" width="110"/>';
               } else if ($payment->name == 'NowPayments') {
-                $paymentName = '<img src="'.url('public/img/payments', auth()->user()->dark_mode == 'off' ? $payment->logo : 'nowpayments-white.png').'" width="130"/>';
+                $paymentName = '<img src="'.url('/imgpayments', auth()->user()->dark_mode == 'off' ? $payment->logo : 'nowpayments-white.png').'" width="130"/>';
               } else if ($payment->name == 'Mercadopago') {
-                $paymentName = '<img src="'.url('public/img/payments', auth()->user()->dark_mode == 'off' ? $payment->logo : 'mercadopago-white.png').'" width="100"/>';
+                $paymentName = '<img src="'.url('/imgpayments', auth()->user()->dark_mode == 'off' ? $payment->logo : 'mercadopago-white.png').'" width="100"/>';
               } else if ($payment->name == 'Flutterwave') {
-                $paymentName = '<img src="'.url('public/img/payments', auth()->user()->dark_mode == 'off' ? $payment->logo : 'flutterwave-white.png').'" width="150"/>';
+                $paymentName = '<img src="'.url('/imgpayments', auth()->user()->dark_mode == 'off' ? $payment->logo : 'flutterwave-white.png').'" width="150"/>';
               } else if ($payment->name == 'Mollie') {
-                $paymentName = '<img src="'.url('public/img/payments', auth()->user()->dark_mode == 'off' ? $payment->logo : 'mollie-white.png').'" width="80"/>';
+                $paymentName = '<img src="'.url('/imgpayments', auth()->user()->dark_mode == 'off' ? $payment->logo : 'mollie-white.png').'" width="80"/>';
               } else if ($payment->name == 'Razorpay') {
-                $paymentName = '<img src="'.url('public/img/payments', auth()->user()->dark_mode == 'off' ? $payment->logo : 'razorpay-white.png').'" width="110"/>';
+                $paymentName = '<img src="'.url('/imgpayments', auth()->user()->dark_mode == 'off' ? $payment->logo : 'razorpay-white.png').'" width="110"/>';
               } else if ($payment->name == 'Payway') {
-                $paymentName = '<img src="'.url('public/img/payments', auth()->user()->dark_mode == 'off' ? $payment->logo : 'payway-white.svg').'" width="110"/>';
+                $paymentName = '<img src="'.url('/imgpayments', auth()->user()->dark_mode == 'off' ? $payment->logo : 'payway-white.svg').'" width="110"/>';
               } else {
-                $paymentName = '<img src="'.url('public/img/payments', $payment->logo).'" width="100"/>';
+                $paymentName = '<img src="'.url('/imgpayments', $payment->logo).'" width="100"/>';
               }
 
               @endphp
@@ -324,7 +324,7 @@
       //==== End Taxes
 
       // Service Fee
-      
+
     if (element != ''
         && value <= {{ $settings->max_deposits_amount }}
         && value >= {{ $settings->min_deposits_amount }}

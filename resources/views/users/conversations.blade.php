@@ -7,7 +7,7 @@
   .fileuploader { display:block; padding: 0; }
   .fileuploader-items-list {margin: 10px 0 0 0;}
   .fileuploader-theme-dragdrop .fileuploader-input {
-    background: {{ auth()->user()->dark_mode == 'on'? '#222' : '#fff' }};  
+    background: {{ auth()->user()->dark_mode == 'on'? '#222' : '#fff' }};
   }
 </style>
 @endsection
@@ -32,7 +32,7 @@
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
-                
+
                     <i class="bi-check2 mr-2"></i> {{ session('status') }}
                 </div>
                 @endif
@@ -83,7 +83,7 @@
                     {{ __('general.info_video_encode_welcome_msg') }}
                   </div>
                   @endif
-                  
+
                 <input @if ($preloadedFile) data-fileuploader-files='{!! $preloadedFile !!}' @endif type="file" name="media" accept="image/*,video/mp4,video/x-m4v,video/quicktime,audio/mp3">
               </div>
 
@@ -102,7 +102,7 @@
 @endsection
 
 @section('javascript')
-  <script src="{{ asset('public/js/fileuploader/fileuploader-welcome-msg.js') }}"></script>
+  <script src="{{ asset('js/fileuploader/fileuploader-welcome-msg.js') }}"></script>
 
   @if (session('encode'))
  <script type="text/javascript">

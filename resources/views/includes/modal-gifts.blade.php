@@ -25,7 +25,7 @@
 
 				@if (request()->route()->named(['live', 'live.private']))
 					<input type="hidden" name="isLive" value="1" />
-					
+
 					@if ($live)
 						<input type="hidden" name="liveID" value="{{ $live->id }}"  />
 						<input type="hidden" name="user_id" value="{{ $creator->id }}" />
@@ -39,8 +39,8 @@
                         <div class="btn-group-toggle btn-group-radio d-inline" data-toggle="buttons">
                         @foreach ($gifts as $gift)
                             <label class="btn btn-radio">
-                              <input type="radio" required name="gift" value="{{ $gift->id }}" id="gift{{ $gift->id }}"> 
-                              <img src="{{ url('public/img/gifts', $gift->image) }}" width="80">
+                              <input type="radio" required name="gift" value="{{ $gift->id }}" id="gift{{ $gift->id }}">
+                              <img src="{{ url('/imggifts', $gift->image) }}" width="80">
                               <small class="d-block w-100 mt-1">
                                 {{ Helper::formatPrice($gift->price, true) }}
                               </small>

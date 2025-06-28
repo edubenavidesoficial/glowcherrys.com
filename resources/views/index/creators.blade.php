@@ -47,7 +47,7 @@
           @endforeach
 
           @include('includes.paginator-creators')
-          
+
         </div><!-- row -->
       </div><!-- col-md-9 -->
 
@@ -67,5 +67,5 @@
 @endsection
 
 @section('javascript')
-<script src="{{ url('public/js/paginator-creators.js') }}?v={{$settings->version}}"></script>
+<script src="{{ url('js/paginator-creators.js') }}?v={{$settings->version}}"></script>
 @endsection

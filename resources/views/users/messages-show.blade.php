@@ -73,9 +73,9 @@
 
         </div>
 
-        @if ($user->verified_id == 'yes' 
-            && $settings->live_streaming_private == 'on' 
-            && $user->allow_live_streaming_private == 'on' 
+        @if ($user->verified_id == 'yes'
+            && $settings->live_streaming_private == 'on'
+            && $user->allow_live_streaming_private == 'on'
             && !auth()->user()->isRestricted($user->id)
             )
         <a href="javascript:void(0);" class="d-none f-size-20 text-muted float-right mr-3 text-decoration-none @if (Helper::isOnline($user->id)) requestLivePrivateModal @else buttonDisabled @endif" @if (Helper::isOnline($user->id)) data-toggle="tooltip" data-placement="bottom" title="{{ __('general.request_private_live_stream') }}" @endif role="button">
@@ -83,7 +83,7 @@
 				</a>
         @endif
 
-        @if (auth()->user()->verified_id == 'yes' 
+        @if (auth()->user()->verified_id == 'yes'
             && $settings->video_call_status
             && auth()->user()->price_video_call
             && !auth()->user()->isRestricted($user->id)
@@ -99,9 +99,9 @@
 
         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown_options">
 
-          @if ($user->verified_id == 'yes' 
-            && $settings->live_streaming_private == 'on' 
-            && $user->allow_live_streaming_private == 'on' 
+          @if ($user->verified_id == 'yes'
+            && $settings->live_streaming_private == 'on'
+            && $user->allow_live_streaming_private == 'on'
             && !auth()->user()->isRestricted($user->id)
             && Helper::isOnline($user->id)
             )
@@ -286,9 +286,9 @@
 </section>
 @include('includes.modal-new-message')
 
-  @if ($user->verified_id == 'yes' 
-            && $settings->live_streaming_private == 'on' 
-            && $user->allow_live_streaming_private == 'on' 
+  @if ($user->verified_id == 'yes'
+            && $settings->live_streaming_private == 'on'
+            && $user->allow_live_streaming_private == 'on'
             && !auth()->user()->isRestricted($user->id)
             )
     @include('includes.modal-live-private-request')
@@ -301,16 +301,16 @@
 @endsection
 
 @section('javascript')
-<script src="{{ asset('public/js/messages.js') }}?v={{$settings->version}}"></script>
-<script src="{{ asset('public/js/fileuploader/fileuploader-msg.js') }}?v={{$settings->version}}"></script>
-<script src="{{ asset('public/js/paginator-messages.js') }}"></script>
+<script src="{{ asset('js/messages.js') }}?v={{$settings->version}}"></script>
+<script src="{{ asset('js/fileuploader/fileuploader-msg.js') }}?v={{$settings->version}}"></script>
+<script src="{{ asset('js/paginator-messages.js') }}"></script>
 
-@if ($user->verified_id == 'yes' 
-            && $settings->live_streaming_private == 'on' 
-            && $user->allow_live_streaming_private == 'on' 
+@if ($user->verified_id == 'yes'
+            && $settings->live_streaming_private == 'on'
+            && $user->allow_live_streaming_private == 'on'
             && !auth()->user()->isRestricted($user->id)
             )
-<script src="{{ asset('public/js/live-private-request.js') }}"></script>
+<script src="{{ asset('js/live-private-request.js') }}"></script>
 @endif
 
 @endsection

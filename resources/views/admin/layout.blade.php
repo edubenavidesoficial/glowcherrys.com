@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link rel="shortcut icon" href="{{ url('public/img', $settings->favicon) }}" />
+    <link rel="shortcut icon" href="{{ url('img', $settings->favicon) }}" />
 
     <title>{{ __('admin.admin') }}</title>
 
@@ -52,7 +52,7 @@
 
       <div class="offcanvas offcanvas-start sidebar bg-dark text-white" tabindex="-1" id="sidebar-nav" data-bs-keyboard="false" data-bs-backdrop="false">
       <div class="offcanvas-header">
-          <h5 class="offcanvas-title"><img src="{{ url('public/img', $settings->logo) }}" width="100" /></h5>
+          <h5 class="offcanvas-title"><img src="{{ url('img', $settings->logo) }}" width="100" /></h5>
           <button type="button" class="btn-close btn-close-custom text-white toggle-menu d-lg-none" data-bs-dismiss="offcanvas" aria-label="Close">
             <i class="bi bi-x-lg"></i>
           </button>
@@ -70,8 +70,8 @@
 
               @if (auth()->user()->hasPermission('general'))
               <li class="nav-item">
-                  <a href="#settings" data-bs-toggle="collapse" class="nav-link text-truncate dropdown-toggle 
-                  @if (request()->is(['panel/admin/settings', 'panel/admin/settings/limits', 'panel/admin/video/encoding', 'panel/admin/settings/cron-job', 'panel/admin/websockets', 'panel/admin/names-reserved'])) active @endif" 
+                  <a href="#settings" data-bs-toggle="collapse" class="nav-link text-truncate dropdown-toggle
+                  @if (request()->is(['panel/admin/settings', 'panel/admin/settings/limits', 'panel/admin/video/encoding', 'panel/admin/settings/cron-job', 'panel/admin/websockets', 'panel/admin/names-reserved'])) active @endif"
                   @if (request()->is(['panel/admin/settings', 'panel/admin/settings/limits', 'panel/admin/video/encoding', 'panel/admin/settings/cron-job', 'panel/admin/websockets', 'panel/admin/names-reserved'])) aria-expanded="true" @endif>
                       <i class="bi-gear me-2"></i> {{ __('admin.general_settings') }}
                   </a>
@@ -104,19 +104,19 @@
                         <a class="nav-link text-truncate @if (request()->is('panel/admin/names-reserved')) text-white @endif" href="{{ url('panel/admin/names-reserved') }}">
                             <i class="bi-chevron-right fs-7 me-1"></i> {{ __('general.names_reserved') }}
                         </a>
-                        
+
                 </li>
               </div><!-- /end collapse settings -->
 
               @if (auth()->user()->hasPermission('reports'))
               <li class="nav-item">
                   <a href="{{ url('panel/admin/reports') }}" class="nav-link text-truncate @if (request()->is('panel/admin/reports')) active @endif">
-                      <i class="bi-flag me-2"></i> 
+                      <i class="bi-flag me-2"></i>
 
                       @if ($reports <> 0)
                         <span class="badge rounded-pill bg-warning text-dark me-1">{{ $reports }}</span>
                       @endif
-                      
+
                       {{ __('admin.reports') }}
                   </a>
               </li><!-- /end list -->
@@ -135,7 +135,7 @@
                   </a>
               </li><!-- /end list -->
               @endif
-              
+
               @if (auth()->user()->hasPermission('verification_requests'))
               <li class="nav-item">
                   <a href="{{ url('panel/admin/verification/members') }}" class="nav-link text-truncate @if (request()->is('panel/admin/verification/members')) active @endif">
@@ -593,11 +593,11 @@
 </main>
 
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="{{ asset('public/js/core.min.js') }}?v={{$settings->version}}"></script>
-    <script src="{{ asset('public/bootstrap/js/bootstrap.bundle.min.js') }}?v={{$settings->version}}"></script>
-    <script src="{{ asset('public/js/ckeditor/ckeditor.js')}}"></script>
-    <script src="{{ asset('public/js/select2/select2.full.min.js') }}"></script>
-    <script src="{{ asset('public/admin/admin-functions.js') }}?v={{$settings->version}}"></script>
+    <script src="{{ asset('js/core.min.js') }}?v={{$settings->version}}"></script>
+    <script src="{{ asset('bootstrap/js/bootstrap.bundle.min.js') }}?v={{$settings->version}}"></script>
+    <script src="{{ asset('js/ckeditor/ckeditor.js')}}"></script>
+    <script src="{{ asset('js/select2/select2.full.min.js') }}"></script>
+    <script src="{{ asset('admin/admin-functions.js') }}?v={{$settings->version}}"></script>
 
     @yield('javascript')
 

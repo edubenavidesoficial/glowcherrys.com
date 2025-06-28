@@ -1,7 +1,7 @@
 @extends('admin.layout')
 
 @section('css')
-<link href="{{ asset('public/js/plyr/plyr.css')}}?v={{$settings->version}}" rel="stylesheet" type="text/css" />
+<link href="{{ asset('js/plyr/plyr.css')}}?v={{$settings->version}}" rel="stylesheet" type="text/css" />
 @endsection
 
 @section('content')
@@ -65,7 +65,7 @@
 										</td>
 
 										<td>
-											<i class="far fa-heart"></i> {{ $reel->likes }} 
+											<i class="far fa-heart"></i> {{ $reel->likes }}
                                             <i class="far fa-comment ms-1"></i> {{ ($reel->comments_count) }}
                                             <i class="bi-eye ms-1"></i> {{ $reel->views }}
 											</td>
@@ -122,6 +122,6 @@
 @endsection
 
 @section('javascript')
-<script src="{{ asset('public/js/plyr/plyr.min.js') }}?v={{$settings->version}}"></script>
-<script src="{{ asset('public/js/plyr/plyr.polyfilled.min.js') }}?v={{$settings->version}}"></script>
+<script src="{{ asset('js/plyr/plyr.min.js') }}?v={{$settings->version}}"></script>
+<script src="{{ asset('js/plyr/plyr.polyfilled.min.js') }}?v={{$settings->version}}"></script>
 @endsection

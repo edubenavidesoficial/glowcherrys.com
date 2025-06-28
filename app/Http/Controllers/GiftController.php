@@ -16,7 +16,7 @@ final class GiftController extends Controller
 {
     use Traits\Functions;
 
-    public $path = 'public/img/gifts/';
+    public $path = '/imggifts/';
 
     public function show()
     {

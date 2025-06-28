@@ -40,7 +40,7 @@
                   <div class="text-muted btn-block small mt-1">
                     <i class="bi-info-circle mr-1"></i> {{ __('general.external_link_buy') }}
                   </div>
-                  
+
                 </div>
                 @endif
 
@@ -103,6 +103,6 @@
 @endsection
 
 @section('javascript')
-  <script src="{{ asset('public/js/fileuploader/fileuploader-shop-preview.js') }}"></script>
-  <script src="{{ asset('public/js/shop.js') }}"></script>
+  <script src="{{ asset('js/fileuploader/fileuploader-shop-preview.js') }}"></script>
+  <script src="{{ asset('js/shop.js') }}"></script>
 @endsection

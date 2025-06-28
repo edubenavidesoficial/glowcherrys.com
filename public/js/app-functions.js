@@ -422,8 +422,8 @@
 		time: 1000
 	});
 
-	var logo = URL_BASE + '/public/img/' + $(".logo").attr('data-logo');
-	var logo2 = URL_BASE + '/public/img/' + $(".logo").attr('data-logo-2');
+	var logo = URL_BASE + '/img' + $(".logo").attr('data-logo');
+	var logo2 = URL_BASE + '/img' + $(".logo").attr('data-logo-2');
 
 	if ($(document).scrollTop() > $(".scroll").height()) {
 		let buttonRegister = $('.btn-register-menu');
@@ -3215,37 +3215,37 @@
 	document.addEventListener('DOMContentLoaded', function() {
 		const inputs = document.querySelectorAll('.code-input');
 		const loginBtn = document.getElementById('btn2fa');
-				
+
 		// Handle input focus and auto-advance
 		inputs.forEach((input, index) => {
 			// Only allow numbers
 			input.addEventListener('input', function(e) {
 				const value = e.target.value;
-				
+
 				// Replace any non-numeric character with empty string
 				e.target.value = value.replace(/[^0-9]/g, '');
-				
+
 				// If input has a value and there's a next input, focus on it
 				if (value && index < inputs.length - 1) {
 					inputs[index + 1].focus();
 				}
-				
+
 				// Check if all inputs are filled
 				checkInputs();
 			});
-			
+
 			// Handle backspace
 			input.addEventListener('keydown', function(e) {
 				if (e.key === 'Backspace' && !e.target.value && index > 0) {
 					inputs[index - 1].focus();
 				}
 			});
-			
+
 			// Handle paste event
 			input.addEventListener('paste', function(e) {
 				e.preventDefault();
 				const pasteData = e.clipboardData.getData('text').trim();
-				
+
 				// If pasted data is a 4-digit number, distribute it across inputs
 				if (/^\d{4}$/.test(pasteData)) {
 					inputs.forEach((input, i) => {
@@ -3256,12 +3256,12 @@
 				}
 			});
 		});
-		
+
 		// Check if all inputs are filled
 		function checkInputs() {
 			const allFilled = Array.from(inputs).every(input => input.value.length === 1);
 			loginBtn.disabled = !allFilled;
-			
+
 			if (allFilled) {
 				const code = Array.from(inputs).map(input => input.value).join('');
 				$('#code2fa').val(code);

@@ -21,7 +21,7 @@
     </script>
 
     @if ($live)
-      <script src="{{ asset('public/js/agora/AgoraRTCSDK-v4.js') }}"></script>
+      <script src="{{ asset('js/agora/AgoraRTCSDK-v4.js') }}"></script>
     @endif
   @endsection
 
@@ -82,11 +82,11 @@
                   		<span class="font-weight-bold text-white text-shadow-sm d-lg-inline-block d-none">{{ $creator->username }}</span>
                       <span class="font-weight-bold text-white text-shadow-sm d-lg-none d-inline-block">{{ str_limit($creator->username, 7, '...') }}</span>
                   		<small class="font-weight-bold text-white text-shadow-sm" style="position: absolute; top: {{ $limitLiveStreaming ? '65px;' : '50px;' }} left: 67px;">
-                        
+
                         @if (!$limitLiveStreaming)
                         {{ __('general.started') }} <span class="timeAgo" data="{{date('c', strtotime($live->created_at))}}"></span>
                         @endif
-                        
+
                         @if ($creator->id == auth()->id())
                         <span class="w-100 @if ($amountTips === 0) display-none @else d-block @endif" id="earned">
                           <i class="bi-coin mr-1"></i> <span id="amountTip">{{ Helper::formatPrice($amountTips) }}</span>
@@ -155,7 +155,7 @@
                         </a>
                       </div>
 
-                        
+
                       @endif
 
                       </div>
@@ -304,11 +304,11 @@
             </select>
 
             <textarea name="message" rows="" cols="40" maxlength="200" placeholder="{{__('general.message')}}*" class="form-control mt-2 textareaAutoSize"></textarea>
-            
+
             </div><!-- /.form-group-->
         </div><!-- Modal body -->
 
-       <div class="text-center pb-4">         
+       <div class="text-center pb-4">
          <button type="submit" class="btn btn-xs btn-white sendReport ml-auto"><i></i> {{__('general.report_live_stream')}}</button>
          <div class="w-100 mt-2">
           <button type="button" class="btn border text-white" data-dismiss="modal">{{__('admin.cancel')}}</button>
@@ -384,8 +384,8 @@
   @endif
 
   @if ($live && !$paymentRequiredToAccess)
-    <script src="{{ asset('public/js/live.js') }}?v={{$settings->version}}"></script>
-    <script src="{{ asset('public/js/agora/agora-broadcast-client-v4.js') }}?v={{$settings->version}}"></script>
+    <script src="{{ asset('js/live.js') }}?v={{$settings->version}}"></script>
+    <script src="{{ asset('js/agora/agora-broadcast-client-v4.js') }}?v={{$settings->version}}"></script>
 
     @if ($creator->id == auth()->id() || !$paymentRequiredToAccess)
       <script>

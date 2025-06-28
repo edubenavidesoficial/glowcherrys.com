@@ -3,10 +3,10 @@
   <head>
     <meta charset="UTF-8">
     <title>Installer</title>
-    <link href="{{ asset('public/css/core.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('public/css/bootstrap.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('public/css/styles.css') }}" rel="stylesheet">
-    <link rel="shortcut icon" href="{{ url('public/img/favicon.png') }}" />
+    <link href="{{ asset('css/core.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/styles.css') }}" rel="stylesheet">
+    <link rel="shortcut icon" href="{{ url('/imgfavicon.png') }}" />
   </head>
   <body class="bg-primary">
   		<main role="main">
@@ -66,7 +66,7 @@
                 							</div>
                 					</div><!--- ./ list-group-item -->
 
-                          
+
 
                           <div class="list-group-item d-flex justify-content-between">
                 							<div>

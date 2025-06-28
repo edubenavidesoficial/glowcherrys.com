@@ -1,29 +1,29 @@
-<link href="{{ asset('public/css/core.min.css') }}?v={{$settings->version}}" rel="stylesheet">
-<link href="{{ asset('public/css/feather.css') }}" rel="stylesheet">
-<link href="{{ asset('public/css/bootstrap-icons.css') }}?v={{$settings->version}}" rel="stylesheet">
-<link href="{{ asset('public/css/icomoon.css') }}" rel="stylesheet">
+<link href="{{ asset('css/core.min.css') }}?v={{$settings->version}}" rel="stylesheet">
+<link href="{{ asset('css/feather.css') }}" rel="stylesheet">
+<link href="{{ asset('css/bootstrap-icons.css') }}?v={{$settings->version}}" rel="stylesheet">
+<link href="{{ asset('css/icomoon.css') }}" rel="stylesheet">
 
 @if (auth()->check() && auth()->user()->dark_mode == 'on')
-<link href="{{ asset('public/css/bootstrap-dark.min.css') }}" rel="stylesheet">
+<link href="{{ asset('css/bootstrap-dark.min.css') }}" rel="stylesheet">
 @else
-<link href="{{ asset('public/css/bootstrap.min.css') }}" rel="stylesheet">
+<link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
 @endif
 
-<link href="{{ asset('public/css/styles.css') }}?v={{$settings->version}}" rel="stylesheet">
-<link href="{{ asset('public/js/plyr/plyr.css')}}?v={{$settings->version}}" rel="stylesheet" type="text/css" />
+<link href="{{ asset('css/styles.css') }}?v={{$settings->version}}" rel="stylesheet">
+<link href="{{ asset('js/plyr/plyr.css')}}?v={{$settings->version}}" rel="stylesheet" type="text/css" />
 
 @auth
-<link href="{{ asset('public/js/fileuploader/font/font-fileuploader.css')}}" media="all" rel="stylesheet" type="text/css" />
-<link href="{{ asset('public/js/fileuploader/jquery.fileuploader.min.css')}}" media="all" rel="stylesheet" type="text/css" />
-<link href="{{ asset('public/js/fileuploader/jquery.fileuploader-theme-thumbnails.css')}}" media="all" rel="stylesheet" type="text/css" />
-<link href="{{ asset('public/js/fileuploader/jquery.fileuploader-theme-dragdrop.css')}}" media="all" rel="stylesheet" type="text/css" />
-<link rel="stylesheet" href="{{ asset('public/js/reels/reels.css') }}?v={{$settings->version}}">
+<link href="{{ asset('js/fileuploader/font/font-fileuploader.css')}}" media="all" rel="stylesheet" type="text/css" />
+<link href="{{ asset('js/fileuploader/jquery.fileuploader.min.css')}}" media="all" rel="stylesheet" type="text/css" />
+<link href="{{ asset('js/fileuploader/jquery.fileuploader-theme-thumbnails.css')}}" media="all" rel="stylesheet" type="text/css" />
+<link href="{{ asset('js/fileuploader/jquery.fileuploader-theme-dragdrop.css')}}" media="all" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="{{ asset('js/reels/reels.css') }}?v={{$settings->version}}">
 
-<link href="{{ asset('public/js/jquery-ui/jquery-ui.min.css')}}" media="all" rel="stylesheet" type="text/css" />
+<link href="{{ asset('js/jquery-ui/jquery-ui.min.css')}}" media="all" rel="stylesheet" type="text/css" />
 
 @if (request()->path() == '/' && $settings->story_status)
-<link href="{{ asset('public/js/story/zuck.min.css')}}?v={{$settings->version}}" rel="stylesheet" type="text/css" />
-<link href="{{ asset('public/js/story/snapssenger.css')}}?v={{$settings->version}}" rel="stylesheet" type="text/css" />
+<link href="{{ asset('js/story/zuck.min.css')}}?v={{$settings->version}}" rel="stylesheet" type="text/css" />
+<link href="{{ asset('js/story/snapssenger.css')}}?v={{$settings->version}}" rel="stylesheet" type="text/css" />
 @endif
 
 @if (request()->path() == '/' && $settings->story_status && $fonts || request()->is('create/story/text') && $settings->story_status && $fonts)
@@ -83,12 +83,12 @@
     }
     // END promptOptions,
     };
- 
+
 
   OneSignal.push(function () {
-        OneSignal.SERVICE_WORKER_PARAM = { scope: '/public/js/' };
-        OneSignal.SERVICE_WORKER_PATH = 'public/js/OneSignalSDKWorker.js'
-        OneSignal.SERVICE_WORKER_UPDATER_PATH = 'public/js/OneSignalSDKWorker.js'
+        OneSignal.SERVICE_WORKER_PARAM = { scope: 'js/' };
+        OneSignal.SERVICE_WORKER_PATH = 'js/OneSignalSDKWorker.js'
+        OneSignal.SERVICE_WORKER_UPDATER_PATH = 'js/OneSignalSDKWorker.js'
         OneSignal.init(initConfig);
 
         OneSignal.showSlidedownPrompt();
@@ -114,9 +114,9 @@
     else
       console.log("Push notifications are not enabled yet.");
   });
-    
+
   // Subscription Change
-	OneSignal.on("subscriptionChange", 
+	OneSignal.on("subscriptionChange",
   function(isSubscribed) {
 
     OneSignal.push(function() {
@@ -473,7 +473,7 @@ a.social-share i {color: #dedede!important;}
 @endif
 
 .bg-gradient {
-  background: url('{{url('public/img', $settings->bg_gradient)}}');
+  background: url('{{url('img', $settings->bg_gradient)}}');
   background-size: cover;
 }
 
@@ -1829,7 +1829,7 @@ a:hover.choose-type-sale {
 .ui-state-active {
     width: 100%;
     display: block;
-    border: 0 !important; 
+    border: 0 !important;
     background: {{ auth()->check() && auth()->user()->dark_mode == 'on' ? '#222' : '#efefef'}};
     color: #333;
     text-decoration: none;

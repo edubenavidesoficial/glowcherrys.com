@@ -7,7 +7,7 @@
   .fileuploader { display:block; padding: 0; }
   .fileuploader-items-list {margin: 10px 0 0 0;}
   .fileuploader-theme-dragdrop .fileuploader-input {
-    background: {{ auth()->user()->dark_mode == 'on'? '#222' : '#fff' }};  
+    background: {{ auth()->user()->dark_mode == 'on'? '#222' : '#fff' }};
   }
 </style>
 @endsection
@@ -52,6 +52,6 @@
 @endsection
 
 @section('javascript')
-  <script src="{{ asset('public/js/fileuploader/fileuploader-story-file.js') }}"></script> 
-  <script src="{{ asset('public/js/story/create-story.js') }}"></script>
+  <script src="{{ asset('js/fileuploader/fileuploader-story-file.js') }}"></script>
+  <script src="{{ asset('js/story/create-story.js') }}"></script>
 @endsection

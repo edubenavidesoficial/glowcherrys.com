@@ -861,7 +861,7 @@ class Helper
 		if (env('FILESYSTEM_DRIVER') == 'dospace' && env('DOS_CDN')) {
 			return 'https://' . env('DOS_BUCKET') . '.' . env('DOS_DEFAULT_REGION') . '.cdn.digitaloceanspaces.com/' . $path;
 		} else {
-			return Storage::url($path);
+        return url('/' . ltrim($path, '/'));
 		}
 	}
 

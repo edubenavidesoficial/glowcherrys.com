@@ -1,7 +1,7 @@
 @extends('admin.layout')
 
 @section('css')
-<link href="{{ asset('public/admin/jvectormap/jquery-jvectormap-1.2.2.css')}}" rel="stylesheet" type="text/css" />
+<link href="{{ asset('admin/jvectormap/jquery-jvectormap-1.2.2.css')}}" rel="stylesheet" type="text/css" />
 @endsection
 
 @section('content')
@@ -167,14 +167,14 @@
 				 <div class="card-body">
 					<div class="d-lg-flex d-block justify-content-between align-items-center mb-4">
 						<h6 class="mb-4 mb-lg-0"><i class="bi-cash-stack me-2"></i> {{ trans('general.earnings') }}</h6>
-  
+
 					   <select class="form-select mb-4 mb-lg-0 w-auto d-block filterEarnings">
 						<option selected="" value="month">{{ __('general.this_month') }}</option>
 						<option value="last-month">{{ __('general.last_month') }}</option>
-						<option value="year">{{ __('general.this_year') }}</option>       
+						<option value="year">{{ __('general.this_year') }}</option>
 					  </select>
 					  </div>
-					 
+
 					 <div class="d-block position-relative" style="height: 350px">
                         <div class="blocked display-none" id="loadChart">
                           <span class="d-flex justify-content-center align-items-center text-center w-100 h-100">
@@ -297,8 +297,8 @@
 @endsection
 
 @section('javascript')
-	<script src="{{ asset('public/admin/jvectormap/jquery-jvectormap-1.2.2.min.js')}}" type="text/javascript"></script>
-	<script src="{{ asset('public/admin/jvectormap/jquery-jvectormap-world-mill-en.js')}}" type="text/javascript"></script>
-  <script src="{{ asset('public/js/Chart.min.js') }}"></script>
+	<script src="{{ asset('admin/jvectormap/jquery-jvectormap-1.2.2.min.js')}}" type="text/javascript"></script>
+	<script src="{{ asset('admin/jvectormap/jquery-jvectormap-world-mill-en.js')}}" type="text/javascript"></script>
+  <script src="{{ asset('js/Chart.min.js') }}"></script>
 	@include('admin.charts')
   @endsection

@@ -12,9 +12,9 @@
 
 			<a class="navbar-brand" href="{{url('/')}}">
 				@if (auth()->check() && auth()->user()->dark_mode == 'on' )
-					<img src="{{url('public/img', $settings->logo)}}" data-logo="{{$settings->logo}}" data-logo-2="{{$settings->logo_2}}" alt="{{$settings->title}}" class="logo align-bottom max-w-100" />
+					<img src="{{url('img', $settings->logo)}}" data-logo="{{$settings->logo}}" data-logo-2="{{$settings->logo_2}}" alt="{{$settings->title}}" class="logo align-bottom max-w-100" />
 				@else
-				<img src="{{url('public/img', auth()->guest() && request()->path() == '/' && $settings->home_style == 0 ? $settings->logo : $settings->logo_2)}}" data-logo="{{$settings->logo}}" data-logo-2="{{$settings->logo_2}}" alt="{{$settings->title}}" class="logo align-bottom max-w-100" />
+				<img src="{{url('img', auth()->guest() && request()->path() == '/' && $settings->home_style == 0 ? $settings->logo : $settings->logo_2)}}" data-logo="{{$settings->logo}}" data-logo-2="{{$settings->logo_2}}" alt="{{$settings->title}}" class="logo align-bottom max-w-100" />
 			@endif
 			</a>
 
@@ -44,18 +44,18 @@
 								aria-label="Search">
 							<button class="btn btn-outline-success my-sm-0 button-search e-none" type="submit"><i
 									class="bi bi-search"></i></button>
-						
+
 							<div class="dropdown-menu dd-menu-user position-absolute" style="width: 95%; top: 48px;" id="dropdownCreators">
-						
+
 								<button type="button" class="d-none" id="triggerBtn" data-toggle="dropdown" aria-haspopup="true"
 									aria-expanded="false"></button>
-						
+
 								<div class="w-100 text-center display-none py-2" id="spinnerSearch">
 									<span class="spinner-border spinner-border-sm align-middle text-primary"></span>
 								</div>
-						
+
 								<div id="containerCreators"></div>
-						
+
 								<div id="viewAll" class="display-none mt-2">
 									<a class="dropdown-item border-top py-2 text-center" href="#">{{ __('general.view_all') }}</a>
 								</div>

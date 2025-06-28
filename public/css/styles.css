@@ -1435,7 +1435,7 @@ a:hover.button-avatar-upload {
 }
 .item-loading::before {
   background-color: #f5f6f7;
-  background-image: url('../img/loadpost.gif');
+  background-image: url('..//imgloadpost.gif');
   background-repeat: repeat-y;
   background-size: 100% 1px;
   content: ' ';

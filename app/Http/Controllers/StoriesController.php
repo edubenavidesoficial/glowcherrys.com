@@ -99,7 +99,7 @@ class StoriesController extends Controller
 
         $background   = $this->request->background;
         $text         = $this->request->text;
-        $image        = public_path('img/stories-bg/') . $background;
+        $image        = public_path('/imgstories-bg/') . $background;
         $getExtension = explode('.', $background);
         $extension    = $getExtension[1];
         $path         = config('path.stories');

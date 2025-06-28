@@ -46,9 +46,9 @@
     <button class="btn btn-cover-upload p-lg-6 px-3" id="coverFile" onclick="$('#uploadCover').trigger('click');">
       <i class="fa fa-camera mr-lg-1"></i>  <span class="d-none d-lg-inline">{{__('general.change_cover')}}</span>
     </button>
-  
+
     <button class="btn btn-cover-upload px-3 deleteCover">
-      <i class="bi-trash3-fill"></i> 
+      <i class="bi-trash3-fill"></i>
     </button>
   </div>
 @endif
@@ -288,7 +288,7 @@
                     </div>
                   </div>
                 @endif
-                
+
           				<div class="container-fluid">
           					<div class="row">
           						<div class="col-md-4 col-6 mb-3">
@@ -375,7 +375,7 @@
               <small class="btn-block sm-btn-size">{{ $totalVideos }}</small>
               <a href="{{request()->path() == $user->username.'/videos' ? 'javascript:;' : url($user->username, 'videos')}}" title="{{__('general.video')}}"><i class="feather icon-video"></i> <span class="d-lg-inline-block d-none">{{__('general.videos')}}</span></a>
               </li>
-              
+
 
               @if ($totalReels != 0)
               <li class="nav-link @if (request()->path() == $user->username.'/reels')active @endif navbar-user-mobile">
@@ -422,7 +422,7 @@
     </div><!-- row -->
   </div><!-- container -->
 
-  
+
   @if ($user->verified_id == 'yes' && request('media') != 'shop' && request('media') != 'reels')
   <div class="container py-4 pb-5">
     <div class="row">
@@ -635,7 +635,7 @@
         <div class="grid-updates position-relative" id="updatesPaginator">
           @include('includes.updates')
         </div>
-        @endif   
+        @endif
 
           @endif
       </div>
@@ -645,7 +645,7 @@
 
   @if (auth()->check() && $user->verified_id == 'yes' && request('media') == 'reels')
     <div class="container py-5">
-      
+
       <div class="@if (auth()->check() && auth()->user()->verified_id == 'yes' && $user->id == auth()->id())d-flex justify-content-between align-items-center @else d-block @endif mb-3 text-right">
 
         @if (auth()->check() && auth()->user()->verified_id == 'yes' && $user->id == auth()->id())
@@ -677,7 +677,7 @@
               <div class="video-thumbnail media-wrapper"></div>
             @endfor
           </div>
-            
+
             @if ($reels->hasPages())
               <div class="w-100 d-block mt-3">
                 {{ $reels->onEachSide(0)->appends(['sort' => request('sort')])->links() }}
@@ -855,7 +855,7 @@
                 </select>
 
                 <textarea name="message" rows="" cols="40" maxlength="200" placeholder="{{__('general.message')}} ({{ __('general.optional') }})" class="form-control mt-2 textareaAutoSize"></textarea>
-                
+
                 </div><!-- /.form-group-->
             </div><!-- Modal body -->
 
@@ -937,11 +937,11 @@
                     if ($payment->type == 'card' ) {
                       $paymentName = '<i class="far fa-credit-card mr-1"></i> '.__('general.debit_credit_card').$recurrent;
                     } else if ($payment->id == 1) {
-                      $paymentName = '<img src="'.url('public/img/payments', auth()->user()->dark_mode == 'off' ? $payment->logo : 'paypal-white.png').'" width="70"/> <small class="w-100 d-block">'.__('general.redirected_to_paypal_website').'</small>';
+                      $paymentName = '<img src="'.url('/imgpayments', auth()->user()->dark_mode == 'off' ? $payment->logo : 'paypal-white.png').'" width="70"/> <small class="w-100 d-block">'.__('general.redirected_to_paypal_website').'</small>';
                     } else if ($payment->name == 'Netvalve') {
-                      $paymentName = '<img src="'.url('public/img/payments', $payment->logo).'" width="100"/>';
+                      $paymentName = '<img src="'.url('/imgpayments', $payment->logo).'" width="100"/>';
                     } else {
-                      $paymentName = '<img src="'.url('public/img/payments', $payment->logo).'" width="70"/>'.$recurrent;
+                      $paymentName = '<img src="'.url('/imgpayments', $payment->logo).'" width="70"/>'.$recurrent;
                     }
 
                     @endphp
@@ -1120,16 +1120,16 @@
 @section('javascript')
 
 @if (auth()->check() && auth()->id() == $user->id)
-<script src="{{ asset('public/js/upload-avatar-cover.js') }}?v={{$settings->version}}"></script>
+<script src="{{ asset('js/upload-avatar-cover.js') }}?v={{$settings->version}}"></script>
 @endif
 
-<script src="{{ asset('public/js/qrcode.min.js') }}?v={{$settings->version}}"></script>
+<script src="{{ asset('js/qrcode.min.js') }}?v={{$settings->version}}"></script>
 
 @if (auth()->check() && $user->verified_id == 'yes' && request('media') == 'reels')
 
 <script>
       let videoData = [
-        
+
       @foreach ($reels as $reel)
       {
         id: {{ $reel->id }},

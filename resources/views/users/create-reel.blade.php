@@ -7,7 +7,7 @@
   .fileuploader { display:block; padding: 0; }
   .fileuploader-items-list {margin: 10px 0 0 0;}
   .fileuploader-theme-dragdrop .fileuploader-input {
-    background: {{ auth()->user()->dark_mode == 'on'? '#222' : '#fff' }};  
+    background: {{ auth()->user()->dark_mode == 'on'? '#222' : '#fff' }};
   }
 </style>
 @endsection
@@ -62,6 +62,6 @@
 @endsection
 
 @section('javascript')
-  <script src="{{ asset('public/js/fileuploader/fileuploader-reel-file.js') }}?v={{ $settings->version }}"></script> 
-  <script src="{{ asset('public/js/reels/create-reel.js') }}?v={{ $settings->version }}"></script>
+  <script src="{{ asset('js/fileuploader/fileuploader-reel-file.js') }}?v={{ $settings->version }}"></script>
+  <script src="{{ asset('js/reels/create-reel.js') }}?v={{ $settings->version }}"></script>
 @endsection

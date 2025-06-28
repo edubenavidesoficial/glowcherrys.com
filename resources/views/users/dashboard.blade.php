@@ -148,10 +148,10 @@
                      <select class="custom-select mb-4 mb-lg-0 w-auto d-block filterEarnings">
                       <option selected="" value="month">{{ __('general.this_month') }}</option>
                       <option value="last-month">{{ __('general.last_month') }}</option>
-                      <option value="year">{{ __('general.this_year') }}</option>       
+                      <option value="year">{{ __('general.this_year') }}</option>
                     </select>
                     </div>
-                     
+
                      <div class="d-block position-relative" style="height: 350px">
                         <div class="blocked display-none" id="loadChart">
                           <span class="d-flex justify-content-center align-items-center text-center w-100 h-100">
@@ -163,7 +163,7 @@
                    </div>
                  </div>
               </div>
-          
+
             <div class="col-md-6 mb-5 mb-lg-0">
               <div class="card shadow-sm">
                 <div class="card-body pb-0">
@@ -178,9 +178,9 @@
                         <th scope="col">{{__('admin.status')}}</th>
                       </tr>
                     </thead>
-            
+
                     <tbody>
-            
+
                       @foreach ($subscriptions as $subscription)
                       <tr>
                         <td>
@@ -190,11 +190,11 @@
                           <a href="{{url($subscription->subscriber->username)}}" class="mr-1">
                             <img src="{{Helper::getFile(config('path.avatar').$subscription->subscriber->avatar)}}" width="35"
                               height="35" class="rounded-circle mr-2">
-            
+
                             {{$subscription->subscriber->hide_name == 'yes' ? $subscription->subscriber->username :
                             $subscription->subscriber->name}}
                           </a>
-            
+
                           <a href="{{url('messages/'.$subscription->subscriber->id, $subscription->subscriber->username)}}"
                             title="{{__('general.message')}}">
                             <i class="feather icon-send mr-1 mr-lg-0"></i>
@@ -202,7 +202,7 @@
                           @endif
                         </td>
                         <td>{{Helper::formatDate($subscription->created_at)}}</td>
-                        </td>            
+                        </td>
                         <td>
                           @if ($subscription->stripe_id == ''
                           && strtotime($subscription->ends_at) > strtotime(now()->format('Y-m-d H:i:s'))
@@ -255,9 +255,9 @@
                         <th scope="col">{{__('general.earnings')}}</th>
                       </tr>
                     </thead>
-            
+
                     <tbody>
-            
+
                       @foreach ($transactions as $transaction)
                       <tr>
                         <td>{{ Helper::formatDate($transaction->created_at) }}</td>
@@ -267,19 +267,19 @@
 
                           @if (isset($transaction->gift->id) && request()->is('my/payments/received'))
                           <span class="d-block mt-2">
-                            <img src="{{ url('public/img/gifts', $transaction->gift->image) }}" width="25">
+                            <img src="{{ url('/imggifts', $transaction->gift->image) }}" width="25">
                           </span>
                           @endif
                       </td>
                       <td>
                         {{ Helper::amountFormatDecimal($transaction->earning_net_user) }}
-  
+
                         @if ($transaction->percentage_applied)
                           <a tabindex="0" role="button" data-container="body" data-toggle="popover" data-trigger="focus" data-placement="top" data-content="{{trans('general.percentage_applied')}} {{ $transaction->percentage_applied }} {{trans('general.platform')}} @if ($transaction->direct_payment) ({{ __('general.direct_payment') }}) @endif">
                             <i class="far fa-question-circle"></i>
                           </a>
                         @endif
-                        
+
                       </td>
                       </tr>
                       @endforeach
@@ -316,7 +316,7 @@
 @endsection
 
 @section('javascript')
-  <script src="{{ asset('public/js/Chart.min.js') }}"></script>
+  <script src="{{ asset('js/Chart.min.js') }}"></script>
 
   <script type="text/javascript">
 
@@ -460,7 +460,7 @@ $(document).on('change','.filterEarnings', function(e) {
   var range = $(this).val();
 
   $(this).blur();
-  
+
   $('#loadChart').show();
 
   $.ajax({
@@ -469,7 +469,7 @@ $(document).on('change','.filterEarnings', function(e) {
       // Empty any previous chart data
       ChartArea.data.labels = [];
       ChartArea.data.datasets[0].data = [];
-      
+
       ChartArea.data.labels = data.labels;
       ChartArea.data.datasets.forEach((dataset) => {
           dataset.data = data.datasets;

@@ -2452,7 +2452,7 @@ class UserController extends Controller
     if ($filePreload) {
       $pathFile =
         $filePreload->status == 'encode' || $filePreload->status == 'pending'
-        ? url('public/temp', $filePreload->file)
+        ? url('temp', $filePreload->file)
         : Helper::getFile(config('path.welcome_messages') . $filePreload->file);
 
       $preloadedFile[] = [

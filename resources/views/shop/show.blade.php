@@ -27,7 +27,7 @@
     <meta name="twitter:title" content="{{ $product->name }}" />
     <meta name="twitter:description" content="{{strip_tags($product->description)}}"/>
 
-    <link href="{{ asset('public/js/splide/splide.min.css')}}?v={{$settings->version}}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('js/splide/splide.min.css')}}?v={{$settings->version}}" rel="stylesheet" type="text/css" />
     @endsection
 
 @section('content')
@@ -115,7 +115,7 @@
         @if  ($product->price === '0.00')
         {{ __('general.free') }}
         @else
-          {{ Helper::amountFormatDecimal($product->price) }} 
+          {{ Helper::amountFormatDecimal($product->price) }}
           <small>{{ $settings->currency_code }}</small>
         @endif
       </h3>
@@ -133,7 +133,7 @@
           && auth()->id() != $product->user()->id
           && $verifyPurchaseUser
           && $product->type == 'physical'
-          && $product->price !== '0.00'          
+          && $product->price !== '0.00'
           || auth()->guest()
           )
 
@@ -326,7 +326,7 @@
                 </select>
 
                 <textarea name="message" rows="" cols="40" maxlength="200" placeholder="{{__('general.message')}} ({{ __('general.optional') }})" class="form-control mt-2 textareaAutoSize"></textarea>
-                
+
                 </div><!-- /.form-group-->
             </div><!-- Modal body -->
 
@@ -375,11 +375,11 @@
 
 @section('javascript')
   @auth
-    <script src="{{ asset('public/js/shop.js') }}"></script>
+    <script src="{{ asset('js/shop.js') }}"></script>
   @endauth
 
   @if ($previews > 1)
-    <script src="{{ asset('public/js/splide/splide.min.js') }}"></script>
-    <script src="{{ asset('public/js/splide/splide-init.js') }}"></script>
+    <script src="{{ asset('js/splide/splide.min.js') }}"></script>
+    <script src="{{ asset('js/splide/splide-init.js') }}"></script>
   @endif
 @endsection

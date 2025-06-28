@@ -23,7 +23,7 @@
 
 								@if ($settings->google_login == 'on')
 								<a href="{{url('oauth/google')}}" class="btn btn-google auth-form-btn flex-grow w-100">
-									<img src="{{ url('public/img/google.svg') }}" class="mr-2" width="18" height="18"> <span class="loginRegisterWith">{{ __('auth.login_with') }}</span> Google
+									<img src="{{ url('/imggoogle.svg') }}" class="mr-2" width="18" height="18"> <span class="loginRegisterWith">{{ __('auth.login_with') }}</span> Google
 								</a>
 							@endif
 							</div>
@@ -32,7 +32,7 @@
 							<small class="btn-block text-center my-3 text-uppercase or">{{__('general.or')}}</small>
 						@endif
 					@endif
-						
+
 			@if (! $settings->disable_login_register_email)
 				<form method="POST" action="{{ route('login') }}" data-url-login="{{ route('login') }}" data-url-register="{{ route('register') }}" id="formLoginRegister" enctype="multipart/form-data">
 						@csrf
@@ -117,7 +117,7 @@
 						{!! NoCaptcha::displaySubmit('formLoginRegister', '<i></i> '.__('auth.login'), ['data-size' => 'invisible', 'id' => 'btnLoginRegister', 'class' => 'btn btn-primary mt-4 w-100']) !!}
 
                   		{!! NoCaptcha::renderJs() !!}
-						
+
 						@else
 						<button type="submit" id="btnLoginRegister" class="btn btn-primary mt-4 w-100"><i></i> {{__('auth.login')}}</button>
 						@endif

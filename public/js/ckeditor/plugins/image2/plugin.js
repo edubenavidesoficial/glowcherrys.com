@@ -353,7 +353,7 @@
 				} );
 
 				// If shifting non-captioned -> captioned, remove classes
-				// related to styles from <img/>.
+				// related to styles from </img>.
 				if ( this.oldData && !this.oldData.hasCaption && this.data.hasCaption ) {
 					for ( var c in this.data.classes )
 						this.parts.image.removeClass( c );
@@ -564,7 +564,7 @@
 					if ( !shift.changed.hasCaption )
 						return;
 
-					// Get <img/> or <a><img/></a> from widget. Note that widget element might itself
+					// Get </img> or <a></img></a> from widget. Note that widget element might itself
 					// be what we're looking for. Also element can be <p style="text-align:center"><a>...</a></p>.
 					var imageOrLink;
 					if ( shift.element.is( { img: 1, a: 1 } ) )
@@ -586,7 +586,7 @@
 						// Replace element with <figure>.
 						replaceSafely( figure, shift.element );
 
-						// Use old <img/> or <a><img/></a> instead of the one from the template,
+						// Use old </img> or <a></img></a> instead of the one from the template,
 						// so we won't lose additional attributes.
 						imageOrLink.replace( figure.findOne( 'img' ) );
 
@@ -596,7 +596,7 @@
 
 					// The caption was present, but now it's to be removed.
 					else {
-						// Unwrap <img/> or <a><img/></a> from figure.
+						// Unwrap </img> or <a></img></a> from figure.
 						imageOrLink.replace( shift.element );
 
 						// Update widget's element.
@@ -611,10 +611,10 @@
 							link = shift.element.is( 'a' ) ?
 								shift.element : shift.element.findOne( 'a' ),
 							// Why deflate:
-							// If element is <img/>, it will be wrapped into <a>,
+							// If element is </img>, it will be wrapped into <a>,
 							// which becomes a new widget.element.
-							// If element is <a><img/></a>, it will be unlinked
-							// so <img/> becomes a new widget.element.
+							// If element is <a></img></a>, it will be unlinked
+							// so </img> becomes a new widget.element.
 							needsDeflate = ( shift.element.is( 'a' ) && !newValue ) || ( shift.element.is( 'img' ) && newValue ),
 							newEl;
 
@@ -673,7 +673,7 @@
 				return imageOrLink;
 			}
 
-			// Wraps <img/> -> <a><img/></a>.
+			// Wraps </img> -> <a></img></a>.
 			// Returns reference to <a>.
 			//
 			// @param {CKEDITOR.dom.element} img
@@ -692,8 +692,8 @@
 				return link;
 			}
 
-			// De-wraps <a><img/></a> -> <img/>.
-			// Returns the reference to <img/>
+			// De-wraps <a></img></a> -> </img>.
+			// Returns the reference to </img>
 			//
 			// @param {CKEDITOR.dom.element} link
 			// @returns {CKEDITOR.dom.element}
@@ -913,10 +913,10 @@
 			//    In this case centering is done with a class set on widget.wrapper.
 			//    Simply replace centering wrapper with figure (it's no longer necessary).
 			//
-			// 2. <p style="text-align:center"><img/></p>.
+			// 2. <p style="text-align:center"></img></p>.
 			//    Nothing to do here: <p> remains for styling purposes.
 			//
-			// 3. <div style="text-align:center"><img/></div>.
+			// 3. <div style="text-align:center"></img></div>.
 			//    Nothing to do here (2.) but that case is only possible in enterMode different
 			//    than ENTER_P.
 			if ( isCenterWrapper( el ) ) {
@@ -934,7 +934,7 @@
 				// If there's a centering wrapper, save it in data.
 				data.align = 'center';
 
-				// Image can be wrapped in link <a><img/></a>.
+				// Image can be wrapped in link <a></img></a>.
 				image = el.getFirst( 'img' ) || el.getFirst( 'a' ).getFirst( 'img' );
 			}
 
@@ -945,7 +945,7 @@
 						CKEDITOR.tools.array.indexOf( [ 'figure', 'a' ], child.parent.name ) !== -1;
 				}, true )[ 0 ];
 
-				// Upcast linked image like <a><img/></a>.
+				// Upcast linked image like <a></img></a>.
 			} else if ( isLinkedOrStandaloneImage( el ) ) {
 				image = el.name == 'a' ? el.children[ 0 ] : el;
 			}
@@ -975,7 +975,7 @@
 
 		// @param {CKEDITOR.htmlParser.element} el
 		return function( el ) {
-			// In case of <a><img/></a>, <img/> is the element to hold
+			// In case of <a></img></a>, </img> is the element to hold
 			// inline styles or classes (image2_alignClasses).
 			var attrsHolder = el.name == 'a' ? el.getFirst() : el,
 				attrs = attrsHolder.attributes,
@@ -1060,7 +1060,7 @@
 				if ( !isLinkedOrStandaloneImage( child ) )
 					return false;
 			}
-			// Centering <div> can hold <img/> or <figure>, depending on enterMode.
+			// Centering <div> can hold </img> or <figure>, depending on enterMode.
 			else {
 				// If a <figure> is the first (only) child, it must have a class.
 				//   <div style="text-align:center"><figure>...</figure><div>
@@ -1068,7 +1068,7 @@
 					if ( !child.hasClass( captionedClass ) )
 						return false;
 				} else {
-					// Centering <div> can hold <img/> or <a><img/></a> only when enterMode
+					// Centering <div> can hold </img> or <a></img></a> only when enterMode
 					// is ENTER_(BR|DIV).
 					//   <div style="text-align:center"><img /></div>
 					//   <div style="text-align:center"><a><img /></a></div>
@@ -1076,7 +1076,7 @@
 						return false;
 
 					// Regardless of enterMode, a child which is not <figure> must be
-					// either <img/> or <a><img/></a>.
+					// either </img> or <a></img></a>.
 					if ( !isLinkedOrStandaloneImage( child ) )
 						return false;
 				}
@@ -1092,7 +1092,7 @@
 		};
 	}
 
-	// Checks whether element is <img/> or <a><img/></a>.
+	// Checks whether element is </img> or <a></img></a>.
 	//
 	// @param {CKEDITOR.htmlParser.element}
 	function isLinkedOrStandaloneImage( el ) {

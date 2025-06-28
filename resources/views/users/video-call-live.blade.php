@@ -5,9 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>{{ $settings->title }}</title>
-    <link href="{{ url('public/css/core.min.css') }}?v={{config('settings.version')}}" rel="stylesheet">
-    <link href="{{ url('public/bootstrap/css/bootstrap.min.css') }}?v={{config('settings.version')}}" rel="stylesheet">
-    <link href="{{ url('public/img', $settings->favicon) }}" rel="icon">
+    <link href="{{ url('css/core.min.css') }}?v={{config('settings.version')}}" rel="stylesheet">
+    <link href="{{ url('bootstrap/css/bootstrap.min.css') }}?v={{config('settings.version')}}" rel="stylesheet">
+    <link href="{{ url('img', $settings->favicon) }}" rel="icon">
     <script src="https://js.pusher.com/8.3.0/pusher.min.js"></script>
     <style>
         html,
@@ -390,9 +390,9 @@
     </div>
 
     <!-- Bootstrap 5.3 JS Bundle with Popper -->
-    <script src="{{ url('public/js/core.min.js') }}?v={{config('settings.version')}}"></script>
-    <script src="{{ url('public/bootstrap/js/bootstrap.bundle.min.js') }}?v={{config('settings.version')}}"></script>
-    <script src="{{ url('public/js/agora/AgoraRTCSDK-v4.js') }}?v={{config('settings.version')}}"></script>
+    <script src="{{ url('js/core.min.js') }}?v={{config('settings.version')}}"></script>
+    <script src="{{ url('bootstrap/js/bootstrap.bundle.min.js') }}?v={{config('settings.version')}}"></script>
+    <script src="{{ url('js/agora/AgoraRTCSDK-v4.js') }}?v={{config('settings.version')}}"></script>
 
     <script>
     const AGORA_APP_ID = "{{ $settings->agora_app_id }}";
@@ -444,7 +444,7 @@
     const mobileMainStream = document.getElementById("mobile-main-stream");
 
     window.onload = async function() {
-        
+
         initializePusher();
 
         await initializeAgora();
@@ -455,75 +455,75 @@
             cluster: PUSHER_CLUSTER,
             forceTLS: true
         });
-        
+
         timerChannel = pusher.subscribe(PUSHER_CHANNEL);
-        
+
         timerChannel.bind('timer-update', function(data) {
             updateTimerDisplay(data);
             statusVideoCall(data);
         });
-        
+
         timerChannel.bind('timer-start', function(data) {
             if (!timerStarted) {
                 startTimer();
                 timerStarted = true;
             }
         });
-        
+
         timerChannel.bind('call-end', function() {
             endCall();
         });
     }
 
     async function initializeAgora() {
-    
+
         rtc.client = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
-        
+
         rtc.client.on("user-published", async (user, mediaType) => {
             await rtc.client.subscribe(user, mediaType);
-            
+
             if (mediaType === "video") {
                 const remoteVideoTrack = user.videoTrack;
-                
+
                 const mainStreamContainer = window.innerWidth <= 768 ? mobileMainStream : desktopMainStream;
                 if (mainStreamContainer) remoteVideoTrack.play(mainStreamContainer);
-                
+
                 if (desktopConnectingElement) desktopConnectingElement.style.display = "none";
                 if (mobileConnectingElement) mobileConnectingElement.style.display = "none";
             }
-            
+
             if (mediaType === "audio") {
                 const remoteAudioTrack = user.audioTrack;
                 remoteAudioTrack.play();
             }
         });
-        
+
         rtc.client.on("user-unpublished", (user, mediaType) => {
             if (mediaType === "video") {
                 if (desktopConnectingElement) desktopConnectingElement.style.display = "block";
                 if (mobileConnectingElement) mobileConnectingElement.style.display = "block";
             }
         });
-        
+
         try {
             await rtc.client.join(AGORA_APP_ID, CHANNEL_NAME, TOKEN, null);
-            
+
             [rtc.localAudioTrack, rtc.localVideoTrack] = await AgoraRTC.createMicrophoneAndCameraTracks();
-            
+
             if (desktopThumbnailImg) desktopThumbnailImg.style.display = "none";
             if (mobileThumbnailImg) mobileThumbnailImg.style.display = "none";
-            
+
             const thumbnailContainer = window.innerWidth <= 768 ? mobileThumbnailContainer : desktopThumbnailContainer;
             if (thumbnailContainer) rtc.localVideoTrack.play(thumbnailContainer);
 
             await rtc.client.publish([rtc.localAudioTrack, rtc.localVideoTrack]);
-            
+
             if (isBuyer) {
                 triggerPusherEvent('timer-start', {});
                 startTimer();
                 timerStarted = true;
             }
-            
+
         } catch (error) {
             console.error("Error initializing Agora: ", error);
             if (error.code === "PERMISSION_DENIED") {
@@ -533,10 +533,10 @@
                 if (desktopConnectingElement) desktopConnectingElement.innerText = `{{ __('general.agora_error') }}: ${error.code}`;
                 if (mobileConnectingElement) mobileConnectingElement.innerText = `{{ __('general.agora_error') }}: ${error.code}`;
             }
-            
+
         }
     }
-        
+
     function triggerPusherEvent(eventName) {
         fetch("{{ route('timer.video.call') }}", {
             method: 'POST',
@@ -564,7 +564,7 @@
     function statusVideoCall(minutesRemaining) {
         if (minutesRemaining <= 0) {
                 triggerPusherEvent('call-end', {});
-                
+
                 endCall();
             }
     }
@@ -601,12 +601,12 @@
 
     function handleViewChange() {
         const newIsMobile = window.matchMedia("(max-width: 768px)").matches;
-        
+
         if (newIsMobile !== isMobile && rtc.localVideoTrack) {
             rtc.localVideoTrack.stop();
-            
+
             isMobile = newIsMobile;
-            
+
             if (isMobile) {
                 if (mobileThumbnailContainer) rtc.localVideoTrack.play(mobileThumbnailContainer);
             } else {
@@ -637,7 +637,7 @@
                     endCall();
                 }
             });
-        
+
     });
 
     if (mobileMicBtn) mobileMicBtn.addEventListener("click", toggleMic);
@@ -657,7 +657,7 @@
             function (isConfirm) {
                 if (isConfirm) {
                     triggerPusherEvent('call-end', {});
-                
+
                     endCall();
                 }
             });
@@ -667,7 +667,7 @@
         if (rtc.localAudioTrack) {
             isMicMuted = !isMicMuted;
             rtc.localAudioTrack.setEnabled(!isMicMuted);
-            
+
             if (isMicMuted) {
                 if (desktopMicBtn) desktopMicBtn.innerHTML = '<i class="fas fa-microphone-slash"></i>';
                 if (mobileMicBtn) mobileMicBtn.innerHTML = '<i class="fas fa-microphone-slash"></i>';
@@ -686,7 +686,7 @@
         if (rtc.localVideoTrack) {
             isCameraOff = !isCameraOff;
             rtc.localVideoTrack.setEnabled(!isCameraOff);
-            
+
             if (isCameraOff) {
                 if (desktopCameraBtn) desktopCameraBtn.innerHTML = '<i class="fas fa-video-slash"></i>';
                 if (mobileCameraBtn) mobileCameraBtn.innerHTML = '<i class="fas fa-video-slash"></i>';

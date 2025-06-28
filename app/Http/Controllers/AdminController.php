@@ -772,8 +772,8 @@ class AdminController extends Controller
 
 	public function storeCategories(Request $request)
 	{
-		$temp = 'public/temp/'; // Temp
-		$path = 'public/img-category/'; // Path General
+		$temp = 'temp/'; // Temp
+		$path = 'img-category/'; // Path General
 
 		Validator::extend('ascii_only', function ($attribute, $value, $parameters) {
 			return !preg_match('/[^x00-x7F\-]/i', $value);
@@ -831,8 +831,8 @@ class AdminController extends Controller
 	public function updateCategories(Request $request)
 	{
 		$categories = Categories::find($request->id);
-		$temp = 'public/temp/'; // Temp
-		$path = 'public/img-category/'; // Path General
+		$temp = 'temp/'; // Temp
+		$path = 'img-category/'; // Path General
 
 		if (!isset($categories)) {
 			return redirect('panel/admin/categories');
@@ -887,7 +887,7 @@ class AdminController extends Controller
 	public function deleteCategories($id)
 	{
 		$categories = Categories::findOrFail($id);
-		$thumbnail = 'public/img-category/' . $categories->image; // Path General
+		$thumbnail = 'img-category/' . $categories->image; // Path General
 
 		User::where('categories_id', $id)->update(['categories_id' => 0]);
 
@@ -1103,8 +1103,8 @@ class AdminController extends Controller
 
 	public function themeStore(Request $request)
 	{
-		$temp  = 'public/temp/'; // Temp
-		$path  = 'public/img/'; // Path
+		$temp  = 'temp/'; // Temp
+		$path  = '/img'; // Path
 		$pathAvatar  = config('path.avatar'); // Path
 
 		$rules = array(
@@ -1908,7 +1908,7 @@ class AdminController extends Controller
 
 				\File::delete(env($key));
 
-				$envIcon = 'public/images/icons/' . $filename;
+				$envIcon = 'images/icons/' . $filename;
 				Helper::envUpdate($key, $envIcon);
 			}
 		}
@@ -2403,7 +2403,7 @@ class AdminController extends Controller
 		$story = Stories::with(['media.views'])->whereId($id)->firstOrFail();
 
 		if ($story->media->count()) {
-			// Delete Views 
+			// Delete Views
 			foreach ($story->media as $media) {
 				$media->views()->delete();
 				// Delete Media files
@@ -2433,8 +2433,8 @@ class AdminController extends Controller
 
 	public function addStoryBackground(Request $request)
 	{
-		$temp  = 'public/temp/';
-		$path  = 'public/img/stories-bg/';
+		$temp  = 'temp/';
+		$path  = '/imgstories-bg/';
 
 		$request->validate([
 			'image' => 'required|mimes:jpg,png,jpe,jpeg'
@@ -2459,7 +2459,7 @@ class AdminController extends Controller
 
 	public function deleteStoryBackground($id)
 	{
-		$path  = 'public/img/stories-bg/';
+		$path  = '/imgstories-bg/';
 		$storyBackground = StoryBackgrounds::findOrFail($id);
 
 		\File::delete($path . $storyBackground->name);

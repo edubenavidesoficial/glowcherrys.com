@@ -87,7 +87,7 @@
 
                       @if (isset($transaction->gift->id) && request()->is('my/payments/received'))
                       <span class="d-block mt-2">
-                        <img src="{{ url('public/img/gifts', $transaction->gift->image) }}" width="25">
+                        <img src="{{ url('/imggifts', $transaction->gift->image) }}" width="25">
                       </span>
                       @endif
                     </td>
@@ -101,7 +101,7 @@
                           <i class="far fa-question-circle"></i>
                         </a>
                       @endif
-                      
+
                     </td>
                     @endif
                     <td>

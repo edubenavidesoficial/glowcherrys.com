@@ -1,8 +1,8 @@
 @extends('admin.layout')
 
 @section('css')
-<link href="{{ asset('public/js/select2/select2.min.css') }}" rel="stylesheet" type="text/css" />
-<link href="{{ asset('public/js/select2/select2-bootstrap-5-theme.min.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ asset('js/select2/select2.min.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ asset('js/select2/select2-bootstrap-5-theme.min.css') }}" rel="stylesheet" type="text/css" />
 @endsection
 
 @section('content')
@@ -241,7 +241,7 @@
             {{ __('auth.login') }} ({{ __('admin.role_admin') }}) <strong>{{ url('login/admin') }}</strong>
           </small>
          </div>
-        
+
        </fieldset><!-- end row -->
 
 			 <fieldset class="row mb-4">

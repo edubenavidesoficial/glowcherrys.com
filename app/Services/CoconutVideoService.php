@@ -55,7 +55,7 @@ class CoconutVideoService
     public static function job($model, $urlMedia, $urlStorage, $urlWebhook)
     {
         $coconut = new \Coconut\Client(config('settings.coconut_key'));
-        $url = url('public/temp', $urlMedia);
+        $url = url('temp', $urlMedia);
         $videoName = strtolower(auth()->user()->username . '-' . auth()->id() . time());
 
         $coconut->notification = [
@@ -87,7 +87,7 @@ class CoconutVideoService
                     'mp4:::quality=5' => [
                         'path' => "/{$videoName}.mp4",
                         'watermark' => config('settings.watermark_on_videos') == 'on' ? [
-                            'url' => url('public/img', config('settings.watermak_video')),
+                            'url' => url('img', config('settings.watermak_video')),
                             'position' => config('settings.watermark_position')
                         ] : false,
                     ]
