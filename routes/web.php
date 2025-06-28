@@ -37,6 +37,7 @@ use App\Http\Controllers\LiveStreamingsController;
 use App\Http\Controllers\TaxRatesController;
 use App\Http\Controllers\CountriesStatesController;
 use App\Http\Controllers\GiftController;
+use App\Http\Controllers\GiftPackageController;
 use App\Http\Controllers\UploadMediaPreviewShopController;
 use App\Http\Controllers\UploadMediaFileShopController;
 use App\Http\Controllers\StripeConnectController;
@@ -510,7 +511,13 @@ Route::group(['middleware' => 'role'], function () {
     Route::post('panel/admin/settings/gifts', [GiftController::class, 'store']);
     Route::post('panel/admin/settings/gifts/update/{gift}', [GiftController::class, 'update']);
     Route::post('gifts/enviar/{gift}', [GiftController::class, 'send']);
-    Route::get('/panel/admin/gifts/delete/{id}', [GiftController::class, 'destroy']);
+    Route::get('/panel/admin/gifts/delete/{id}', [GiftController::class, 'destroy']);  Route::get('panel/admin/settings/gift', [AdminController::class, 'settingsGift'])->name('general');
+
+   //Gift Package
+    Route::get('panel/admin/settings/diamonts', [AdminController::class, 'settingsGiftPackage'])->name('general');
+    Route::post('panel/admin/settings/gifts-package', [GiftPackageController::class, 'store']);
+    Route::post('panel/admin/settings/gifts-package/update/{gifts_package}', [GiftPackageController::class, 'update']);
+    Route::get('/panel/admin/gifts-package/delete/{id}', [GiftPackageController::class, 'destroy']);
 
 
     // BILLING
@@ -827,5 +834,6 @@ Route::prefix('panel/admin/settings')->group(function () {
     Route::apiResources([
         'sliders' => SliderController::class,
         'gifts' => GiftController::class,
+        'gifts-package' => GiftPackageController::class,
     ]);
 });

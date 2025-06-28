@@ -96,6 +96,11 @@
                   <i class="bi-chevron-right fs-7 me-1"></i> {{ trans('admin.gift') }}
                   </a>
                 </li>
+                <li>
+                <a class="nav-link text-truncate @if (request()->is('panel/admin/settings/diamonts')) text-white @endif" href="{{ url('panel/admin/settings/diamonts') }}">
+                  <i class="bi-chevron-right fs-7 me-1"></i> {{ trans('admin.gift_package') }}
+                  </a>
+                </li>
               </div><!-- /end collapse settings -->
 
               @if (auth()->user()->hasPermission('withdrawals'))

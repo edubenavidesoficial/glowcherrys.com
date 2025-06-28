@@ -28,12 +28,14 @@ use App\Models\StoryFonts;
 use App\Models\Withdrawals;
 use Illuminate\Support\Str;
 use App\Events\NewPostEvent;
+use App\Http\Resources\GiftPackageResource;
 use App\Http\Resources\GiftResource;
 use App\Http\Resources\SliderResource;
 use App\Models\Transactions;
 use Illuminate\Http\Request;
 use App\Models\AdminSettings;
 use App\Models\Gift;
+use App\Models\GiftPackage;
 use App\Models\Notifications;
 use App\Models\Subscriptions;
 use App\Models\ShopCategories;
@@ -422,6 +424,12 @@ class AdminController extends Controller
         $results = Gift::all(); // Obtén las imágenes del slider desde la base de datos
         $gifts = GiftResource::collection($results);
 		return view('admin.gift',['gifts'=>$gifts])->withSettings($this->settings);
+	}
+    public function settingsGiftPackage()
+	{
+        $results = GiftPackage::all(); // Obtén las imágenes del slider desde la base de datos
+        $giftsPackage = GiftPackageResource::collection($results);
+		return view('admin.gift_package',['gifts_packages'=>$giftsPackage])->withSettings($this->settings);
 	}
 
     //<--- END METHOD
