@@ -54,14 +54,12 @@
 												<i class="bi-pencil"></i>
 											</a>
 
-											{!! Form::open([
-												'method' => 'POST',
-												'url' => "panel/admin/states/delete/$state->id",
-												'class' => 'd-inline-block align-top'
-											]) !!}
-
-											{!! Form::button('<i class="bi-trash-fill"></i>', ['class' => 'btn btn-danger rounded-pill btn-sm actionDelete']) !!}
-											{!! Form::close() !!}
+											<form method="POST" action="{{ url('panel/admin/states/delete', $state->id) }}" class="d-inline-block align-top">
+												@csrf
+												<button type="submit" class="btn btn-danger rounded-pill btn-sm actionDelete">
+													<i class="bi-trash-fill"></i>
+												</button>
+											</form>
 											</div>
 										</td>
 

@@ -40,12 +40,12 @@
 
 							<form action="{{ url('panel/admin/members') }}" id="formSort" method="get">
 								<select name="sort" id="sort" class="form-select d-inline-block w-auto filter">
-									<option @if ($sort == '') selected="selected" @endif value="">{{ trans('admin.sort_id') }}</option>
-									<option @if ($sort == 'admins') selected="selected" @endif value="admins">{{ trans('users.admin') }}</option>
-										<option @if ($sort == 'creators') selected="selected" @endif value="creators">{{ trans('general.creators') }}</option>
-									<option @if ($sort == 'email_pending') selected="selected" @endif value="email_pending">{{ trans('general.verification_pending') }} ({{trans('auth.email')}})</option>
-									<option @if ($sort == 'balance') selected="selected" @endif value="balance">{{ trans('general.balance') }}</option>
-									<option @if ($sort == 'wallet') selected="selected" @endif value="wallet">{{ trans('general.wallet') }}</option>
+									<option @if ($sort == '') selected="selected" @endif value="">{{ __('admin.sort_id') }}</option>
+									<option @if ($sort == 'admins') selected="selected" @endif value="admins">{{ __('users.admin') }}</option>
+										<option @if ($sort == 'creators') selected="selected" @endif value="creators">{{ __('general.creators') }}</option>
+									<option @if ($sort == 'email_pending') selected="selected" @endif value="email_pending">{{ __('general.verification_pending') }} ({{__('auth.email')}})</option>
+									<option @if ($sort == 'balance') selected="selected" @endif value="balance">{{ __('general.balance') }}</option>
+									<option @if ($sort == 'wallet') selected="selected" @endif value="wallet">{{ __('general.wallet') }}</option>
 		        		</select>
 							</form><!-- form -->
 
@@ -65,16 +65,17 @@
                @if ($data->total() !=  0 && $data->count() != 0)
                   <tr>
                      <th class="active">ID</th>
-										 <th class="active">{{ trans('auth.full_name') }}</th>
-										 <th class="active">{{ trans('general.balance') }}</th>
-										 <th class="active">{{ trans('general.wallet') }}</th>
-										 <th class="active">{{ trans('general.posts') }}</th>
-										 <th class="active">{{ trans('admin.date') }}</th>
+										 <th class="active">{{ __('auth.full_name') }}</th>
+										 <th class="active">{{ __('general.balance') }}</th>
+										 <th class="active">{{ __('general.wallet') }}</th>
+										 <th class="active">{{ __('general.posts') }}</th>
+										 <th class="active">{{ __('admin.date') }}</th>
+										 <th class="active">{{ __('general.last_login') }}</th>
 										 <th class="active">IP</th>
-										 <th class="active">{{ trans('admin.role') }}</th>
-										 <th class="active">{{ trans('admin.verified') }}</th>
-										 <th class="active">{{ trans('admin.status') }}</th>
-										 <th class="active">{{ trans('admin.actions') }}</th>
+										 <th class="active">{{ __('admin.role') }}</th>
+										 <th class="active">{{ __('admin.verified') }}</th>
+										 <th class="active">{{ __('admin.status') }}</th>
+										 <th class="active">{{ __('admin.actions') }}</th>
                    </tr>
 
                  @foreach ($data as $user)
@@ -90,45 +91,47 @@
                      <td>{{ Helper::amountFormatDecimal($user->wallet)}}</td>
                      <td>{{ $user->updates()->count() }}</td>
                      <td>{{ Helper::formatDate($user->date) }}</td>
-                     <td>{{ $user->ip ? $user->ip : trans('general.no_available') }}</td>
+                     <td>{{ Helper::formatDate($user->last_seen) }}</td>
+                     <td>{{ $user->ip ? $user->ip : __('general.no_available') }}</td>
                      <td>
 											 @if ($user->role == 'admin' && $user->permissions == 'full_access')
- 												<span class="rounded-pill badge bg-primary">{{ trans('general.super_admin') }}</span>
+ 												<span class="rounded-pill badge bg-primary">{{ __('general.super_admin') }}</span>
  											@elseif ($user->role == 'admin' && $user->permissions != 'full_access')
- 													<span class="rounded-pill badge bg-primary">{{ trans('admin.role_admin') }}</span>
+ 													<span class="rounded-pill badge bg-primary">{{ __('admin.role_admin') }}</span>
  											@else
- 												<span class="rounded-pill badge bg-secondary">{{ trans('admin.normal') }}</span>
+ 												<span class="rounded-pill badge bg-secondary">{{ __('admin.normal') }}</span>
  											@endif
                      </td>
 
-										 @php
-
-										 if ($user->verified_id == 'no' ) {
-		                        			$verified    = 'warning';
-		  								$_verified = trans('admin.pending');
-		               } elseif ($user->verified_id == 'yes' ) {
-		                        			$verified = 'success';
-		  								$_verified = trans('admin.verified');
-		                        		} else {
-		                        			$verified = 'danger';
-		  								$_verified = trans('admin.reject');
-		                        		}
-		                   @endphp
+						@php
+							if ($user->verified_id == 'no' ) {
+							$verified    = 'warning';
+							$_verified = __('admin.pending');
+							} elseif ($user->verified_id == 'yes' ) {
+								$verified = 'success';
+							$_verified = __('admin.verified');
+							} else {
+								$verified = 'danger';
+							$_verified = __('admin.reject');
+							}
+						@endphp
 
 		                        <td><span class="rounded-pill badge bg-{{$verified}}">{{ $_verified }}</span></td>
 
                     @php
-
-										if ($user->status == 'pending') {
-					                  $mode    = 'info';
-					                  $_status = trans('admin.pending');
-					                           } elseif ($user->status == 'active') {
-					                  $mode = 'success';
-					                  $_status = trans('admin.active');
-					                           } else {
-					                 $mode = 'warning';
-					                 $_status = trans('admin.suspended');
-                         }
+						if ($user->status == 'pending') {
+						$mode    = 'info';
+						$_status = __('admin.pending');
+						} elseif ($user->status == 'active') {
+						$mode = 'success';
+						$_status = __('admin.active');
+						} elseif ($user->status == 'disabled') {
+						$mode = 'secondary';
+						$_status = __('admin.disabled');
+						} else {
+						$mode = 'warning';
+						$_status = __('admin.suspended');
+                        }
                     @endphp
 
                      <td><span class="rounded-pill badge bg-{{$mode}}">{{ $_status }}</span></td>
@@ -141,14 +144,12 @@
                          <i class="bi-pencil"></i>
                        </a>
 
-                  {!! Form::open([
-                 'method' => 'POST',
-                 'url' => ['panel/admin/members', $user->id],
-                 'id' => 'form'.$user->id,
-                 'class' => 'd-inline-block align-top'
-               ]) !!}
-               {!! Form::button('<i class="bi-trash-fill"></i>', ['data-url' => $user->id, 'class' => 'btn btn-danger rounded-pill btn-sm actionDelete']) !!}
-           {!! Form::close() !!}
+					   <form method="POST" action="{{ url('panel/admin/members', $user->id) }}" id="form{{ $user->id }}" class="d-inline-block align-top">
+						@csrf
+						<button type="submit" data-url="{{ $user->id }}" class="btn btn-danger rounded-pill btn-sm actionDelete">
+							<i class="bi-trash-fill"></i>
+						</button>
+					</form>
 					 </div>
 
         @else
@@ -160,11 +161,11 @@
                    @endforeach
 
 									@else
-										<h5 class="text-center p-5 text-muted fw-light m-0">{{ trans('general.no_results_found') }}
+										<h5 class="text-center p-5 text-muted fw-light m-0">{{ __('general.no_results_found') }}
 
                       @if (isset($query))
                         <div class="d-block w-100 mt-2">
-                          <a href="{{url('panel/admin/members')}}"><i class="bi-arrow-left me-1"></i> {{ trans('auth.back') }}</a>
+                          <a href="{{url('panel/admin/members')}}"><i class="bi-arrow-left me-1"></i> {{ __('auth.back') }}</a>
                         </div>
                       @endif
                     </h5>
@@ -177,7 +178,7 @@
 				 </div><!-- card-body -->
  			</div><!-- card  -->
 
-			@if ($data->lastPage() > 1)
+		@if ($data->lastPage() > 1)
 			{{ $data->appends(['q' => $query, 'sort' => $sort])->onEachSide(0)->links() }}
 		@endif
  		</div><!-- col-lg-12 -->

@@ -3,8 +3,8 @@
 @section('title') {{auth()->user()->verified_id == 'yes' ? trans('general.edit_my_page') : trans('users.edit_profile')}} -@endsection
 
 @section('css')
-  <link rel="stylesheet" href="{{ asset('/plugins/datepicker/datepicker3.css') }}" rel="stylesheet" type="text/css">
-  <link href="{{ asset('/plugins/select2/select2.min.css') }}?v={{$settings->version}}" rel="stylesheet" type="text/css" />
+  <link rel="stylesheet" href="{{ asset('public/plugins/datepicker/datepicker3.css') }}" rel="stylesheet" type="text/css">
+  <link href="{{ asset('public/plugins/select2/select2.min.css') }}?v={{$settings->version}}" rel="stylesheet" type="text/css" />
 @endsection
 
 @section('content')
@@ -12,7 +12,7 @@
     <div class="container">
       <div class="row justify-content-center text-center mb-sm">
         <div class="col-lg-8 py-5">
-          <h2 class="mb-0 font-montserrat"><i class="bi bi-pencil mr-2"></i> {{ auth()->user()->verified_id == 'yes' ? trans('general.edit_my_page') : trans('users.edit_profile')}}</h2>
+          <h2 class="mb-0 font-montserrat"><i class="bi-pencil mr-2"></i> {{ auth()->user()->verified_id == 'yes' ? trans('general.edit_my_page') : trans('users.edit_profile')}}</h2>
           <p class="lead text-muted mt-0">{{trans('users.settings_page_desc')}}</p>
         </div>
       </div>
@@ -226,7 +226,7 @@
                     <div class="col-md-6">
                         <div class="input-group mb-4">
                           <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="fab fa-twitter"></i></span>
+                            <span class="input-group-text"><i class="bi-twitter-x"></i></span>
                           </div>
                           <input class="form-control" name="twitter" placeholder="https://twitter.com/username"  value="{{auth()->user()->twitter}}" type="text">
                         </div>
@@ -277,7 +277,7 @@
                                 <div class="col-md-6">
                                     <div class="input-group mb-4">
                                       <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="bi bi-snapchat"></i></span>
+                                        <span class="input-group-text"><i class="bi-snapchat"></i></span>
                                       </div>
                                       <input class="form-control" name="snapchat" placeholder="https://www.snapchat.com/add/username"  value="{{auth()->user()->snapchat}}" type="text">
                                     </div>
@@ -286,7 +286,7 @@
                                   <div class="col-md-6">
                                       <div class="input-group mb-4">
                                         <div class="input-group-prepend">
-                                          <span class="input-group-text"><i class="bi bi-tiktok"></i></span>
+                                          <span class="input-group-text"><i class="bi-tiktok"></i></span>
                                         </div>
                                         <input class="form-control" name="tiktok" placeholder="https://www.tiktok.com/@username"  value="{{auth()->user()->tiktok}}" type="text">
                                       </div>
@@ -297,7 +297,7 @@
                                   <div class="col-md-6">
                                       <div class="input-group mb-4">
                                         <div class="input-group-prepend">
-                                          <span class="input-group-text"><i class="bi bi-telegram"></i></span>
+                                          <span class="input-group-text"><i class="bi-telegram"></i></span>
                                         </div>
                                         <input class="form-control" name="telegram" placeholder="https://t.me/username"  value="{{auth()->user()->telegram}}" type="text">
                                       </div>
@@ -306,7 +306,7 @@
                                     <div class="col-md-6">
                                         <div class="input-group mb-4">
                                           <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="bi bi-twitch"></i></span>
+                                            <span class="input-group-text"><i class="bi-twitch"></i></span>
                                           </div>
                                           <input class="form-control" name="twitch" placeholder="https://www.twitch.tv/username"  value="{{auth()->user()->twitch}}" type="text">
                                         </div>
@@ -317,7 +317,7 @@
                                     <div class="col-md-6">
                                         <div class="input-group mb-4">
                                           <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="bi bi-discord"></i></span>
+                                            <span class="input-group-text"><i class="bi-discord"></i></span>
                                           </div>
                                           <input class="form-control" name="discord" placeholder="https://discord.gg/username"  value="{{auth()->user()->discord}}" type="text">
                                         </div>
@@ -337,7 +337,7 @@
                                       <div class="col-md-6">
                                           <div class="input-group mb-4">
                                             <div class="input-group-prepend">
-                                              <span class="input-group-text"><i class="bi bi-reddit"></i></span>
+                                              <span class="input-group-text"><i class="bi-reddit"></i></span>
                                             </div>
                                             <input class="form-control" name="reddit" placeholder="https://reddit.com/user/username"  value="{{auth()->user()->reddit}}" type="text">
                                           </div>
@@ -346,12 +346,32 @@
                                         <div class="col-md-6">
                                             <div class="input-group mb-4">
                                               <div class="input-group-prepend">
-                                                <span class="input-group-text"><i class="bi bi-spotify"></i></span>
+                                                <span class="input-group-text"><i class="bi-spotify"></i></span>
                                               </div>
                                               <input class="form-control" name="spotify" placeholder="https://spotify.com/username"  value="{{auth()->user()->spotify}}" type="text">
                                             </div>
                                           </div><!-- ./col-md-6 -->
+
+                                          <div class="col-md-6">
+                                            <div class="input-group mb-4">
+                                              <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="bi-threads"></i></span>
+                                              </div>
+                                              <input class="form-control" name="threads" placeholder="https://threads.net/username"  value="{{auth()->user()->threads}}" type="text">
+                                            </div>
+                                          </div><!-- ./col-md-6 -->
+
+                                          <div class="col-md-6">
+                                            <div class="input-group mb-4">
+                                              <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="fab fa-kickstarter"></i></span>
+                                              </div>
+                                              <input class="form-control" name="kick" placeholder="https://kick.com/username"  value="{{auth()->user()->kick}}" type="text">
+                                            </div>
+                                          </div><!-- ./col-md-6 -->
                                     </div><!-- End Row Form Group -->
+
+                                    
 
                           <div class="form-group">
                             <label class="w-100"><i class="fa fa-bullhorn text-muted"></i> {{trans('users.your_story')}} *
@@ -379,13 +399,13 @@
 @endsection
 
 @section('javascript')
-  <script src="{{ asset('/plugins/datepicker/bootstrap-datepicker.js') }}"></script>
+  <script src="{{ asset('public/plugins/datepicker/bootstrap-datepicker.js') }}"></script>
   @if (config('app.locale') != 'en')
-    <script src="{{ asset('/plugins/datepicker/locales/bootstrap-datepicker.'.config('app.locale').'.js') }}"></script>
+    <script src="{{ asset('public/plugins/datepicker/locales/bootstrap-datepicker.'.config('app.locale').'.js') }}"></script>
   @endif
 
-  <script src="{{ asset('/plugins/select2/select2.full.min.js') }}" type="text/javascript"></script>
-  <script src="{{ asset('/plugins/select2/i18n/'.config('app.locale').'.js') }}" type="text/javascript"></script>
+  <script src="{{ asset('public/plugins/select2/select2.full.min.js') }}" type="text/javascript"></script>
+  <script src="{{ asset('public/plugins/select2/i18n/'.config('app.locale').'.js') }}" type="text/javascript"></script>
 
 <script type="text/javascript">
 

@@ -22,13 +22,13 @@
                @if ($data->total() !=  0 && $data->count() != 0)
                   <tr>
                      <th class="active">ID</th>
-										 <th class="active">{{ trans('general.item') }}</th>
-										 <th class="active">{{ trans('general.creator') }}</th>
-										 <th class="active">{{trans('admin.type')}}</th>
-										 <th class="active">{{trans('general.price')}}</th>
-										 <th class="active">{{trans('general.sales')}}</th>
-										 <th class="active">{{ trans('admin.date') }}</th>
-										 <th class="active">{{ trans('admin.actions') }}</th>
+										 <th class="active">{{ __('general.item') }}</th>
+										 <th class="active">{{ __('general.creator') }}</th>
+										 <th class="active">{{__('admin.type')}}</th>
+										 <th class="active">{{__('general.price')}}</th>
+										 <th class="active">{{__('general.sales')}}</th>
+										 <th class="active">{{ __('admin.date') }}</th>
+										 <th class="active">{{ __('admin.actions') }}</th>
                    </tr>
 
                  @foreach ($data as $product)
@@ -45,31 +45,29 @@
 												 {{$product->user()->name}} <i class="fa fa-external-link-alt"></i>
 											 </a>
 										 @else
-											 <em>{{ trans('general.no_available') }}</em>
+											 <em>{{ __('general.no_available') }}</em>
 										 @endif
 										 </td>
-										 <td>{!! $product->type == 'digital' ? '<a href="'.url('product/download', $product->id).'">'. __('general.digital_download').'</a>' : (($product->type == 'physical') ? __('general.physical_products') : __('general.custom_content')) !!}</td>
+										 <td>{!! $product->type == 'digital' ? '<a href="'.url('product/download', $product->id).'"><i class="bi-download me-1"></i> '. __('general.digital_download').'</a>' : (($product->type == 'physical') ? __('general.physical_products') : __('general.custom_content')) !!}</td>
 
 										 <td>{{ Helper::amountFormatDecimal($product->price) }}</td>
 										 <td>{{ $product->purchases->count() }}</td>
 										 <td>{{date($settings->date_format, strtotime($product->created_at))}}</td>
 
 										 <td>
-											 {!! Form::open([
-												 'method' => 'POST',
-												 'url' => url('panel/admin/product/delete', $product->id),
-												 'class' => 'displayInline'
-											 ]) !!}
-
-											 {!! Form::button('<i class="bi-trash-fill"></i>', ['class' => 'btn btn-danger rounded-pill btn-sm actionDelete']) !!}
-											 {!! Form::close() !!}
+											<form method="POST" action="{{ url('panel/admin/product/delete', $product->id) }}" class="displayInline">
+												@csrf
+												<button type="submit" class="btn btn-danger rounded-pill btn-sm actionDelete">
+													<i class="bi-trash-fill"></i>
+												</button>
+											</form>
 										 </td>
 
 									 </tr><!-- /.TR -->
                    @endforeach
 
 									@else
-										<h5 class="text-center p-5 text-muted fw-light m-0">{{ trans('general.no_results_found') }}</h5>
+										<h5 class="text-center p-5 text-muted fw-light m-0">{{ __('general.no_results_found') }}</h5>
 									@endif
 
 								</tbody>

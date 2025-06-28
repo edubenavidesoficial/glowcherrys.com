@@ -53,14 +53,12 @@
 
                    @if ($data->count() != 1)
 
-                     {!! Form::open([
-                    'method' => 'POST',
-                    'url' => url('panel/admin/languages', $lang->id),
-                    'id' => 'form'.$lang->id,
-                    'class' => 'd-inline-block align-top'
-                  ]) !!}
-                  {!! Form::button('<i class="bi-trash-fill"></i>', ['data-url' => $lang->id, 'class' => 'btn btn-danger rounded-pill btn-sm actionDelete']) !!}
-              {!! Form::close() !!}
+                   <form method="POST" action="{{ url('panel/admin/languages', $lang->id) }}" id="form{{ $lang->id }}" class="d-inline-block align-top">
+                    @csrf
+                    <button type="submit" data-url="{{ $lang->id }}" class="btn btn-danger rounded-pill btn-sm actionDelete">
+                        <i class="bi-trash-fill"></i>
+                    </button>
+                </form>
                     @endif
 
                   </td>

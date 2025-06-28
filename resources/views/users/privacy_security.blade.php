@@ -38,23 +38,27 @@
 
                   @if ($currentSession)
                   <p class="card-text mb-4 border-bottom pb-2">
-                    <i class="bi-{{ $currentSession->device_type == 'phone' ? 'phone' : 'laptop' }} mr-1"></i> 
-                    <strong>{{ $currentSession->browser }}, {{ $currentSession->platform }}{{ $currentSession->device_type == 'phone' ? ', '.$currentSession->device : null }}</strong> -  <small class="timeAgo text-muted mr-2" data="{{date('c', strtotime($currentSession->updated_at))}}"></small> 
+                    <i class="bi-{{ $currentSession->device_type == 'phone' ? 'phone' : 'display' }} mr-1"></i> 
+                    <strong>{{ $currentSession->getNameBrowser() }} {{ __('general.on') }} {{ $currentSession->getNamePlatform() }}{{ $currentSession->device_type == 'phone' ? ', '.$currentSession->device : null }}</strong>
                   <span class="badge badge-pill badge-success">{{ __('general.active_now') }}</span>
 
-                  <small class="text-muted w-100 d-block mt-2 mb-0">{{ $currentSession->ip }} {{ $currentSession->country ? ' - '.$currentSession->country : null }}</small> 
+                  <small class="text-muted w-100 d-block mt-2 mb-0">
+                    {{ $currentSession->ip }} - {{ $currentSession->country ? $currentSession->country.' - ' : null }} <span class="timeAgo" data="{{date('c', strtotime($currentSession->updated_at))}}"></span> 
+                  </small> 
                   </p>
                   @endif
                   
                   @foreach ($agents as $agent)
                   <p class="card-text mb-1">
-                    <i class="bi-{{ $agent->device_type == 'phone' ? 'phone' : 'laptop' }} mr-1"></i> 
-                    <strong>{{ $agent->browser }}, {{ $agent->platform }}{{ $agent->device_type == 'phone' ? ', '.$agent->device : null }}</strong> -  <small class="timeAgo text-muted mr-2" data="{{date('c', strtotime($agent->updated_at))}}"></small> 
+                    <i class="bi-{{ $agent->device_type == 'phone' ? 'phone' : 'display' }} mr-1"></i> 
+                    <strong>{{ $agent->getNameBrowser() }} {{ __('general.on') }}  {{ $agent->getNamePlatform() }} {{ $agent->device_type == 'phone' ? ', '.$agent->device : null }}</strong> 
                   </p>
-                  <small class="text-muted w-100 d-block mb-2">{{ $agent->ip }} {{ $agent->country ? ' - '.$agent->country : null }}</small> 
+                  <small class="text-muted w-100 d-block mb-2">
+                    {{ $agent->ip }} - {{ $agent->country ? $agent->country.' - ' : null }} <span class="timeAgo" data="{{date('c', strtotime($agent->updated_at))}}"></span> 
+                  </small> 
                   @endforeach
                 
-                  <small class="text-muted w-100 d-block mt-3">* {{ __('general.login_session_alert') }}</small> 
+                  <small class="text-muted w-100 d-block my-3 font-weight-bold"> <i class="bi-exclamation-triangle mr-1"></i> {{ __('general.login_session_alert') }}</small> 
 
                   @if ($agents->count() != 0)
                   <a href="#" class="btn btn-sm btn-danger mt-2" data-toggle="modal" data-target="#logoutDevices">
@@ -72,7 +76,6 @@
               </div>
 
           @if (auth()->user()->verified_id == 'yes')
-
             <h5>{{ __('general.privacy') }}</h5>
 
             <form method="POST" action="{{ url('privacy/security') }}">
@@ -129,6 +132,13 @@
                   </div>
                 </div>
 
+                <div class="btn-block mb-4">
+                  <div class="custom-control custom-switch custom-switch-lg">
+                    <input type="checkbox" class="custom-control-input" name="allow_comments" value="1" @checked(auth()->user()->allow_comments) id="allow_comments">
+                    <label class="custom-control-label switch" for="allow_comments">{{ __('general.allow_comments') }}</label>
+                  </div>
+                </div>
+
                 <h5 class="mt-5">{{ __('general.security') }}</h5>
 
                 <div class="btn-block mb-4">
@@ -156,10 +166,55 @@
               <i class="feather icon-user-x mr-1"></i> {{ __('general.delete_account') }}</small>
             </a>
           </div>
+
+            @if (auth()->user()->verified_id == 'yes' && auth()->user()->free_subscription == 'yes' && $settings->allow_creators_deactivate_profile)
+            <h5 class="mt-5">{{ __('general.deactivate_your_account') }}</h5>
+            <small class="w-100">{{ __('general.deactivate_your_account_alert') }}</small>
+
+            <div class="w-100 d-block mt-2 mb-5">
+              <form action="{{ route('deactivate.account') }}" method="POST">
+                @csrf
+                <button class="btn btn-main btn-warning pr-3 pl-3" id="actionDeactivate">
+                  <i class="bi-person-slash mr-1"></i> {{ __('general.deactivate_your_account') }}</small>
+                </button>
+              </form>
+              
+            </div>
+          @endif
         @endif
 
         </div><!-- end col-md-6 -->
       </div>
     </div>
   </section>
+@endsection
+
+@section('javascript')
+<script type="text/javascript">
+    $("#actionDeactivate").on('click', function (e) {
+		e.preventDefault();
+
+		var element = $(this);
+		var form = $(element).parents('form');
+
+		element.blur();
+
+		swal(
+			{
+				title: delete_confirm,
+				type: "warning",
+				showLoaderOnConfirm: true,
+				showCancelButton: true,
+				confirmButtonColor: "#ffc107",
+				confirmButtonText: "{{ __('general.yes_confirm_deactivate') }}",
+				cancelButtonText: cancel_confirm,
+				closeOnConfirm: false,
+			},
+			function (isConfirm) {
+				if (isConfirm) {
+					form.submit();
+				}
+			});
+	});
+</script>
 @endsection

@@ -1,32 +1,44 @@
-<link href="{{ asset('/css/core.min.css') }}?v={{$settings->version}}" rel="stylesheet">
-<link href="{{ asset('/css/feather.css') }}" rel="stylesheet">
-<link href="{{ asset('/css/bootstrap-icons.css') }}?v={{$settings->version}}" rel="stylesheet">
-<link href="{{ asset('/css/icomoon.css') }}" rel="stylesheet">
+<link href="{{ asset('public/css/core.min.css') }}?v={{$settings->version}}" rel="stylesheet">
+<link href="{{ asset('public/css/feather.css') }}" rel="stylesheet">
+<link href="{{ asset('public/css/bootstrap-icons.css') }}?v={{$settings->version}}" rel="stylesheet">
+<link href="{{ asset('public/css/icomoon.css') }}" rel="stylesheet">
 
 @if (auth()->check() && auth()->user()->dark_mode == 'on')
-<link href="{{ asset('/css/bootstrap-dark.min.css') }}" rel="stylesheet">
+<link href="{{ asset('public/css/bootstrap-dark.min.css') }}" rel="stylesheet">
 @else
-<link href="{{ asset('/css/bootstrap.min.css') }}" rel="stylesheet">
+<link href="{{ asset('public/css/bootstrap.min.css') }}" rel="stylesheet">
 @endif
 
-<link href="{{ asset('/css/styles.css') }}?v={{$settings->version}}" rel="stylesheet">
-<link href="{{ asset('/js/plyr/plyr.css')}}?v={{$settings->version}}" rel="stylesheet" type="text/css" />
+<link href="{{ asset('public/css/styles.css') }}?v={{$settings->version}}" rel="stylesheet">
+<link href="{{ asset('public/js/plyr/plyr.css')}}?v={{$settings->version}}" rel="stylesheet" type="text/css" />
 
 @auth
-<link href="{{ asset('/js/fileuploader/font/font-fileuploader.css')}}" media="all" rel="stylesheet" type="text/css" />
-<link href="{{ asset('/js/fileuploader/jquery.fileuploader.min.css')}}" media="all" rel="stylesheet" type="text/css" />
-<link href="{{ asset('/js/fileuploader/jquery.fileuploader-theme-thumbnails.css')}}" media="all" rel="stylesheet" type="text/css" />
-<link href="{{ asset('/js/fileuploader/jquery.fileuploader-theme-dragdrop.css')}}" media="all" rel="stylesheet" type="text/css" />
+<link href="{{ asset('public/js/fileuploader/font/font-fileuploader.css')}}" media="all" rel="stylesheet" type="text/css" />
+<link href="{{ asset('public/js/fileuploader/jquery.fileuploader.min.css')}}" media="all" rel="stylesheet" type="text/css" />
+<link href="{{ asset('public/js/fileuploader/jquery.fileuploader-theme-thumbnails.css')}}" media="all" rel="stylesheet" type="text/css" />
+<link href="{{ asset('public/js/fileuploader/jquery.fileuploader-theme-dragdrop.css')}}" media="all" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="{{ asset('public/js/reels/reels.css') }}?v={{$settings->version}}">
 
-<link href="{{ asset('/js/jquery-ui/jquery-ui.min.css')}}" media="all" rel="stylesheet" type="text/css" />
+<link href="{{ asset('public/js/jquery-ui/jquery-ui.min.css')}}" media="all" rel="stylesheet" type="text/css" />
 
 @if (request()->path() == '/' && $settings->story_status)
-<link href="{{ asset('/js/story/zuck.min.css')}}?v={{$settings->version}}" rel="stylesheet" type="text/css" />
-<link href="{{ asset('/js/story/snapssenger.css')}}?v={{$settings->version}}" rel="stylesheet" type="text/css" />
+<link href="{{ asset('public/js/story/zuck.min.css')}}?v={{$settings->version}}" rel="stylesheet" type="text/css" />
+<link href="{{ asset('public/js/story/snapssenger.css')}}?v={{$settings->version}}" rel="stylesheet" type="text/css" />
 @endif
 
 @if (request()->path() == '/' && $settings->story_status && $fonts || request()->is('create/story/text') && $settings->story_status && $fonts)
 <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family={{$fonts}}">
+@endif
+
+@if ($settings->websockets)
+<script src="https://js.pusher.com/8.3.0/pusher.min.js"></script>
+<script>
+  window.pusher =
+  {
+    "cluster": "{{ config('broadcasting.connections.pusher.options.cluster') }}",
+    "key": "{{ config('broadcasting.connections.pusher.key') }}"
+};
+</script>
 @endif
 
 @if ($settings->push_notification_status)
@@ -74,9 +86,9 @@
  
 
   OneSignal.push(function () {
-        OneSignal.SERVICE_WORKER_PARAM = { scope: '//js/' };
-        OneSignal.SERVICE_WORKER_PATH = '/js/OneSignalSDKWorker.js'
-        OneSignal.SERVICE_WORKER_UPDATER_PATH = '/js/OneSignalSDKWorker.js'
+        OneSignal.SERVICE_WORKER_PARAM = { scope: '/public/js/' };
+        OneSignal.SERVICE_WORKER_PATH = 'public/js/OneSignalSDKWorker.js'
+        OneSignal.SERVICE_WORKER_UPDATER_PATH = 'public/js/OneSignalSDKWorker.js'
         OneSignal.init(initConfig);
 
         OneSignal.showSlidedownPrompt();
@@ -128,31 +140,32 @@
 <script type="text/javascript">
 // Global variables
   var URL_BASE = "{{ url('/') }}";
-  var lang = '{{ auth()->user()->language ?? session('locale') }}';
+  var urlPreviousPage = "{{ !Helper::isPreviousUrlReelsSection() ? url()->previous() : url('/') }}";
+  var lang = '{{ isset(auth()->user()->language) && !empty(auth()->user()->language) ? auth()->user()->language : session('locale') }}';
   var _title = '@section("title")@show {{e($settings->title).' - '.__('seo.slogan')}}';
   var session_status = "{{ auth()->check() ? 'on' : 'off' }}";
-  var ReadMore = "{{trans('general.view_all')}}";
-  var copiedSuccess = "{{trans('general.copied_success')}}";
-  var copied = "{{trans('general.copied')}}";
-  var copy_link = "{{trans('general.copy_link')}}";
-  var loading = "{{trans('general.loading')}}";
-  var please_wait = "{{trans('general.please_wait')}}";
-  var error_occurred = "{{trans('general.error')}}";
-  var error_oops = "{{ trans('general.error_oops') }}";
-  var error_reload_page = "{{ trans('general.error_reload_page') }}";
-  var ok = "{{trans('users.ok')}}";
+  var ReadMore = "{{__('general.view_all')}}";
+  var copiedSuccess = "{{__('general.copied_success')}}";
+  var copied = "{{__('general.copied')}}";
+  var copy_link = "{{__('general.copy_link')}}";
+  var loading = "{{__('general.loading')}}";
+  var please_wait = "{{__('general.please_wait')}}";
+  var error_occurred = "{{__('general.error')}}";
+  var error_oops = "{{ __('general.error_oops') }}";
+  var error_reload_page = "{{ __('general.error_reload_page') }}";
+  var ok = "{{__('users.ok')}}";
   var user_count_carousel = @if (auth()->guest() && request()->path() == '/' && config('settings.home_style') == 0) {{$users->count()}}@else 0 @endif;
-  var no_results_found = "{{trans('general.no_results_found')}}";
-  var no_results = "{{trans('general.no_results')}}";
-  var no_one_seen_story_yet =  "{{trans('general.no_one_seen_story_yet')}}";
+  var no_results_found = "{{__('general.no_results_found')}}";
+  var no_results = "{{__('general.no_results')}}";
+  var no_one_seen_story_yet =  "{{__('general.no_one_seen_story_yet')}}";
   var is_profile = {{ request()->route()->named('profile') ? 'true' : 'false' }};
   var error_scrollelement = false;
   var captcha = {{ $settings->captcha == 'on' ? 'true' : 'false' }};
   var alert_adult = {{ $settings->alert_adult == 'on' ? 'true' : 'false' }};
-  var error_internet_disconnected = "{{ trans('general.error_internet_disconnected') }}";
+  var error_internet_disconnected = "{{ __('general.error_internet_disconnected') }}";
   var announcement_cookie = "{{$settings->announcement_cookie}}";
-  var resend_code = "{{ trans('general.resend_code') }}";
-  var resending_code = "{{ trans('general.resending_code') }}";
+  var resend_code = "{{ __('general.resend_code') }}";
+  var resending_code = "{{ __('general.resending_code') }}";
   var query = "{{strlen(request()->get('q')) > 2 ? trim(str_replace('#', '%23', request()->get('q'))) : false}}";
   var sortBy = "{{ in_array(request()->get('sort'), ['oldest', 'unlockable', 'free']) ? trim(request()->get('sort')) : false}}";
   var login_continue = "{{ __('general.login_continue') }}";
@@ -161,71 +174,72 @@
   var sign_up_with = "{{ __('auth.sign_up_with') }}";
   var currentPage = "{!! url()->full() !!}";
   var requestGender = {{ request()->get('gender') ? 'true' : 'false' }};
-@auth
   var is_bookmarks = {{ request()->is('my/bookmarks') ? 'true' : 'false' }};
   var is_likes = {{ request()->is('my/likes') ? 'true' : 'false' }};
   var is_purchases = {{ request()->is('my/purchases') ? 'true' : 'false' }};
+  var is_explore = {{ request()->is(['/']) && config('settings.home_style') == 2 && auth()->guest() || request()->is(['explore']) ? 'true' : 'false' }};
+
+@auth
   var isMessageChat = {{ request()->is('messages/*') ? 'true' : 'false' }};
-  var delete_confirm = "{{trans('general.delete_confirm')}}";
-  var confirm_delete_comment = "{{trans('general.confirm_delete_comment')}}";
-  var confirm_delete_update = "{{trans('general.confirm_delete_update')}}";
-  var yes_confirm = "{{trans('general.yes_confirm')}}";
-  var cancel_confirm = "{{trans('general.cancel_confirm')}}";
-  var formats_available = "{{trans('general.formats_available')}}";
-  var formats_available_images = "{{trans('general.formats_available_images')}}";
-  var formats_available_verification = "{{trans('general.formats_available_verification_form_w9', ['formats' => 'JPG, PNG, GIF'])}}";
+  var delete_confirm = "{{__('general.delete_confirm')}}";
+  var confirm_delete_comment = "{{__('general.confirm_delete_comment')}}";
+  var confirm_delete_update = "{{__('general.confirm_delete_update')}}";
+  var yes_confirm = "{{__('general.yes_confirm')}}";
+  var cancel_confirm = "{{__('general.cancel_confirm')}}";
+  var formats_available = "{{__('general.formats_available')}}";
+  var formats_available_images = "{{__('general.formats_available_images')}}";
+  var formats_available_verification = "{{__('general.formats_available_verification_form_w9', ['formats' => 'JPG, PNG, GIF'])}}";
   var file_size_allowed = {{$settings->file_size_allowed * 1024}};
-  var max_size_id = "{{trans('general.max_size_id').' '.Helper::formatBytes($settings->file_size_allowed * 1024)}}";
-  var max_size_id_lang = "{{trans('general.max_size_id').' '.Helper::formatBytes($settings->file_size_allowed_verify_account * 1024)}}";
+  var max_size_id = "{{__('general.max_size_id').' '.Helper::formatBytes($settings->file_size_allowed * 1024)}}";
+  var max_size_id_lang = "{{__('general.max_size_id').' '.Helper::formatBytes($settings->file_size_allowed_verify_account * 1024)}}";
   var maxSizeInMb = "{{ floor($settings->file_size_allowed / 1024)}}";
   var file_size_allowed_verify_account = {{$settings->file_size_allowed_verify_account * 1024}};
-  var error_width_min = "{{trans('general.width_min',['data' => 20])}}";
+  var error_width_min = "{{__('general.width_min',['data' => 20])}}";
   var story_length = {{$settings->story_length}};
-  var payment_card_error = "{{ trans('general.payment_card_error') }}";
-  var confirm_delete_message = "{{trans('general.confirm_delete_message')}}";
-  var confirm_delete_conversation = "{{trans('general.confirm_delete_conversation')}}";
-  var confirm_cancel_subscription = "{!!trans('general.confirm_cancel_subscription')!!}";
-  var yes_confirm_cancel = "{{trans('general.yes_confirm_cancel')}}";
-  var confirm_delete_notifications = "{{trans('general.confirm_delete_notifications')}}";
-  var confirm_delete_withdrawal = "{{trans('general.confirm_delete_withdrawal')}}";
-  var change_cover = "{{trans('general.change_cover')}}";
-  var pin_to_your_profile = "{{trans('general.pin_to_your_profile')}}";
-  var unpin_from_profile = "{{trans('general.unpin_from_profile')}}";
-  var post_pinned_success = "{{trans('general.post_pinned_success')}}";
-  var post_unpinned_success = "{{trans('general.post_unpinned_success')}}";
+  var payment_card_error = "{{ __('general.payment_card_error') }}";
+  var confirm_delete_message = "{{__('general.confirm_delete_message')}}";
+  var confirm_delete_conversation = "{{__('general.confirm_delete_conversation')}}";
+  var confirm_cancel_subscription = "{!!__('general.confirm_cancel_subscription')!!}";
+  var yes_confirm_cancel = "{{__('general.yes_confirm_cancel')}}";
+  var confirm_delete_notifications = "{{__('general.confirm_delete_notifications')}}";
+  var confirm_delete_withdrawal = "{{__('general.confirm_delete_withdrawal')}}";
+  var change_cover = "{{__('general.change_cover')}}";
+  var pin_to_your_profile = "{{__('general.pin_to_your_profile')}}";
+  var unpin_from_profile = "{{__('general.unpin_from_profile')}}";
+  var post_pinned_success = "{{__('general.post_pinned_success')}}";
+  var post_unpinned_success = "{{__('general.post_unpinned_success')}}";
   var stripeKey = "{{ PaymentGateways::where('id', 2)->where('enabled', '1')->whereSubscription('yes')->first() ? env('STRIPE_KEY') : false }}";
   var stripeKeyWallet = "{{ PaymentGateways::where('id', 2)->where('enabled', '1')->first() ? env('STRIPE_KEY') : false }}";
-  var thanks = "{{ trans('general.thanks') }}";
-  var tip_sent_success = "{{ trans('general.tip_sent_success') }}";
-  var error_payment_stripe_3d = "{{ trans('general.error_payment_stripe_3d') }}";
+  var thanks = "{{ __('general.thanks') }}";
+  var tip_sent_success = "{{ __('general.tip_sent_success') }}";
+  var error_payment_stripe_3d = "{{ __('general.error_payment_stripe_3d') }}";
   var colorStripe = {!! auth()->user()->dark_mode == 'on' ? "'#dcdcdc'" : "'#32325d'" !!};
   var full_name_user = '{{ auth()->user()->name }}';
   var color_default = '{{ $settings->color_default }}';
-  var formats_available_upload_file = "{{trans('general.formats_available_upload_file')}}";
-  var cancel_subscription = "{{trans('general.unsubscribe')}}";
-  var your_subscribed = "{{trans('general.your_subscribed')}}";
-  var subscription_expire = "{{trans('general.subscription_expire')}}";
-  var formats_available_verification_form_w9 = "{{trans('general.formats_available_verification_form_w9', ['formats' => 'PDF'])}}";
-  var payment_was_successful = "{{trans('general.payment_was_successful')}}";
-  var public_post = "{{trans('general.public')}}";
-  var locked_post = "{{trans('users.content_locked')}}";
+  var formats_available_upload_file = "{{__('general.formats_available_upload_file')}}";
+  var cancel_subscription = "{{__('general.unsubscribe')}}";
+  var your_subscribed = "{{__('general.your_subscribed')}}";
+  var subscription_expire = "{{__('general.subscription_expire')}}";
+  var formats_available_verification_form_w9 = "{{__('general.formats_available_verification_form_w9', ['formats' => 'PDF'])}}";
+  var payment_was_successful = "{{__('general.payment_was_successful')}}";
+  var public_post = "{{__('general.public')}}";
+  var locked_post = "{{__('users.content_locked')}}";
   var maximum_files_post = {{$settings->maximum_files_post}};
   var maximum_files_msg = {{$settings->maximum_files_msg}};
-  var great = "{{trans('general.great')}}";
-  var msg_success_sent_all_subscribers = "{{trans('general.msg_success_sent_all_subscribers')}}";
-  var is_explore = {{ request()->is('explore') ? 'true' : 'false' }};
-  var video_on_way = "{{trans('general.video_on_way')}}";
-  var story_on_way = "{{trans('general.story_on_way')}}";
-  var video_processed_info = "{{trans('general.video_processed_info')}}";
-  var confirm_end_live = "{{trans('general.confirm_end_live')}}";
-  var yes_confirm_end_live = "{{trans('general.yes_confirm_end_live')}}";
+  var great = "{{__('general.great')}}";
+  var msg_success_sent_all_subscribers = "{{__('general.msg_success_sent_all_subscribers')}}";
+  var video_on_way = "{{__('general.video_on_way')}}";
+  var story_on_way = "{{__('general.story_on_way')}}";
+  var video_processed_info = "{{__('general.video_processed_info')}}";
+  var confirm_end_live = "{{__('general.confirm_end_live')}}";
+  var yes_confirm_end_live = "{{__('general.yes_confirm_end_live')}}";
   var liveMode = false;
   var min_width_height_image = {{ $settings->min_width_height_image }};
-  var min_width_image_error = '{{ trans('general.width_min', ['data' => $settings->min_width_height_image]) }}';
-  var decimalZero = {{ $settings->currency_code == 'JPY' ? 0 : 2 }};
-  var confirm_exit_live = "{{trans('general.confirm_exit_live')}}";
-  var yes_confirm_exit_live = "{{trans('general.yes_confirm_exit_live')}}";
-  var purchase_processed_shortly = "{{trans('general.purchase_processed_shortly')}}";
+  var min_width_image_error = '{{ __('general.width_min', ['data' => $settings->min_width_height_image]) }}';
+  var decimalZero = {{ in_array(config('settings.currency_code'), config('currencies.zero-decimal')) ? 0 : 2 }};
+  var confirm_exit_live = "{{__('general.confirm_exit_live')}}";
+  var yes_confirm_exit_live = "{{__('general.yes_confirm_exit_live')}}";
+  var purchase_processed_shortly = "{{__('general.purchase_processed_shortly')}}";
   var confirm_reject_order = "{{ __('general.confirm_reject_order') }}";
   var reject_order = "{{ __('general.reject_order') }}";
   var action_cannot_reversed = "{{ __('general.action_cannot_reversed') }}";
@@ -238,10 +252,63 @@
   @if ($settings->video_encoding == 'off')
   var extensionsPostMessage = ['png','jpeg','jpg','gif','ief','video/mp4','audio/x-matroska','audio/mpeg'];
   var extensionsStories = ['png','jpeg','jpg','gif','ief','video/mp4','audio/x-matroska','audio/mpeg'];
+  var extensionsReels = ['video/mp4'];
   @else
   var extensionsPostMessage = ['png','jpeg','jpg','gif','ief','video/mp4','video/quicktime','video/3gpp','video/mpeg','video/x-matroska','video/x-ms-wmv','video/vnd.avi','video/avi','video/x-flv','audio/x-matroska','audio/mpeg'];
   var extensionsStories = ['png','jpeg','jpg','gif','ief','video/mp4','video/quicktime','video/3gpp','video/mpeg','video/x-matroska','video/x-ms-wmv','video/vnd.avi','video/avi','video/x-flv'];
+  var extensionsReels = ['video/mp4','video/quicktime','video/3gpp','video/mpeg','video/x-matroska','video/x-ms-wmv','video/vnd.avi','video/avi','video/x-flv'];
   @endif
+  var errorStoryMaxVideosLength = "{{ __('general.error_story_max_videos_length', ['length' => $settings->story_max_videos_length]) }}";
+  var errorReelMaxVideosLength = "{{ __('general.error_story_max_videos_length', ['length' => 60]) }}";
+  var storyMaxVideosLength = {{ $settings->story_max_videos_length }};
+  var confirm_delete_image_cover = "{{ __('general.confirm_delete_image_cover') }}";
+  var at = "{{ __('general.at') }}";
+  var publish = "{{ __('general.publish') }}";
+  var schedule = "{{ __('general.schedule') }}";
+  var reject_request = "{{ __('general.reject_request') }}";
+  var advertising = {{ $advertising->count() ? 'true' : 'false'  }};
+  var invalid_format_epub = "{{__('general.invalid_format', ['formats' => 'EPUB'])}}";
+  var gift_sent_success = "{{ __('general.gift_sent_success') }}";
+
+  var choose_file_to_upload = "{{ __('general.choose_file_to_upload') }}";
+  var browse_file = "{{ __('general.browse_file') }}";
+  var one_file_chosen = "{{ __('general.one_file_chosen') }}";
+  var more_files_chosen = "{{ __('general.more_files_chosen') }}";
+
+  var confirmDelete = "{{ __('general.confirm') }}";
+  var cancelUpload = "{{ __('admin.cancel') }}";
+  var nameFile = "{{ __('auth.name') }}";
+  var typeFile = "{{ __('general.type') }}";
+  var sizeFile = "{{ __('general.size') }}";
+  var dimensionsFile = "{{ __('general.dimensions') }}";
+  var durationFile = "{{ __('general.duration') }}";
+  var cropFile = "{{ __('general.crop') }}";
+  var rotateFile = "{{ __('general.rotate') }}";
+  var sortFiles = "{{ __('general.sort') }}";
+  var downloadFile = "{{ __('general.download') }}";
+  var removeFile = "{{ __('general.delete') }}";
+  var dropFiles = "{{ __('general.drop_files') }}";
+  var pasteFiles = "{{ __('general.paste_files') }}";
+  var removeConfirmation = "{{ __('general.removeConfirmation') }}";
+  var filesLimit = "{{ __('general.filesLimit') }}";
+  var iFile = "{{ __('general.file') }}";
+  var iFiles = "{{ __('general.files') }}";
+  var filesType = "{{ __('general.filesType') }}";
+  var fileSize = "{{ __('general.fileSize') }}";
+  var filesSizeAll = "{{ __('general.filesSizeAll') }}";
+  var fileName = "{{ __('general.fileName') }}";
+  var remoteFile = "{{ __('general.remoteFile') }}";
+  var folderUpload = "{{ __('general.folderUpload') }}";
+  var rejectedVideoCall = "{{ __('general.rejected_video_call') }}";
+  var rejectedVideoCallInfo = "{{ __('general.rejected_video_call_info') }}";
+  var unansweredVideoCall = "{{ __('general.video_call_unanswered') }}";
+  var unansweredVideoCallInfo = "{{ __('general.video_call_unanswered_info') }}";
+  var please_wait_answer = "{{ __('general.please_wait_answer') }}";
+  var userAuthId = "{{ auth()->id() }}";
+  var errorProportionVideoReel = "{{ __('general.error_proportion_video_reel') }}";
+  var isReelPage = {{ request()->routeIs('reels.section.*') ? 'true' : 'false' }};
+  var statusVideoEncoding = {{ $settings->video_encoding == 'on' ? 'true' : 'false' }};
+
 @endauth
 </script>
 
@@ -346,8 +413,10 @@
 .link-scroll a.nav-link:not(.btn) {
   color: #969696;
 }
-.btn-upload:hover {
-background-color: #222222;
+.btn-upload:hover,
+.btn-post:hover,
+.icons-live:hover {
+background-color: #222222 !important;
 }
 .btn-active-hover {
 background-color: #222222 !important;
@@ -404,7 +473,7 @@ a.social-share i {color: #dedede!important;}
 @endif
 
 .bg-gradient {
-  background: url('{{url('/img', $settings->bg_gradient)}}');
+  background: url('{{url('public/img', $settings->bg_gradient)}}');
   background-size: cover;
 }
 
@@ -412,7 +481,7 @@ a.social-share i {color: #797979; font-size: 32px;}
 a:hover.social-share { text-decoration: none; }
 .btn-whatsapp {color: #50b154 !important;}
 .close-inherit {color: inherit !important;}
-.btn-twitter { background-color: #1da1f2;  color:#fff !important;}
+.btn-twitter { background-color: #000;  color:#fff !important;}
 
 @media (max-width: 991px) {
   .navbar-user-mobile {
@@ -456,14 +525,9 @@ color:grey;
 @endif
 
 @if ($settings->color_default <> '')
-
 :root {
   --plyr-color-main: {{$settings->color_default}};
-}
-:root {
   --swiper-theme-color: {{$settings->color_default}};
-}
-:root {
   --color-media-wrapper: @if (auth()->check() && auth()->user()->dark_mode == 'off') #f1f1f1 @else #454545 @endif;
   --color-pulse-media-wrapper: @if (auth()->check() && auth()->user()->dark_mode == 'off') #f8f8f8 @else #373737 @endif;
 }
@@ -568,10 +632,18 @@ input[type='file'] {overflow: hidden;}
 .badge-free { top: 10px; right: 10px; background: rgb(0 0 0 / 65%); color: #fff; font-size: 12px;}
 
 .btn-facebook, .btn-twitter, .btn-google {position: relative;}
-.btn-facebook i, .btn-twitter i  {
+.btn-facebook i  {
   position: absolute;
     left: 10px;
     bottom: 14px;
+    width: 36px;
+}
+
+.btn-twitter i {
+    position: absolute;
+    left: 10px;
+    bottom: 9px !important;
+    bottom: 13px;
     width: 36px;
 }
 
@@ -1094,16 +1166,12 @@ input[type=number] {
   	        transition: all 0.2s ease;
 }
 .wrapper-msg-inbox::-webkit-scrollbar-track {
-    background-color: @if (auth()->check() && auth()->user()->dark_mode == 'on') #313131 @else #ebebeb @endif;
+    background-color: transparent;
     border-radius: 6px;
 }
 .wrapper-msg-inbox::-webkit-scrollbar-thumb {
     background-color: #ccc;
     border-radius: 6px;
-}
-.wrapper-msg-inbox {
-  scrollbar-color: #ccc @if (auth()->check() && auth()->user()->dark_mode == 'on') #313131 @else #ebebeb @endif;
-  scrollbar-width: 5px;
 }
 .msg-inbox {
   border: 0;
@@ -1834,16 +1902,12 @@ a:hover.choose-type-sale {
   	        transition: all 0.2s ease;
 }
 .custom-scrollbar::-webkit-scrollbar-track {
-    background-color: @if (auth()->check() && auth()->user()->dark_mode == 'on') #313131 @else #ebebeb @endif;
+    background-color: transparent;
     border-radius: 6px;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb {
     background-color: #ccc;
     border-radius: 6px;
-}
-.custom-scrollbar {
-  scrollbar-color: #ccc @if (auth()->check() && auth()->user()->dark_mode == 'on') #313131 @else #ebebeb @endif;
-  scrollbar-width: 5px;
 }
 .icon--dashboard {
     color: rgb(0 0 0 / {{ auth()->check() && auth()->user()->dark_mode == 'on' ? '5%' : '2%' }}) !important;
@@ -2005,6 +2069,9 @@ a:hover.choose-type-sale {
 .modalStoryViews {
   max-height: 400px;
 }
+.modalGifts {
+  max-height: 600px;
+}
 .modal-text-story {
   color: #fff;
   position: absolute;
@@ -2049,5 +2116,111 @@ a:hover.choose-type-sale {
 .grecaptcha-badge {
   visibility: hidden;
 }
+.btn-post {
+  width: 48px;
+  height: 48px;
+  padding: 0;
+-webkit-transition: all 200ms linear;
+  -moz-transition: all 200ms linear;
+  -o-transition: all 200ms linear;
+  -ms-transition: all 200ms linear;
+  transition: all 200ms linear;
+}
+.btn-post:hover {
+  background-color: #f3f3f3;
+}
+@media (max-width: 991px) {
+  .btn-post {
+    width: 40px;
+    height: 40px;
+  }
+}
+.icons-live {
+  padding: 10px 12px;
+-webkit-transition: all 200ms linear;
+  -moz-transition: all 200ms linear;
+  -o-transition: all 200ms linear;
+  -ms-transition: all 200ms linear;
+  transition: all 200ms linear;
+}
+.icons-live:hover {
+  background-color: #f3f3f3;
+}
+.thumbnails-shop {
+display: flex;
+margin: 1rem auto 0;
+padding: 0;
+justify-content: center;
+}
+
+
+.thumbnail-shop {
+width: 70px;
+height: 70px;
+overflow: hidden;
+list-style: none;
+margin: 0 0.2rem;
+cursor: pointer;
+opacity: 0.3;
+}
+
+.thumbnail-shop.is-active {
+  opacity: 1;
+}
+
+.thumbnail-shop img {
+width: 100%;
+height: auto;
+}
+.buttonDisabled {
+  opacity: .3;
+  cursor: default;
+}
+.buttonDisabled:active > i {
+  animation: none !important;
+}
+.container-full-w {
+  max-width: 100% !important;
+}
+.font-12 {
+  font-size: 12px;
+}
+.b-radio-custom {
+  border-radius: 0.8rem !important;
+}
+.gslide-image {background-color: #fff !important;}
+@if (auth()->check() && auth()->user()->dark_mode == 'on')
+.card-updates .data-link {
+  text-decoration: underline !important;
+}
 @endif
+
+@-moz-document url-prefix() {
+  .custom-scrollbar {
+    scrollbar-color: #ccc transparent;
+    scrollbar-width: thin;
+  }
+
+  .wrapper-msg-inbox {
+    scrollbar-color: #ccc transparent;
+    scrollbar-width: thin;
+  }
+}
+@endif
+
+@auth
+.btn-radio {
+  border-radius: 15px !important;
+  margin: 0 10px 10px 0 !important;
+  border: 1px solid {{ auth()->user()->dark_mode == 'on' ? '#5b5a5a' : '#ccc' }};
+  color: {{ auth()->user()->dark_mode == 'on' ? '#fff' : '#212529' }} !important;
+}
+.btn-radio.active {
+  border-color:{{ auth()->user()->dark_mode == 'on' ? '#fff' : $settings->color_default }};
+}
+.btn-group-radio > .btn:not(:disabled):not(.disabled).active {
+  box-shadow: inset 0px 0px 0px 1px {{ auth()->user()->dark_mode == 'on' ? '#fff' : $settings->color_default }} !important;
+}
+@endauth
+
 </style>

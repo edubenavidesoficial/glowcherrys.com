@@ -1058,7 +1058,7 @@ class FileUploader {
 				$message = "Upload folder doesn't exist or is not writable";
 				break;
 	        default:
-	            $message = "Unknown upload error";
+	            $message = "Unknown upload error - Code: ".$code;
 	            break;
 	    }
 

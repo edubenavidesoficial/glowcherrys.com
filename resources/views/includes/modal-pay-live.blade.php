@@ -21,6 +21,8 @@
 							<small class="w-100 d-block">
 								"{{ $live->name }}"
 							</small>
+
+							<small class="w-100 d-block font-12">* {{ __('general.in_currency', ['currency_code' => $settings->currency_code]) }}</small>
 						</div>
 
 						<form method="post" action="{{url('send/payment/live')}}" id="formPayLive">
@@ -111,6 +113,7 @@
 									<a href="{{ url('/') }}" class="btn e-none p-0">{{trans('admin.cancel')}}</a>
 								</div>
 							</div>
+							@include('includes.site-billing-info')
 						</form>
 					</div>
 				</div>

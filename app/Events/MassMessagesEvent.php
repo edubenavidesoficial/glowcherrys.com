@@ -3,12 +3,12 @@
 namespace App\Events;
 
 use Illuminate\Broadcasting\Channel;
-use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PresenceChannel;
-use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
-use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Broadcasting\PrivateChannel;
+use Illuminate\Broadcasting\PresenceChannel;
+use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
 class MassMessagesEvent
 {
@@ -22,7 +22,10 @@ class MassMessagesEvent
     public $file;
     public $originalName;
     public $size;
-    public $token;
+    public $hasFileEpub;
+    public $fileEpub;
+    public $originalNameEpub;
+    public $sizeEpub;
 
     /**
      * Create a new event instance.
@@ -38,7 +41,10 @@ class MassMessagesEvent
           $file,
           $originalName,
           $size,
-          $token
+          $hasFileEpub,
+          $fileEpub,
+          $originalNameEpub,
+          $sizeEpub,
       ) {
         $this->user = $authUser;
         $this->fileuploader = $fileuploader;
@@ -48,7 +54,10 @@ class MassMessagesEvent
         $this->file = $file;
         $this->originalName = $originalName;
         $this->size = $size;
-        $this->token = $token;
+        $this->hasFileEpub = $hasFileEpub;
+        $this->fileEpub = $fileEpub;
+        $this->originalNameEpub = $originalNameEpub;
+        $this->sizeEpub = $sizeEpub;
     }
 
     /**

@@ -1,5 +1,5 @@
 	<div class="card card-updates h-100 card-user-profile shadow-sm">
-	<div class="card-cover" style="background: @if ($response->cover != '') url({{ Helper::getFile(config('path.cover').$response->cover) }})  @endif #505050 center center; background-size: cover;"></div>
+	<div class="card-cover" style="background: @if ($response->cover != '') url({{ route('resize', ['path' => 'cover', 'file' => $response->cover, 'size' => 480]) }})  @endif #505050 center center; background-size: cover;"></div>
 	<div class="card-avatar @if (Helper::isCreatorLive($getCurrentLiveCreators, $response->id))liveLink @endif" @if (Helper::isCreatorLive($getCurrentLiveCreators, $response->id)) data-url="{{ url('live', $response->username) }}" @endif>
 
 		@if (Helper::isCreatorLive($getCurrentLiveCreators, $response->id))

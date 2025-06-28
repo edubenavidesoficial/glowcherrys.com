@@ -98,18 +98,17 @@
                         </a>
 
                         @if ($sale->delivery_status == 'pending')
-
                           <form class="d-inline-block" method="post" action="{{url('delivered/product', $sale->id)}}">
                             @csrf
-                            <button title="{{ __('general.mark_as_delivered') }}" class="mr-2 btn btn-success btn-sm-custom actionAcceptRejectOrder acceptOrder" type="button">
-                              <i class="bi-check"></i>
+                            <button title="{{ __('general.mark_as_delivered') }}" class="mr-2 btn btn-success btn-sm-custom actionAcceptReject acceptOrder" type="button">
+                              <i class="bi-check2"></i>
                             </button>
                           </form>
 
                           <form class="d-inline-block" method="post" action="{{ url('reject/order', $sale->id) }}">
                             @csrf
-                            <button title="{{ __('general.reject') }}" class="btn btn-danger btn-sm-custom actionAcceptRejectOrder rejectOrder" type="button">
-                              <i class="bi-trash"></i>
+                            <button title="{{ __('general.reject') }}" class="btn btn-danger btn-sm-custom actionAcceptReject rejectOrder" type="button">
+                              <i class="bi-x-lg"></i>
                             </button>
                           </form>
 

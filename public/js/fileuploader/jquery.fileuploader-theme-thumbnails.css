@@ -209,21 +209,23 @@
   white-space: nowrap;
 }
 .fileuploader-items-list::-webkit-scrollbar {
-    height: 8px;
+    height: 7px;
     -webkit-transition: all 0.2s ease;
   	        transition: all 0.2s ease;
 }
 .fileuploader-items-list::-webkit-scrollbar-track {
-    background-color: #ebebeb;
+    background-color: transparent;
     border-radius: 6px;
 }
 .fileuploader-items-list::-webkit-scrollbar-thumb {
     background-color: var(--plyr-color-main);
     border-radius: 6px;
 }
-.fileuploader-items-list {
-  scrollbar-color: var(--plyr-color-main) #ebebeb;
-  scrollbar-width: thin;
+@-moz-document url-prefix() {
+    .fileuploader-items-list {
+        scrollbar-color: var(--plyr-color-main) transparent;
+        scrollbar-width: thin;
+      }
 }
 .fileuploader {
   background: none !important;

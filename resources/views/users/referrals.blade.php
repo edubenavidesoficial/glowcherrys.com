@@ -1,42 +1,41 @@
 @extends('layouts.app')
 
-@section('title') {{trans('general.referrals')}} -@endsection
+@section('title') {{__('general.referrals')}} -@endsection
 
 @section('content')
 <section class="section section-sm">
     <div class="container">
       <div class="row justify-content-center text-center mb-sm">
         <div class="col-lg-8 py-5">
-          <h2 class="mb-0 font-montserrat"><i class="bi bi-person-plus mr-2"></i> {{trans('general.referrals')}}</h2>
+          <h2 class="mb-0 font-montserrat"><i class="bi bi-person-plus mr-2"></i> {{__('general.referrals')}}</h2>
 
           @if ($settings->referral_system == 'on')
-
             <p class="lead text-muted mt-0">
-              {{trans('general.referrals_welcome_desc', ['percentage' => $settings->percentage_referred])}}
+              {{__('general.referrals_welcome_desc', ['percentage' => auth()->user()->custom_profit_referral ?: $settings->percentage_referred])}}
               <small class="d-block">
                 @if ($settings->referral_transaction_limit <> 'unlimited')
-                  * {{ trans_choice('general.total_transactions_per_referral', $settings->referral_transaction_limit, ['percentage' => $settings->percentage_referred, 'total' => $settings->referral_transaction_limit]) }}
+                  * {{ trans_choice('general.total_transactions_per_referral', $settings->referral_transaction_limit, ['percentage' => auth()->user()->custom_profit_referral ?: $settings->percentage_referred, 'total' => $settings->referral_transaction_limit]) }}
                 @else
-                  * {{trans('general.total_transactions_referral_unlimited', ['percentage' => $settings->percentage_referred])}}
+                  * {{__('general.total_transactions_referral_unlimited', ['percentage' => auth()->user()->custom_profit_referral ?: $settings->percentage_referred])}}
                 @endif
 
               </small>
             </p>
 
-            <button class="d-none copy-url" id="copyLink" data-clipboard-text="{{ url('/?ref='.auth()->user()->id) }}"></button>
+            <button class="d-none copy-url" id="copyLink" data-clipboard-text="{{ url(auth()->user()->username.'?ref='.auth()->user()->id) }}"></button>
             <span>
-              <span class="text-muted">{{ trans('general.your_referral_link') }}</span>
+              <span class="text-muted">{{ __('general.your_referral_link') }}</span>
 
-              <span class="text-break"><strong>{{ url('/?ref='.auth()->user()->id) }}</strong></span>
+              <span class="text-break"><strong>{{ url(auth()->user()->username.'?ref='.auth()->user()->id) }}</strong></span>
 
-              <button class="btn btn-link e-none p-1 text-decoration-none" data-toggle="tooltip" data-placement="top" title="{{trans('general.copy_link')}}" onclick="$('#copyLink').trigger('click')">
+              <button class="btn btn-link e-none p-1 text-decoration-none" data-toggle="tooltip" data-placement="top" title="{{__('general.copy_link')}}" onclick="$('#copyLink').trigger('click')">
   							<i class="far fa-clone"></i>
   						</button>
             </span>
           @else
           <div class="alert alert-danger mt-3">
           <span class="alert-inner--text">
-            <i class="fa fa-exclamation-triangle mr-1"></i> {{ trans('general.referral_system_disabled') }}
+            <i class="fa fa-exclamation-triangle mr-1"></i> {{ __('general.referral_system_disabled') }}
           </span>
         </div>
           @endif
@@ -49,29 +48,48 @@
 
           <div class="content">
             <div class="row">
-              <div class="col-lg-4 mb-2">
+              <div class="col-lg-3 mb-2">
                 <div class="card">
                   <div class="card-body">
-                    <h4><i class="fas fa-users mr-2 text-primary icon-dashboard"></i> {{ number_format(auth()->user()->referrals()->count()) }}</h4>
-                    <small>{{ trans('general.total_registered_users') }}</small>
+                    <h5>
+                      <i class="fas fa-hand-holding-usd mr-2 text-primary icon-dashboard"></i> {{Helper::amountFormatDecimal(auth()->user()->balance)}}
+                    </h5>
+                    <small>{{ __('general.balance') }}</small>
+                    @if (auth()->user()->balance >= $settings->amount_min_withdrawal)
+                    <a href="{{ url('settings/withdrawals')}}" class="link-border color-link"> {{ __('general.make_withdrawal') }}</a>
+
+                    @else
+                    <a href="javascript:;" class="link-border color-link text-muted" data-toggle="tooltip" title="{{__('general.amount_min_withdrawal')}} {{Helper::amountWithoutFormat($settings->amount_min_withdrawal)}} {{$settings->currency_code}}">
+                       {{ __('general.make_withdrawal') }}
+                      </a>
+                  @endif
                   </div>
                 </div><!-- card 1 -->
               </div><!-- col-lg-4 -->
 
-              <div class="col-lg-4 mb-2">
+              <div class="col-lg-3 mb-2">
                 <div class="card">
                   <div class="card-body">
-                    <h4><i class="fa fa-receipt mr-2 text-primary icon-dashboard"></i> {{ number_format(auth()->user()->referralTransactions()->count()) }}</h4>
-                    <small>{{ trans('general.total_transactions') }}</small>
+                    <h5><i class="fas fa-users mr-2 text-primary icon-dashboard"></i> {{ number_format(auth()->user()->referrals()->count()) }}</h5>
+                    <small>{{ __('general.total_registered_users') }}</small>
                   </div>
                 </div><!-- card 1 -->
               </div><!-- col-lg-4 -->
 
-              <div class="col-lg-4 mb-2">
+              <div class="col-lg-3 mb-2">
                 <div class="card">
                   <div class="card-body">
-                    <h4><i class="fas fa-hand-holding-usd mr-2 text-primary icon-dashboard"></i> {{ Helper::amountFormatDecimal(auth()->user()->referralTransactions()->sum('earnings')) }}</h4>
-                    <small>{{ trans('general.earnings_total') }}</small>
+                    <h5><i class="fa fa-receipt mr-2 text-primary icon-dashboard"></i> {{ number_format(auth()->user()->referralTransactions()->count()) }}</h5>
+                    <small>{{ __('general.total_transactions') }}</small>
+                  </div>
+                </div><!-- card 1 -->
+              </div><!-- col-lg-4 -->
+
+              <div class="col-lg-3 mb-2">
+                <div class="card">
+                  <div class="card-body">
+                    <h5><i class="fas fa-hand-holding-usd mr-2 text-primary icon-dashboard"></i> {{ Helper::amountFormatDecimal(auth()->user()->referralTransactions()->sum('earnings')) }}</h5>
+                    <small>{{ __('general.earnings_total') }}</small>
                   </div>
                 </div><!-- card 1 -->
               </div><!-- col-lg-4 -->
@@ -79,15 +97,15 @@
               <div class="col-lg-12 mt-3 py-4">
                  <div class="card">
                    <div class="card-body">
-                     <h4 class="mb-4">{{ trans('admin.transactions') }}</h4>
+                     <h4 class="mb-4">{{ __('admin.transactions') }}</h4>
 
                      <div class="table-responsive">
                        <table class="table table-striped m-0">
                          <thead>
                            <tr>
-                             <th scope="col">{{trans('admin.type')}}</th>
-                             <th scope="col">{{trans('admin.date')}}</th>
-                             <th scope="col">{{trans('general.earnings')}}</th>
+                             <th scope="col">{{__('admin.type')}}</th>
+                             <th scope="col">{{__('admin.date')}}</th>
+                             <th scope="col">{{__('general.earnings')}}</th>
                            </tr>
                          </thead>
 
@@ -104,9 +122,7 @@
 
                          @else
                            <tr>
-                             <td>{{ trans('general.no_transactions_yet') }}</td>
-                             <td></td>
-                             <td></td>
+                             <td colspan="12" class="text-center">{{ __('general.no_transactions_yet') }}</td>
                            </tr>
                           @endif
 

@@ -33,14 +33,14 @@
              @csrf
 
 		        <div class="row mb-3">
-		          <label class="col-sm-2 col-form-label text-lg-end">{{ trans('admin.fee') }}</label>
+		          <label class="col-sm-2 col-form-label text-lg-end">{{ __('admin.fee') }}</label>
 		          <div class="col-sm-10">
 		            <input value="{{ $data->fee }}" name="fee" type="text" class="form-control">
 		          </div>
 		        </div>
 
             <div class="row mb-3">
-		          <label class="col-sm-2 col-form-label text-lg-end">{{ trans('admin.fee_cents') }}</label>
+		          <label class="col-sm-2 col-form-label text-lg-end">{{ __('admin.fee_cents') }}</label>
 		          <div class="col-sm-10">
 		            <input value="{{ $data->fee_cents }}" name="fee_cents" type="text" class="form-control">
 		          </div>
@@ -71,7 +71,7 @@
 		        </div>
 
             <fieldset class="row mb-3">
-              <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ trans('admin.status') }}</legend>
+              <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ __('admin.status') }}</legend>
               <div class="col-sm-10">
                 <div class="form-check form-switch form-switch-md">
                  <input class="form-check-input" type="checkbox" name="enabled" @if ($data->enabled) checked="checked" @endif value="1" role="switch">
@@ -79,22 +79,31 @@
               </div>
             </fieldset>
 
+			<fieldset class="row mb-3">
+				<legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ __('general.allow_payments_alipay') }} <i class="bi-info-circle showTooltip ms-1" title="{{ __('general.only_wallet') }}"></i></legend>
+				<div class="col-sm-10">
+				  <div class="form-check form-switch form-switch-md">
+				   <input class="form-check-input" type="checkbox" name="allow_payments_alipay" @if ($data->allow_payments_alipay) checked="checked" @endif value="1" role="switch">
+				 </div>
+				</div>
+			  </fieldset>
+
 						<fieldset class="row mb-3">
-		          <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ trans('admin.subscription') }}</legend>
+		          <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ __('admin.subscription') }}</legend>
 		          <div class="col-sm-10">
 		            <div class="form-check">
 		              <input class="form-check-input" type="radio" name="subscription" id="radio1" @if ($data->subscription == 'yes') checked="checked" @endif value="yes">
 		              <label class="form-check-label" for="radio1">
-		                {{ trans('admin.active') }}
+		                {{ __('admin.active') }}
 		              </label>
 		            </div>
 		            <div class="form-check">
 		              <input class="form-check-input" type="radio" name="subscription" id="radio2" @if ($data->subscription == 'no') checked="checked" @endif value="no">
 		              <label class="form-check-label" for="radio2">
-		                {{ trans('admin.disabled') }}
+		                {{ __('admin.disabled') }}
 		              </label>
 		            </div>
-								<small class="d-block">{{ trans('general.note_disable_subs_payment') }}</small>
+								<small class="d-block">{{ __('general.note_disable_subs_payment') }}</small>
 		          </div>
 		        </fieldset><!-- end row -->
 

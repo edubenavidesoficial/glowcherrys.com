@@ -33,18 +33,25 @@
 						 <fieldset class="row mb-5">
 			         <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ __('general.home_style') }}</legend>
 			         <div class="col-sm-10">
-			           <div class="form-check">
-			             <input class="form-check-input" type="radio" name="home_style" id="radio1" @if ($settings->home_style == 0) checked="checked" @endif value="0">
+			           <div class="form-check mb-3">
+			             <input class="form-check-input" type="radio" name="home_style" id="radio1" @checked($settings->home_style == 0) value="0">
 			             <label class="form-check-label" for="radio1">
-			               <img src="{{url('//img/homepage-1.jpg')}}">
+			               <img class="border" src="{{url('/public/img/homepage-1.jpg')}}">
 			             </label>
 			           </div>
-			           <div class="form-check">
-			             <input class="form-check-input" type="radio" name="home_style" id="radio2" @if ($settings->home_style == 1) checked="checked" @endif value="1">
+			           <div class="form-check mb-3">
+			             <input class="form-check-input" type="radio" name="home_style" id="radio2" @checked($settings->home_style == 1) value="1">
 			             <label class="form-check-label" for="radio2">
-										 <img src="{{url('//img/homepage-2.jpg')}}">
+							<img class="border" src="{{url('/public/img/homepage-2.jpg')}}">
 			             </label>
 			           </div>
+
+					   <div class="form-check">
+						<input class="form-check-input" type="radio" name="home_style" id="radio3" @checked($settings->home_style == 2) value="2">
+						<label class="form-check-label" for="radio3">
+						   <img class="border" src="{{url('/public/img/homepage-explore.jpg')}}">
+						</label>
+					  </div>
 			         </div>
 			       </fieldset><!-- end row -->
 
@@ -52,13 +59,13 @@
 		          <label class="col-sm-2 col-form-label text-lg-end">{{ __('general.logo') }}</label>
 		          <div class="col-lg-5 col-sm-10">
                 <div class="d-block mb-2">
-                  <img src="{{url('//img', $settings->logo)}}" class="bg-secondary" style="width:150px">
+                  <img src="{{url('/public/img', $settings->logo)}}" class="bg-secondary" style="width:150px">
                 </div>
 
                 <div class="input-group mb-1">
                   <input name="logo" type="file" class="form-control custom-file rounded-pill">
                 </div>
-                <small class="d-block">{{ __('general.recommended_size') }} 487x144 px (PNG)</small>
+                <small class="d-block">{{ __('general.recommended_size') }} 487x144 px (PNG, SVG)</small>
 		          </div>
 		        </div>
 
@@ -66,21 +73,35 @@
 		          <label class="col-sm-2 col-form-label text-lg-end">{{ __('general.logo_blue') }}</label>
 		          <div class="col-lg-5 col-sm-10">
                 <div class="d-block mb-2">
-                  <img src="{{url('//img', $settings->logo_2)}}" style="width:150px">
+                  <img src="{{url('/public/img', $settings->logo_2)}}" style="width:150px">
                 </div>
 
                 <div class="input-group mb-1">
                   <input name="logo_2" type="file" class="form-control custom-file rounded-pill">
                 </div>
-                <small class="d-block">{{ __('general.recommended_size') }} 487x144 px (PNG)</small>
+                <small class="d-block">{{ __('general.recommended_size') }} 487x144 px (PNG, SVG)</small>
 		          </div>
 		        </div>
+
+				<div class="row mb-3">
+					<label class="col-sm-2 col-form-label text-lg-end">{{ __('general.watermak_video') }}</label>
+					<div class="col-lg-5 col-sm-10">
+				  <div class="d-block mb-2">
+					<img src="{{url('/public/img', $settings->watermak_video)}}" class="bg-dark" style="width:150px">
+				  </div>
+  
+				  <div class="input-group mb-1">
+					<input name="watermak_video" type="file" class="form-control custom-file rounded-pill">
+				  </div>
+				  <small class="d-block">{{ __('general.recommended_size') }} 487x144 px (PNG)</small>
+					</div>
+				  </div>
 
             <div class="row mb-3">
 		          <label class="col-sm-2 col-form-label text-lg-end">Favicon</label>
 		          <div class="col-lg-5 col-sm-10">
                 <div class="d-block mb-2">
-                  <img src="{{url('//img', $settings->favicon)}}">
+                  <img src="{{url('/public/img', $settings->favicon)}}">
                 </div>
 
                 <div class="input-group mb-1">
@@ -94,7 +115,7 @@
 		          <label class="col-sm-2 col-form-label text-lg-end">{{ __('general.index_image_top') }}</label>
 		          <div class="col-lg-5 col-sm-10">
                 <div class="d-block mb-2">
-                  <img src="{{url('//img', $settings->home_index)}}" style="width:200px">
+                  <img src="{{url('/public/img', $settings->home_index)}}" style="width:200px">
                 </div>
 
                 <div class="input-group mb-1">
@@ -108,7 +129,7 @@
 		          <label class="col-sm-2 col-form-label text-lg-end">{{ __('admin.background') }}</label>
 		          <div class="col-lg-5 col-sm-10">
                 <div class="d-block mb-2">
-                  <img class="img-fluid" src="{{ url('//img', $settings->bg_gradient) }}" style="width:400px">
+                  <img class="img-fluid" src="{{ url('/public/img', $settings->bg_gradient) }}" style="width:400px">
                 </div>
 
                 <div class="input-group mb-1">
@@ -122,7 +143,7 @@
 		          <label class="col-sm-2 col-form-label text-lg-end">{{ __('admin.image_index_1') }}</label>
 		          <div class="col-lg-5 col-sm-10">
                 <div class="d-block mb-2">
-                  <img src="{{url('//img', $settings->img_1)}}" style="width:120px">
+                  <img src="{{url('/public/img', $settings->img_1)}}" style="width:120px">
                 </div>
 
                 <div class="input-group mb-1">
@@ -136,7 +157,7 @@
 		          <label class="col-sm-2 col-form-label text-lg-end">{{ __('admin.image_index_2') }}</label>
 		          <div class="col-lg-5 col-sm-10">
                 <div class="d-block mb-2">
-                  <img src="{{url('//img', $settings->img_2)}}" style="width:120px">
+                  <img src="{{url('/public/img', $settings->img_2)}}" style="width:120px">
                 </div>
 
                 <div class="input-group mb-1">
@@ -150,7 +171,7 @@
 		          <label class="col-sm-2 col-form-label text-lg-end">{{ __('admin.image_index_3') }}</label>
 		          <div class="col-lg-5 col-sm-10">
                 <div class="d-block mb-2">
-                  <img src="{{url('//img', $settings->img_3)}}" style="width:120px">
+                  <img src="{{url('/public/img', $settings->img_3)}}" style="width:120px">
                 </div>
 
                 <div class="input-group mb-1">
@@ -164,7 +185,7 @@
 		          <label class="col-sm-2 col-form-label text-lg-end">{{ __('admin.image_index_4') }}</label>
 		          <div class="col-lg-5 col-sm-10">
                 <div class="d-block mb-2">
-                  <img src="{{url('//img', $settings->img_4)}}" style="width:120px">
+                  <img src="{{url('/public/img', $settings->img_4)}}" style="width:120px">
                 </div>
 
                 <div class="input-group mb-1">
@@ -209,6 +230,13 @@
                 <input type="color" name="color" class="form-control form-control-color" value="{{ $settings->color_default }}">
 		          </div>
 		        </div>
+
+				<div class="row mb-3">
+					<label class="col-sm-2 col-form-label text-lg-end">{{ __('general.theme_color_pwa') }}</label>
+					<div class="col-sm-10">
+				  <input type="color" name="theme_color_pwa" class="form-control form-control-color" value="{{ $settings->theme_color_pwa }}">
+					</div>
+				  </div>
 
 						<div class="row mb-3">
 		          <label class="col-sm-2 col-form-label text-lg-end">{{ __('general.navbar_background_color') }}</label>

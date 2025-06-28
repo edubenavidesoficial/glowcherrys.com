@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'default' => env('FILESYSTEM_DRIVER', 'public'),
+    'default' => env('FILESYSTEM_DRIVER', 'default'),
 
     /*
     |--------------------------------------------------------------------------
@@ -47,7 +47,7 @@ return [
         'default' => [
             'driver' => 'local',
             'root' => public_path(),
-            'url' => env('APP_URL'),
+            'url' => env('APP_URL').'/public',
             'visibility' => 'public',
        ],
 
@@ -72,7 +72,7 @@ return [
             'visibility' => 'public',
             'endpoint' => 'https://'.env('DOS_DEFAULT_REGION').'.digitaloceanspaces.com',
         ],
-
+  
         'wasabi' => [
             'driver' => 's3',
             'key' => env('WAS_ACCESS_KEY_ID'),
@@ -82,15 +82,19 @@ return [
             'visibility' => 'public',
             'endpoint' => 'https://s3.'.env('WAS_DEFAULT_REGION').'.wasabisys.com'
         ],
-
+  
         'backblaze' => [
-            'driver'         => 'b2',
-            'accountId'      => env('BACKBLAZE_ACCOUNT_ID'),
-            'applicationKey' => env('BACKBLAZE_APP_KEY'),
-            'bucketName'     => env('BACKBLAZE_BUCKET'),
-            'bucketId'       => env('BACKBLAZE_BUCKET_ID'),
+            'driver' => 's3',
+            'key' => env('BACKBLAZE_ACCOUNT_ID'),
+            'secret' => env('BACKBLAZE_APP_KEY'),
+            'region' => env('BACKBLAZE_BUCKET_REGION'),
+            'bucket' => env('BACKBLAZE_BUCKET'),
+            'visibility' => 'public',
+            'endpoint' => 'https://s3.'.env('BACKBLAZE_BUCKET_REGION').'.backblazeb2.com',
+            'request_checksum_calculation' => 'when_required',
+            'response_checksum_validation' => 'when_required',
         ],
-
+  
         'vultr' => [
             'driver' => 's3',
             'key'=> env('VULTR_ACCESS_KEY'),
@@ -101,6 +105,17 @@ return [
             'endpoint' => env('VULTR_ENDPOINT'),
         ],
 
+        'pushr' => [
+            'driver' => 's3',
+            'key'=> env('PUSHR_ACCESS_KEY'),
+            'secret' => env('PUSHR_SECRET_KEY'),
+            'region' => 'us-east-1',
+            'bucket' => env('PUSHR_BUCKET'),
+            'url' => env('PUSHR_URL'),
+            'endpoint' => env('PUSHR_ENDPOINT'),
+            'use_path_style_endpoint' => true,
+            'visibility' => 'public',
+        ],
     ],
 
     /*

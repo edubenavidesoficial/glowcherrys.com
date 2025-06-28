@@ -15,7 +15,45 @@
 
         <div class="col-md-12 mb-5 mb-lg-0">
 
-          @if ($posts->count() != 0)
+          @if (session('notify'))
+          <div class="alert alert-primary">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">×</span>
+              </button>
+
+            <i class="bi-info-circle mr-1"></i> {{ session('notify') }}
+          </div>
+          @endif
+
+          @if ($posts->isNotEmpty())
+          <div class="d-lg-flex d-block justify-content-between align-items-center mb-3 text-word-break">
+            <form class="position-relative mr-3 w-100 mb-lg-0 mb-2" role="search" autocomplete="off" action="{{ url('my/posts') }}" method="get">
+              <i class="bi bi-search btn-search bar-search"></i>
+             <input type="text" minlength="3" required="" name="q" class="form-control pl-5" value="{{ request('q') }}" placeholder="{{ __('general.search') }}" aria-label="Search">
+          </form>
+
+            <div class="w-lg-100">
+              <select class="form-control custom-select w-100 pr-4 filter">
+                <option @selected(!request('sort')) value="{{ url('my/posts') }}">{{ __('general.all') }}</option>
+
+                @if ($settings->allow_scheduled_posts)
+                <option @selected(request('sort') == 'scheduled') value="{{ url('my/posts?sort=scheduled') }}">
+                  {{ __('general.scheduled') }}
+                </option> 
+                @endif
+                
+                <option @selected(request('sort') == 'pending') value="{{ url('my/posts?sort=pending') }}">
+                  {{ __('admin.pending') }}
+                </option> 
+
+
+                <option @selected(request('sort') == 'ppv') value="{{ url('my/posts?sort=ppv') }}">
+                  {{ __('general.ppv') }}
+                </option>
+              </select>
+            </div>
+          </div>
+
           <div class="card shadow-sm mb-2">
           <div class="table-responsive">
             <table class="table table-striped m-0">
@@ -37,29 +75,11 @@
                 @foreach ($posts as $post)
                   <tr>
                     <td>{{ $post->id }}</td>
-
                     <td>
-                      @if ($post->media->count() != 0)
-                        @foreach ($post->media as $media)
-                          @if ($media->type == 'image')
-                            <i class="feather icon-image mr-1"></i>
-                          @endif
-
-                          @if ($media->type == 'video')
-                            <i class="feather icon-video mr-1"></i>
-                          @endif
-
-                          @if ($media->type == 'music')
-                            <i class="feather icon-mic mr-1"></i>
-                            @endif
-
-                            @if ($media->type == 'file')
-                          <i class="far fa-file-archive"></i>
-                          @endif
-                        @endforeach
-
+                      @if ($post->media_count)
+                      {{ $post->media_count }} {{trans_choice('general.files', $post->media_count )}}
                       @else
-                        <i class="bi bi-file-font"></i>
+                      {{ __('general.text') }}
                       @endif
                     </td>
 
@@ -85,7 +105,12 @@
                     <td>
                       @if ($post->status == 'active')
                         <span class="badge badge-pill badge-success text-uppercase">{{__('general.active')}}</span>
-                      @else
+                      @elseif($post->status == 'schedule')
+                      <span class="badge badge-pill badge-info text-uppercase">{{__('general.scheduled')}}</span>
+                        <a tabindex="0" role="button" data-container="body" data-toggle="popover" data-trigger="focus" data-placement="top" data-content="{{ __('general.date_schedule') }} {{ Helper::formatDateSchedule($post->scheduled_date) }}">
+                          <i class="far fa-question-circle"></i>
+                        </a>
+                        @else
                         <span class="badge badge-pill badge-warning text-uppercase">{{__('general.pending')}}</span>
                       @endif
                     </td>
@@ -105,7 +130,15 @@
             <span class="btn-block mb-3">
               <i class="feather icon-feather ico-no-result"></i>
             </span>
-            <h4 class="font-weight-light">{{__('general.not_post_created')}}</h4>
+
+            @if (request('q'))
+              <h4 class="font-weight-light">{{__('general.no_results_found')}}</h4>
+              <a href="{{ url('my/posts') }}" class="btn btn-primary btn-sm mt-3">
+                <i class="bi-arrow-left mr-1"></i> {{ __('general.go_back') }}
+              </a>
+            @else
+              <h4 class="font-weight-light">{{__('general.not_post_created')}}</h4>
+            @endif
           </div>
         @endif
         </div><!-- end col-md-6 -->

@@ -5,12 +5,9 @@
 @section('content')
   <div class="jumbotron home m-0 bg-gradient">
     <div class="container pt-lg-md">
-      <div class="row">
-        <div class="col-lg-7">
-          <img src="{{url('/img', $settings->home_index)}}" class="img-center img-fluid d-lg-block d-none">
-        </div>
+      <div class="row justify-content-center">
         <div class="col-lg-5">
-          <div class="card bg-white shadow border-0">
+          <div class="card bg-white shadow border-0 b-radio-custom">
 
             <div class="card-body px-lg-5 py-lg-5">
 
@@ -20,9 +17,15 @@
               <small class="btn-block text-center mt-2 mb-4">{{ __('auth.login_welcome') }}</small>
 
               @if (session('login_required'))
-    			<div class="alert alert-danger" id="dangerAlert">
-                		<i class="fa fa-exclamation-triangle"></i> {{__('auth.login_required')}}
-                		</div>
+                <div class="alert alert-danger" id="dangerAlert">
+                  <i class="fa fa-exclamation-triangle"></i> {{session('login_required')}}
+                </div>
+                	@endif
+
+                  @if (session('error_social_login'))
+                  <div class="alert alert-danger" id="dangerAlert">
+                    <i class="fa fa-exclamation-triangle"></i> {{__('general.error')}} "{{ session('error_social_login') }}"
+                  </div>
                 	@endif
 
               @include('errors.errors-forms')
@@ -38,13 +41,13 @@
 
                 @if ($settings->twitter_login == 'on')
                 <a href="{{url('oauth/twitter')}}" class="btn btn-twitter auth-form-btn mb-2 w-100">
-                  <i class="fab fa-twitter mr-2"></i> {{ __('auth.login_with') }} Twitter
+                  <i class="bi-twitter-x mr-2"></i> {{ __('auth.login_with') }} X
                 </a>
               @endif
 
                   @if ($settings->google_login == 'on')
                   <a href="{{url('oauth/google')}}" class="btn btn-google auth-form-btn flex-grow w-100">
-                    <img src="{{ url('/img/google.svg') }}" class="mr-2" width="18" height="18"> {{ __('auth.login_with') }} Google
+                    <img src="{{ url('public/img/google.svg') }}" class="mr-2" width="18" height="18"> {{ __('auth.login_with') }} Google
                   </a>
                 @endif
                 </div>

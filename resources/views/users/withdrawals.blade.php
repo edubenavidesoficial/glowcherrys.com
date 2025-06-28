@@ -89,11 +89,8 @@
                       ->where('status','pending')
                       ->count() == 0)
 
-                  {!! Form::open([
-                   'method' => 'POST',
-                   'url' => "settings/withdrawals",
-                   'class' => 'd-inline'
-                 ]) !!}
+                  <form method="POST" action="{{ url('settings/withdrawals') }}" class="d-inline">
+                    @csrf
 
                  @if ($settings->type_withdrawals == 'custom')
                    <div class="form-group mt-3">
@@ -106,8 +103,8 @@
                    </div><!-- End form-group -->
                  @endif
 
-                  {!! Form::submit(trans('general.make_withdrawal'), ['class' => 'btn btn-1 btn-success mb-2 saveChanges']) !!}
-                  {!! Form::close() !!}
+                 <input type="submit" value="{{ trans('general.make_withdrawal') }}" class="btn btn-1 btn-success mb-2 saveChanges">
+                  </form>
                 @else
                   <button class="btn btn-1 btn-success mb-2 disabled e-none">{{trans('general.make_withdrawal')}}</button>
                 @endif
@@ -148,14 +145,12 @@
                     <td>
 
                   @if ($withdrawal->status != 'paid' && Carbon\Carbon::parse($withdrawal->estimated_payment)->shortAbsoluteDiffForHumans() <> '5d')
-                      {!! Form::open([
-                        'method' => 'POST',
-                        'url' => "delete/withdrawal/$withdrawal->id",
-                        'class' => 'd-inline'
-                      ]) !!}
-
-                      {!! Form::button(trans('general.delete'), ['class' => 'btn btn-danger btn-sm deleteW p-1 px-2']) !!}
-                      {!! Form::close() !!}
+                    <form method="POST" action="{{ url('delete/withdrawal', $withdrawal->id) }}" class="d-inline">
+                      @csrf
+                      <button type="submit" class="btn btn-danger btn-sm deleteW p-1 px-2">
+                          {{ trans('general.delete') }}
+                      </button>
+                  </form>
 
                   @elseif ($withdrawal->status != 'paid' && Carbon\Carbon::parse($withdrawal->estimated_payment)->shortAbsoluteDiffForHumans() == '5d')
 

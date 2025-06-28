@@ -14,7 +14,9 @@
     @endif
 
   @else
-    <a href="{{url('creators')}}" class="float-right">{{ __('general.view_all') }} <small class="pl-1"><i class="fa fa-long-arrow-alt-right"></i></small></a>
+    @if (!$settings->disable_creators_section)
+      <a href="{{url('creators')}}" class="float-right">{{ __('general.view_all') }} <small class="pl-1"><i class="fa fa-long-arrow-alt-right"></i></small></a>
+    @endif
 @endauth
   </h6>
 

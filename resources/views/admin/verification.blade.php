@@ -27,11 +27,22 @@
 			<div class="card shadow-custom border-0">
 				<div class="card-body p-lg-4">
 
+					@if ($data->isNotEmpty())
+					<div class="d-lg-flex justify-content-lg-between align-items-center mb-2 w-100">
+					<!-- form -->
+					<form class="mt-lg-0 mt-2 position-relative" role="search" autocomplete="off" action="{{ url()->current() }}"
+						method="get">
+						<i class="bi bi-search btn-search bar-search"></i>
+						<input type="text" name="q" class="form-control ps-5 w-auto" value="{{ $query }}" required minlength="2"  placeholder="{{ __('general.search') }}">
+					</form><!-- form -->
+					</div>
+					@endif
+
 					<div class="table-responsive p-0">
 						<table class="table table-hover">
 						 <tbody>
 
-							@if ($data->count() !=  0)
+							@if ($data->isNotEmpty())
 								 <tr>
 									  <th class="active">ID</th>
 										<th class="active">{{ trans('admin.user') }}</th>
@@ -49,10 +60,10 @@
 									<tr>
 										<td>{{ $verify->id }}</td>
 										<td>
-											@if (! isset($verify->user()->username))
+											@if (! isset($verify->creator->username))
 												<em>{{ trans('general.no_available') }}</em>
 											@else
-											<a href="{{ url($verify->user()->username) }}" target="_blank">{{ $verify->user()->name }}
+											<a href="{{ url($verify->creator->username) }}" target="_blank">{{ $verify->creator->name }}
 												<i class="bi-box-arrow-up-right ms-1"></i>
 											</a>
 										@endif
@@ -60,13 +71,13 @@
 										<td>{{ $verify->address }}</td>
 										<td>{{ $verify->city }}</td>
 										<td>
-											@if (! isset($verify->user()->username)
-														|| isset($verify->user()->username)
-														&& ! isset($verify->user()->country()->country_name)
+											@if (! isset($verify->creator->username)
+														|| isset($verify->creator->username)
+														&& ! isset($verify->creator->country()->country_name)
 														)
 												<em>{{ trans('general.no_available') }}</em>
 												@else
-											{{ $verify->user()->country()->country_name }}
+											{{ $verify->creator->country()->country_name }}
 										@endif
 
 										</td>
@@ -104,23 +115,21 @@
 								@if ($verify->status == 'pending')
 
 							<div class="d-flex">
-								@if (isset($verify->user()->username))
-										{!! Form::open([
-										'method' => 'POST',
-										'url' => url('panel/admin/verification/members/approve', $verify->id).'/'.$verify->user_id,
-										'class' => 'displayInline'
-									]) !!}
-								 {!! Form::button('<i class="bi-check2"></i>', ['class' => 'btn btn-success btn-sm rounded-pill actionApprove me-2', 'title' => trans('admin.approve')]) !!}
+								@if (isset($verify->creator->username))
+								<form method="POST" action="{{ url('panel/admin/verification/members/approve', $verify->id).'/'.$verify->user_id }}" class="displayInline">
+									@csrf
+									<button type="submit" class="btn btn-success btn-sm rounded-pill actionApprove me-2" title="{{ trans('admin.approve') }}">
+										<i class="bi-check2"></i>
+									</button>
+								</form>
 							 @endif
 
-									 {!! Form::close() !!}
-											{!! Form::open([
-											'method' => 'POST',
-											'url' => url('panel/admin/verification/members/delete', $verify->id).'/'.$verify->user_id,
-											'class' => 'displayInline'
-										]) !!}
-									 {!! Form::button('<i class="bi-x"></i>', ['class' => 'btn btn-danger btn-sm rounded-pill actionDeleteVerification', 'title' => trans('admin.reject')]) !!}
-										 {!! Form::close() !!}
+							 <form method="POST" action="{{ url('panel/admin/verification/members/delete', $verify->id).'/'.$verify->user_id }}" class="displayInline">
+								@csrf
+								<button type="submit" class="btn btn-danger btn-sm rounded-pill actionDeleteVerification" title="{{ trans('admin.reject') }}">
+									<i class="bi-x"></i>
+								</button>
+							</form>
 
 									</div>
 
@@ -133,7 +142,14 @@
 									@endforeach
 
 									@else
-										<h5 class="text-center p-5 text-muted fw-light m-0">{{ trans('general.no_results_found') }}</h5>
+										<h5 class="text-center p-5 text-muted fw-light m-0">{{ trans('general.no_results_found') }}
+
+											@if (isset($query))
+												<div class="d-block w-100 mt-2">
+												<a href="{{url('panel/admin/verification/members')}}"><i class="bi-arrow-left me-1"></i> {{ __('auth.back') }}</a>
+												</div>
+											@endif
+										</h5>
 									@endif
 
 								</tbody>

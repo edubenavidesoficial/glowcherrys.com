@@ -1,14 +1,14 @@
 @extends('layouts.app')
 
-@section('title') {{trans('general.wallet')}} -@endsection
+@section('title') {{__('general.wallet')}} -@endsection
 
 @section('content')
 <section class="section section-sm">
     <div class="container">
       <div class="row justify-content-center text-center mb-sm">
         <div class="col-lg-8 py-5">
-          <h2 class="mb-0 font-montserrat"><i class="iconmoon icon-Wallet mr-2"></i> {{trans('general.wallet')}}</h2>
-          <p class="lead text-muted mt-0">{{trans('general.wallet_desc')}}</p>
+          <h2 class="mb-0 font-montserrat"><i class="iconmoon icon-Wallet mr-2"></i> {{__('general.wallet')}}</h2>
+          <p class="lead text-muted mt-0">{{__('general.wallet_desc')}}</p>
         </div>
       </div>
       <div class="row">
@@ -16,6 +16,8 @@
         @include('includes.cards-settings')
 
         <div class="col-md-6 col-lg-9 mb-5 mb-lg-0">
+
+          @include('errors.errors-forms')
 
           @if (session('error_message'))
           <div class="alert alert-danger mb-3">
@@ -46,7 +48,7 @@
                 </h2>
 
                 <span class="w-100 d-block">
-                {{trans('general.funds_available')}}
+                {{__('general.funds_available')}}
                 </span>
 
                 @if ($equivalent_money)
@@ -55,6 +57,13 @@
                   </span>
                 @endif
 
+                <span class="w-100 d-block mt-2">
+                  @if (auth()->user()->balance != 0.00)
+                  <a href="#" data-toggle="modal" data-target="#modalTransfer" class="btn btn-1 btn-success mb-2 text-decoration-none">
+                    <i class="bi bi-arrow-left-right mr-2"></i> {{ __('general.transfer_balance') }}
+                  </a>
+                  @endif
+                </span>
               </span>
             </div>
 
@@ -71,13 +80,16 @@
               <div class="input-group-prepend">
                 <span class="input-group-text">{{$settings->currency_symbol}}</span>
               </div>
-                  <input class="form-control form-control-lg" required id="onlyNumber" name="amount" min="{{ $settings->min_deposits_amount }}" max="{{ $settings->max_deposits_amount }}" autocomplete="off" placeholder="{{trans('admin.amount')}} ({{ __('general.minimum') }} {{ Helper::priceWithoutFormat($settings->min_deposits_amount) }} - {{ __('general.maximum') }} {{ Helper::priceWithoutFormat($settings->max_deposits_amount) }})" type="number">
+                  <input class="form-control form-control-lg" required id="onlyNumber" name="amount" min="{{ $settings->min_deposits_amount }}" max="{{ $settings->max_deposits_amount }}" autocomplete="off" placeholder="{{__('admin.amount')}} ({{ __('general.minimum') }} {{ Helper::priceWithoutFormat($settings->min_deposits_amount) }} - {{ __('general.maximum') }} {{ Helper::priceWithoutFormat($settings->max_deposits_amount) }})" type="number">
+                  <small class="d-block w-100 my-1">
+                    <i class="bi-arrow-up-square mr-1"></i> <i class="bi-arrow-down-square mr-1"></i> {{ __('general.increase_decrease_amount') }}
+                  </small>
               </div>
 
               <p class="help-block margin-bottom-zero fee-wrap">
 
                 <span class="d-block w-100">
-                {{ trans('general.transaction_fee') }}:
+                {{ __('general.transaction_fee') }}:
 
                 <span class="float-right"><strong>{{ Helper::symbolPositionLeft() }}<span id="handlingFee">0</span>{{ Helper::symbolPositionRight() }}</strong></span>
               </span><!-- end transaction fee -->
@@ -96,7 +108,7 @@
   						@endif
 
                 <span class="d-block w-100">
-                  {{ trans('general.total') }}:
+                  {{ __('general.total') }}:
 
                   <span class="float-right">
                   <strong>{{ Helper::symbolPositionLeft() }}<span id="total">0</span>{{ Helper::symbolPositionRight() }}</strong>
@@ -109,29 +121,30 @@
             @foreach (PaymentGateways::where('enabled', '1')->orderBy('type', 'DESC')->get() as $payment)
 
               @php
-
               if ($payment->type == 'card' ) {
-                $paymentName = '<i class="far fa-credit-card mr-1 icon-sm-radio"></i> '. trans('general.debit_credit_card') .' ('.$payment->name.')';
+                $paymentName = '<i class="far fa-credit-card mr-1 icon-sm-radio"></i> '. __('general.debit_credit_card') .' ('.$payment->name.')';
               } elseif ($payment->type == 'bank') {
-                $paymentName = '<i class="fa fa-university mr-1 icon-sm-radio"></i> '.trans('general.bank_transfer');
+                $paymentName = '<i class="fa fa-university mr-1 icon-sm-radio"></i> '.__('general.bank_transfer');
               } else if ($payment->name == 'PayPal') {
-                $paymentName = '<img src="'.url('/img/payments', auth()->user()->dark_mode == 'off' ? $payment->logo : 'paypal-white.png').'" width="70"/>';
+                $paymentName = '<img src="'.url('public/img/payments', auth()->user()->dark_mode == 'off' ? $payment->logo : 'paypal-white.png').'" width="70"/>';
               } else if ($payment->name == 'Coinpayments') {
-                $paymentName = '<img src="'.url('/img/payments', auth()->user()->dark_mode == 'off' ? $payment->logo : 'coinpayments-white.png').'" width="150"/>';
+                $paymentName = '<img src="'.url('public/img/payments', auth()->user()->dark_mode == 'off' ? $payment->logo : 'coinpayments-white.png').'" width="150"/>';
               } else if ($payment->name == 'Coinbase') {
-                $paymentName = '<img src="'.url('/img/payments', auth()->user()->dark_mode == 'off' ? $payment->logo : 'coinbase-white.png').'" width="110"/>';
+                $paymentName = '<img src="'.url('public/img/payments', auth()->user()->dark_mode == 'off' ? $payment->logo : 'coinbase-white.png').'" width="110"/>';
               } else if ($payment->name == 'NowPayments') {
-                $paymentName = '<img src="'.url('/img/payments', auth()->user()->dark_mode == 'off' ? $payment->logo : 'nowpayments-white.png').'" width="130"/>';
+                $paymentName = '<img src="'.url('public/img/payments', auth()->user()->dark_mode == 'off' ? $payment->logo : 'nowpayments-white.png').'" width="130"/>';
               } else if ($payment->name == 'Mercadopago') {
-                $paymentName = '<img src="'.url('/img/payments', auth()->user()->dark_mode == 'off' ? $payment->logo : 'mercadopago-white.png').'" width="100"/>';
+                $paymentName = '<img src="'.url('public/img/payments', auth()->user()->dark_mode == 'off' ? $payment->logo : 'mercadopago-white.png').'" width="100"/>';
               } else if ($payment->name == 'Flutterwave') {
-                $paymentName = '<img src="'.url('/img/payments', auth()->user()->dark_mode == 'off' ? $payment->logo : 'flutterwave-white.png').'" width="150"/>';
+                $paymentName = '<img src="'.url('public/img/payments', auth()->user()->dark_mode == 'off' ? $payment->logo : 'flutterwave-white.png').'" width="150"/>';
               } else if ($payment->name == 'Mollie') {
-                $paymentName = '<img src="'.url('/img/payments', auth()->user()->dark_mode == 'off' ? $payment->logo : 'mollie-white.png').'" width="80"/>';
+                $paymentName = '<img src="'.url('public/img/payments', auth()->user()->dark_mode == 'off' ? $payment->logo : 'mollie-white.png').'" width="80"/>';
               } else if ($payment->name == 'Razorpay') {
-                $paymentName = '<img src="'.url('/img/payments', auth()->user()->dark_mode == 'off' ? $payment->logo : 'razorpay-white.png').'" width="110"/>';
+                $paymentName = '<img src="'.url('public/img/payments', auth()->user()->dark_mode == 'off' ? $payment->logo : 'razorpay-white.png').'" width="110"/>';
+              } else if ($payment->name == 'Payway') {
+                $paymentName = '<img src="'.url('public/img/payments', auth()->user()->dark_mode == 'off' ? $payment->logo : 'payway-white.svg').'" width="110"/>';
               } else {
-                $paymentName = '<img src="'.url('/img/payments', $payment->logo).'" width="100"/>';
+                $paymentName = '<img src="'.url('public/img/payments', $payment->logo).'" width="100"/>';
               }
 
               @endphp
@@ -139,27 +152,27 @@
                 <input name="payment_gateway" required value="{{$payment->name}}" id="tip_radio{{$payment->name}}" @if (PaymentGateways::where('enabled', '1')->count() == 1) checked @endif class="custom-control-input" type="radio">
                 <label class="custom-control-label" for="tip_radio{{$payment->name}}">
                   <span><strong>{!!$paymentName!!}</strong></span>
-                  <small class="w-100 d-block">{{ $payment->fee != 0.00 || $payment->fee_cents != 0.00 ? '* '.trans('general.transaction_fee').':' : null }} {{ $payment->fee != 0.00 ? $payment->fee.'%' : null }} {{ $payment->fee_cents != 0.00 ? '+ '. Helper::amountFormatDecimal($payment->fee_cents) : null }}</small>
+                  <small class="w-100 d-block">{{ $payment->fee != 0.00 || $payment->fee_cents != 0.00 ? '* '.__('general.transaction_fee').':' : null }} {{ $payment->fee != 0.00 ? $payment->fee.'%' : null }} {{ $payment->fee_cents != 0.00 ? '+ '. Helper::amountFormatDecimal($payment->fee_cents) : null }}</small>
                 </label>
               </div>
 
               @if ($payment->type == 'bank')
                 <div class="btn-block @if (PaymentGateways::where('enabled', '1')->count() != 1) display-none @endif" id="bankTransferBox">
                   <div class="alert alert-default border">
-                  <h5 class="font-weight-bold"><i class="fa fa-university mr-1 icon-sm-radio"></i> {{trans('general.make_payment_bank')}}</h5>
+                  <h5 class="font-weight-bold"><i class="fa fa-university mr-1 icon-sm-radio"></i> {{__('general.make_payment_bank')}}</h5>
                   <ul class="list-unstyled">
                       <li>
                         {!!nl2br($payment->bank_info)!!}
 
                         <hr />
                         <span class="d-block w-100 mt-2">
-                        {{ trans('general.total') }}: <strong>{{ Helper::symbolPositionLeft() }}<span id="total2">0</span>{{ Helper::symbolPositionRight() }}</strong>
+                        {{ __('general.total') }}: <strong>{{ Helper::symbolPositionLeft() }}<span id="total2">0</span>{{ Helper::symbolPositionRight() }}</strong>
                         <span>
 
                           @if ($equivalent_money)
-                          <span class="btn-block w-100">
+                          <small class="btn-block w-100">
                             <strong>{{ $equivalent_money }}</strong>
-                          </span>
+                          </small>
                         @endif
 
                       </li>
@@ -170,9 +183,9 @@
                   <span class="btn-block mb-2" id="previewImage"></span>
 
                     <input type="file" name="image" id="fileBankTransfer" accept="image/*" class="visibility-hidden">
-                    <button class="btn btn-1 btn-block btn-outline-primary mb-2 border-dashed" onclick="$('#fileBankTransfer').trigger('click');" type="button" id="btnFilePhoto">{{trans('general.upload_image')}} (JPG, PNG, GIF) {{trans('general.maximum')}}: {{Helper::formatBytes($settings->file_size_allowed_verify_account * 1024)}}</button>
+                    <button class="btn btn-1 btn-block btn-outline-primary mb-2 border-dashed" onclick="$('#fileBankTransfer').trigger('click');" type="button" id="btnFilePhoto">{{__('general.upload_image')}} (JPG, PNG, GIF) {{__('general.maximum')}}: {{Helper::formatBytes($settings->file_size_allowed_verify_account * 1024)}}</button>
 
-                  <small class="text-muted btn-block">{{trans('general.info_bank_transfer')}}</small>
+                  <small class="text-muted btn-block">{{__('general.info_bank_transfer')}}</small>
                 </div>
                 </div><!-- Alert -->
               @endif
@@ -180,10 +193,17 @@
             @endforeach
 
             <div class="alert alert-danger display-none" id="errorAddFunds">
-                <ul class="list-unstyled m-0" id="showErrorsFunds"></ul>
+                <ul class="list-unstyled m-0 text-break" id="showErrorsFunds"></ul>
               </div>
 
-            <button class="btn btn-1 btn-success btn-block mt-4" id="addFundsBtn" type="submit"><i></i> {{trans('general.add_funds')}}</button>
+              <div class="custom-control custom-control-alternative custom-checkbox">
+                <input class="custom-control-input" required id=" customCheckLogin" name="agree_terms" type="checkbox">
+                <label class="custom-control-label" for=" customCheckLogin">
+                  <span>{{__('general.i_agree_with')}} <a href="{{$settings->link_terms}}" target="_blank">{{__('admin.terms_conditions')}}</a></span>
+                </label>
+              </div>
+
+            <button class="btn btn-1 btn-success btn-block mt-4" id="addFundsBtn" type="submit"><i></i> {{__('general.add_funds')}}</button>
           </form>
 
           @if ($data->count() != 0)
@@ -194,11 +214,11 @@
               <table class="table table-striped m-0">
                 <thead>
                   <th scope="col">ID</th>
-                  <th scope="col">{{ trans('admin.amount') }}</th>
-                  <th scope="col">{{ trans('general.payment_gateway') }}</th>
-                  <th scope="col">{{ trans('admin.date') }}</th>
-                  <th scope="col">{{ trans('admin.status') }}</th>
-                  <th> {{trans('general.invoice')}}</th>
+                  <th scope="col">{{ __('admin.amount') }}</th>
+                  <th scope="col">{{ __('general.payment_gateway') }}</th>
+                  <th scope="col">{{ __('admin.date') }}</th>
+                  <th scope="col">{{ __('admin.status') }}</th>
+                  <th> {{__('general.invoice')}}</th>
                 </thead>
 
                 <tbody>
@@ -214,10 +234,10 @@
 
                       if ($deposit->status == 'pending' ) {
                        			$mode    = 'warning';
-             								$_status = trans('admin.pending');
+             								$_status = __('admin.pending');
                           } else {
                             $mode = 'success';
-             								$_status = trans('general.success');
+             								$_status = __('general.success');
                           }
 
                        @endphp
@@ -226,10 +246,10 @@
 
                        <td>
                          @if ($deposit->status == 'active')
-                         <a href="{{url('deposits/invoice', $deposit->id)}}" target="_blank"><i class="far fa-file-alt"></i> {{trans('general.invoice')}}</a>
+                         <a href="{{url('deposits/invoice', $deposit->id)}}" target="_blank"><i class="far fa-file-alt"></i> {{__('general.invoice')}}</a>
                        </td>
                      @else
-                       {{trans('general.no_available')}}
+                       {{__('general.no_available')}}
                          @endif
                     </tr><!-- /.TR -->
                     @endforeach
@@ -237,7 +257,7 @@
               </table>
             </div><!-- table-responsive -->
           </div><!-- card -->
-          <small class="w-100 d-block mt-2">{{ trans('general.transaction_fee_info') }}</small>
+          <small class="w-100 d-block mt-2">{{ __('general.transaction_fee_info') }}</small>
 
           @if ($data->hasPages())
   			    	<div class="mt-3">
@@ -251,12 +271,16 @@
       </div>
     </div>
   </section>
+
+  @if (auth()->user()->balance != 0.00)
+    @include('includes.modal-transfer')
+  @endif
+
 @endsection
 
 @section('javascript')
-
 <script type="text/javascript">
-@if ($settings->currency_code == 'JPY')
+@if (in_array(config('settings.currency_code'), config('currencies.zero-decimal')))
   $decimal = 0;
   @else
   $decimal = 2;
@@ -299,6 +323,8 @@
       }
       //==== End Taxes
 
+      // Service Fee
+      
     if (element != ''
         && value <= {{ $settings->max_deposits_amount }}
         && value >= {{ $settings->min_deposits_amount }}
@@ -406,10 +432,10 @@ $('#onlyNumber').on('keyup', function() {
 @if (session('payment_process'))
    swal({
      html:true,
-     title: "{{ trans('general.congratulations') }}",
-     text: "{!! trans('general.payment_process_wallet') !!}",
+     title: "{{ __('general.congratulations') }}",
+     text: "{!! __('general.payment_process_wallet') !!}",
      type: "success",
-     confirmButtonText: "{{ trans('users.ok') }}"
+     confirmButtonText: "{{ __('users.ok') }}"
      });
   @endif
 

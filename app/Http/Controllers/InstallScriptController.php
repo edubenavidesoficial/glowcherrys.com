@@ -19,14 +19,12 @@ class InstallScriptController extends Controller
   {
     try {
       // Check Datebase
-       $settings = AdminSettings::first();
+       AdminSettings::first();
        return redirect('/');
     } catch (\Exception $e) {
-      // empty
     }
 
-    $minVersionPHP     = '8.1.0';
-    $currentVersionPHP = (int) str_replace('.', '', phpversion());
+    $minVersionPHP     = '8.2.0';
     $versionPHP = version_compare(phpversion(), $minVersionPHP, '>=') ? true : false;
 
     // Extensions

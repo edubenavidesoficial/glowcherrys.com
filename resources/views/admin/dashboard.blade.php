@@ -1,7 +1,7 @@
 @extends('admin.layout')
 
 @section('css')
-<link href="{{ asset('/admin/jvectormap/jquery-jvectormap-1.2.2.css')}}" rel="stylesheet" type="text/css" />
+<link href="{{ asset('public/admin/jvectormap/jquery-jvectormap-1.2.2.css')}}" rel="stylesheet" type="text/css" />
 @endsection
 
 @section('content')
@@ -248,7 +248,7 @@
 					 @foreach ($subscriptions as $subscription)
 						 <div class="d-flex mb-3">
 							 <div class="flex-shrink-0">
-								 <img src="{{ Helper::getFile(config('path.avatar').$subscription->subscriber->avatar) }}" width="50" class="rounded-circle" />
+								 <img src="{{ isset($subscription->subscriber->username) ? Helper::getFile(config('path.avatar').$subscription->subscriber->avatar) : Helper::getFile(config('path.avatar').$settings->avatar) }}" width="50" class="rounded-circle" />
 							 </div>
 							  <div class="flex-grow-1 ms-3">
 							    <h6 class="m-0 fw-light text-break">
@@ -262,10 +262,10 @@
 
 										{{__('general.subscribed_to')}}
 
-										@if (! isset($subscription->creator->first()->username))
+										@if (! isset($subscription->creator->username))
 											<em class="text-muted">{{ __('general.no_available') }}</em>
 									@else
-										<a href="{{url($subscription->creator->first()->username)}}" target="_blank">{{$subscription->creator->first()->name}}</a>
+										<a href="{{url($subscription->creator->username)}}" target="_blank">{{$subscription->creator->name}}</a>
 									@endif
 
 									</h6>
@@ -297,8 +297,8 @@
 @endsection
 
 @section('javascript')
-	<script src="{{ asset('/admin/jvectormap/jquery-jvectormap-1.2.2.min.js')}}" type="text/javascript"></script>
-	<script src="{{ asset('/admin/jvectormap/jquery-jvectormap-world-mill-en.js')}}" type="text/javascript"></script>
-  <script src="{{ asset('/js/Chart.min.js') }}"></script>
+	<script src="{{ asset('public/admin/jvectormap/jquery-jvectormap-1.2.2.min.js')}}" type="text/javascript"></script>
+	<script src="{{ asset('public/admin/jvectormap/jquery-jvectormap-world-mill-en.js')}}" type="text/javascript"></script>
+  <script src="{{ asset('public/js/Chart.min.js') }}"></script>
 	@include('admin.charts')
   @endsection

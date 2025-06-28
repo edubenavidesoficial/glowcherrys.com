@@ -2,18 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Http\File;
-use Illuminate\Support\Facades\Storage;
-use App\Models\User;
-use App\Models\Updates;
-use App\Models\Messages;
-use App\Models\AdminSettings;
-use App\Models\Media;
-use Carbon\Carbon;
-use App\Helper;
-use Image;
 use FileUploader;
+use Illuminate\Http\Request;
+use App\Models\AdminSettings;
+use Illuminate\Support\Facades\Storage;
 
 class UploadMediaFileShopController extends Controller
 {

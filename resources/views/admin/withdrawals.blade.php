@@ -25,11 +25,22 @@
 			<div class="card shadow-custom border-0">
 				<div class="card-body p-lg-4">
 
+          @if ($data->isNotEmpty())
+					<div class="d-lg-flex justify-content-lg-between align-items-center mb-2 w-100">
+					<!-- form -->
+					<form class="mt-lg-0 mt-2 position-relative" role="search" autocomplete="off" action="{{ url()->current() }}"
+						method="get">
+						<i class="bi bi-search btn-search bar-search"></i>
+						<input type="text" name="q" class="form-control ps-5 w-auto" value="{{ $query }}" required minlength="2"  placeholder="{{ __('general.search') }}">
+					</form><!-- form -->
+					</div>
+					@endif
+
 					<div class="table-responsive p-0">
 						<table class="table table-hover">
 						 <tbody>
 
-               @if ($data->total() !=  0 && $data->count() != 0)
+               @if ($data->isNotEmpty())
                   <tr>
                      <th class="active">ID</th>
              <th class="active">{{ trans('admin.user') }}</th>
@@ -76,7 +87,14 @@
                    @endforeach
 
 									@else
-										<h5 class="text-center p-5 text-muted fw-light m-0">{{ trans('general.no_results_found') }}</h5>
+										<h5 class="text-center p-5 text-muted fw-light m-0">{{ trans('general.no_results_found') }}
+
+                      @if (isset($query))
+												<div class="d-block w-100 mt-2">
+												<a href="{{url()->current()}}"><i class="bi-arrow-left me-1"></i> {{ __('auth.back') }}</a>
+												</div>
+											@endif
+                    </h5>
 									@endif
 
 								</tbody>

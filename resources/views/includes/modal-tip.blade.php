@@ -11,7 +11,8 @@
 						<div class="text-muted text-center mb-3 position-relative modal-offset">
 							<img src="{{Helper::getFile(config('path.avatar').auth()->user()->avatar)}}" width="100" class="avatar-modal rounded-circle mb-1">
 							<h6>
-								{{trans('general.send_tip')}} <span class="userNameTip"></span>
+								{{__('general.send_tip')}} <span class="userNameTip"></span>
+								<small class="w-100 d-block font-12">* {{ __('general.in_currency', ['currency_code' => $settings->currency_code]) }}</small>
 							</h6>
 						</div>
 
@@ -23,7 +24,7 @@
 								<input type="hidden" name="isMessage" value="1" />
 							@endif
 
-							@if (request()->route()->named('live'))
+							@if (request()->route()->named(['live', 'live.private']))
 								<input type="hidden" name="isLive" value="1" />
 
 								@if ($live)
@@ -34,7 +35,10 @@
 
 							<input type="hidden" id="cardholder-name" value="{{ auth()->user()->name }}"  />
 							<input type="hidden" id="cardholder-email" value="{{ auth()->user()->email }}"  />
-							<input type="number" min="{{$settings->min_tip_amount}}" max="{{$settings->max_tip_amount}}" required data-min-tip="{{$settings->min_tip_amount}}" data-max-tip="{{$settings->max_tip_amount}}" autocomplete="off" id="onlyNumber" class="form-control mb-3 tipAmount" name="amount" placeholder="{{trans('general.tip_amount')}} ({{ __('general.minimum') }} {{ Helper::priceWithoutFormat($settings->min_tip_amount) }})">
+							<input type="number" min="{{$settings->min_tip_amount}}" max="{{$settings->max_tip_amount}}" required data-min-tip="{{$settings->min_tip_amount}}" data-max-tip="{{$settings->max_tip_amount}}" autocomplete="off" id="onlyNumber" class="form-control mb-1 tipAmount" name="amount" placeholder="{{__('general.tip_amount')}} ({{ __('general.minimum') }} {{ Helper::priceWithoutFormat($settings->min_tip_amount) }})">
+							<small class="d-block w-100 mb-3">
+								<i class="bi-arrow-up-square mr-1"></i> <i class="bi-arrow-down-square mr-1"></i> {{ __('general.increase_decrease_amount') }}
+							  </small>
 							@csrf
 
 							@if (! request()->route()->named('live'))
@@ -44,11 +48,11 @@
 								@php
 
 								if ($payment->type == 'card' ) {
-									$paymentName = '<i class="far fa-credit-card mr-1"></i> '.trans('general.debit_credit_card') .' <small class="w-100 d-block">'.__('general.powered_by').' '.$payment->name.'</small>';
+									$paymentName = '<i class="far fa-credit-card mr-1"></i> '.__('general.debit_credit_card') .' <small class="w-100 d-block">'.__('general.powered_by').' '.$payment->name.'</small>';
 								} else if ($payment->id == 1) {
-									$paymentName = '<img src="'.url('/img/payments', auth()->user()->dark_mode == 'off' ? $payment->logo : 'paypal-white.png').'" width="70"/> <small class="w-100 d-block">'.trans('general.redirected_to_paypal_website').'</small>';
+									$paymentName = '<img src="'.url('public/img/payments', auth()->user()->dark_mode == 'off' ? $payment->logo : 'paypal-white.png').'" width="70"/> <small class="w-100 d-block">'.__('general.redirected_to_paypal_website').'</small>';
 								} else {
-									$paymentName = '<img src="'.url('/img/payments', $payment->logo).'" width="70"/>';
+									$paymentName = '<img src="'.url('public/img/payments', $payment->logo).'" width="70"/>';
 								}
 
 								$allPayments = $paymentGatewaysSubscription;
@@ -108,9 +112,11 @@
 								</div>
 
 							<div class="text-center">
-								<button type="button" class="btn e-none mt-4" data-dismiss="modal">{{trans('admin.cancel')}}</button>
-								<button type="submit" id="tipBtn" class="btn btn-primary mt-4 tipBtn"><i></i> {{trans('auth.send')}}</button>
+								<button type="button" class="btn e-none mt-4" data-dismiss="modal">{{__('admin.cancel')}}</button>
+								<button type="submit" id="tipBtn" class="btn btn-primary mt-4 tipBtn"><i></i> {{__('auth.send')}}</button>
 							</div>
+
+							@include('includes.site-billing-info')
 						</form>
 					</div>
 				</div>

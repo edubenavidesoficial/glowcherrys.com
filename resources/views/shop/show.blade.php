@@ -26,6 +26,8 @@
     <meta name="twitter:image" content="{{Helper::getFile(config('path.shop').$product->previews[0]->name)}}" />
     <meta name="twitter:title" content="{{ $product->name }}" />
     <meta name="twitter:description" content="{{strip_tags($product->description)}}"/>
+
+    <link href="{{ asset('public/js/splide/splide.min.css')}}?v={{$settings->version}}" rel="stylesheet" type="text/css" />
     @endsection
 
 @section('content')
@@ -35,26 +37,37 @@
 
         <div class="col-md-7 mb-lg-0 mb-4">
 
-          <div class="text-center mb-4 position-relative bg-light">
-
-            @if ($previews > 1)
-              <span class="count-previews">
-                {{ $previews }} <i class="ml-1 bi-image"></i>
-              </span>
-            @endif
-
+          @if ($previews == 1)
+          <div class="text-center mb-4 position-relative bg-light rounded-large shadow-large">
             <a href="{{ Helper::getFile(config('path.shop').$product->previews[0]->name) }}" class="glightbox w-100" data-gallery="gallery{{$product->id}}">
-              <img class="img-fluid" src="{{ Helper::getFile(config('path.shop').$product->previews[0]->name) }}" style="max-height:600px; cursor: zoom-in;">
+              <img class="img-fluid rounded-large" src="{{ Helper::getFile(config('path.shop').$product->previews[0]->name) }}" style="max-height:600px; cursor: zoom-in;">
             </a>
-
-            @if ($previews > 1)
-              @for ($i=1; $i < $previews; $i++)
-                <a href="{{ Helper::getFile(config('path.shop').$product->previews[$i]->name) }}" class="glightbox w-100 display-none" data-gallery="gallery{{$product->id}}">
-                  <img class="img-fluid" src="{{ Helper::getFile(config('path.shop').$product->previews[$i]->name) }}">
-                </a>
-              @endfor
-            @endif
           </div>
+          @endif
+
+          @if ($previews > 1)
+          <section id="mainCarousel" class="splide text-center rounded-large">
+            <div class="splide__track">
+              <ul class="splide__list">
+                @for ($i=0; $i < $previews; $i++)
+                <li class="splide__slide">
+                  <a href="{{ Helper::getFile(config('path.shop').$product->previews[$i]->name) }}" class="glightbox" data-gallery="gallery{{$product->id}}">
+                    <img class="img-fluid rounded-large" src="{{ route('resize', ['path' => 'shop', 'file' => $product->previews[$i]->name, 'size' => 600, 'crop' => 'fit']) }}" style="cursor: zoom-in;">
+                  </a>
+                </li>
+                @endfor
+              </ul>
+            </div>
+          </section>
+
+          <ul id="thumbnails-shop" class="thumbnails-shop mb-3">
+            @for ($i=0; $i < $previews; $i++)
+            <li class="thumbnail-shop">
+              <img class="img-fluid rounded" src="{{ route('resize', ['path' => 'shop', 'file' => $product->previews[$i]->name, 'size' => 80, 'crop' => 'fit']) }}">
+            </li>
+            @endfor
+          </ul>
+          @endif
 
           <h4 class="mb-3">{{ __('general.description') }}</h4>
           <p class="text-break">
@@ -68,7 +81,7 @@
 
       <div class="card rounded-large shadow-large card-border-0">
 
-        <div class="card-body">
+        <div class="card-body p-lg-5 p-4">
 
           <h3 class="mb-2 font-weight-bold text-break">{{ $product->name }}</h3>
 
@@ -99,27 +112,57 @@
     	</div><!-- end card -->
 
       <h3>
-        {{ Helper::amountFormatDecimal($product->price) }} <small>{{ $settings->currency_code }}</small>
+        @if  ($product->price === '0.00')
+        {{ __('general.free') }}
+        @else
+          {{ Helper::amountFormatDecimal($product->price) }} 
+          <small>{{ $settings->currency_code }}</small>
+        @endif
       </h3>
 
       @if (auth()->check()
           && auth()->id() != $product->user()->id
           && ! $verifyPurchaseUser
+          && $product->price !== '0.00'
           || auth()->check()
           && auth()->id() != $product->user()->id
           && $verifyPurchaseUser
           && $product->type == 'custom'
+          && $product->price !== '0.00'
           || auth()->check()
           && auth()->id() != $product->user()->id
           && $verifyPurchaseUser
           && $product->type == 'physical'
+          && $product->price !== '0.00'          
           || auth()->guest()
           )
-      <button class="btn btn-1 btn-primary btn-block mt-4" @if ($product->quantity == 0 && $product->type == 'physical') disabled @endif type="button" data-toggle="modal" @auth data-target="#buyNowForm" @else data-target="#loginFormModal" @endauth>
-        {{ $product->quantity == 0 && $product->type == 'physical' ? __('general.sold_out') : __('general.buy_now') }}
-      </button>
 
-    @elseif (auth()->check() && auth()->id() != $product->user()->id && $verifyPurchaseUser && $product->type == 'digital')
+          @if ($product->external_link ==  '')
+            <button class="btn btn-1 btn-primary btn-block mt-4" @if ($product->quantity == 0 && $product->type == 'physical') disabled @endif type="button" data-toggle="modal" @auth data-target="#buyNowForm" @else data-target="#loginFormModal" @endauth>
+
+              @if  ($product->price === '0.00')
+              {{ __('general.download') }}
+              @else
+              {{ $product->quantity == 0 && $product->type == 'physical' ? __('general.sold_out') : __('general.buy_now') }}
+              @endif
+            </button>
+          @endif
+
+          @if ($product->external_link !=  '')
+              <a class="btn btn-1 btn-primary btn-block mt-4" href="{{ $product->external_link }}" target="_blank">
+                {{ __('general.buy_now') }} <i class="bi-box-arrow-up-right ml-1"></i>
+              </a>
+              <div class="d-block small w-100 text-center mt-1">
+                <i class="bi-exclamation-triangle mr-1"></i> {{ __('general.info_external_link') }}
+              </div>
+          @endif
+
+      @elseif (auth()->check() && auth()->id() != $product->user()->id && $verifyPurchaseUser && $product->type == 'digital')
+      <a class="btn btn-1 btn-primary btn-block mt-4" href="{{ url('product/download', $product->id) }}">
+        {{ __('general.download') }}
+      </a>
+
+    @elseif (auth()->check() && auth()->id() != $product->user()->id && $product->price === '0.00')
       <a class="btn btn-1 btn-primary btn-block mt-4" href="{{ url('product/download', $product->id) }}">
         {{ __('general.download') }}
       </a>
@@ -140,9 +183,17 @@
 
     @endif
 
+    @if ($product->price !== '0.00' && $product->external_link ==  '')
       <div class="w-100 d-block mt-3">
         <i class="bi-cart2 mr-2"></i> {{ __('general.purchases') }} ({{ $product->purchases()->count() }})
       </div>
+      @endif
+
+      @if ($product->price === '0.00')
+      <div class="w-100 d-block mt-3">
+        <i class="bi-download mr-2"></i> {{ __('general.downloads') }} ({{ $product->downloads }})
+      </div>
+      @endif
 
       @if ($product->type == 'digital')
         <div class="w-100 d-block mt-3">
@@ -214,7 +265,7 @@
         </a>
 
         <a href="https://twitter.com/intent/tweet?url={{url()->current().Helper::referralLink()}}&text={{ $product->name }}" title="Twitter" target="_blank" class="d-inline-block mr-2 h5">
-          <i class="fab fa-twitter twitter-btn"></i>
+          <i class="bi-twitter-x"></i>
         </a>
 
         <a href="whatsapp://send?text={{url()->current().Helper::referralLink()}}" data-action="share/whatsapp/share" class="d-inline-block h5" title="WhatsApp">
@@ -273,6 +324,9 @@
                   <option value="violent_sexual">{{trans('admin.violent_sexual_content')}}</option>
                   <option value="fraud">{{trans('general.fraud')}}</option>
                 </select>
+
+                <textarea name="message" rows="" cols="40" maxlength="200" placeholder="{{__('general.message')}} ({{ __('general.optional') }})" class="form-control mt-2 textareaAutoSize"></textarea>
+                
                 </div><!-- /.form-group-->
             </div><!-- Modal body -->
 
@@ -306,7 +360,7 @@
 
     	 </div>
 
-       @foreach ($userProducts->where('id', '<>', $product->id)->take(3)->inRandomOrder()->get() as $product)
+       @foreach ($userProducts->where('id', '<>', $product->id)->take(3)->latest()->get() as $product)
        <div class="col-md-4 mb-4">
          @include('shop.listing-products')
        </div><!-- end col-md-4 -->
@@ -321,6 +375,11 @@
 
 @section('javascript')
   @auth
-    <script src="{{ asset('/js/shop.js') }}"></script>
+    <script src="{{ asset('public/js/shop.js') }}"></script>
   @endauth
+
+  @if ($previews > 1)
+    <script src="{{ asset('public/js/splide/splide.min.js') }}"></script>
+    <script src="{{ asset('public/js/splide/splide-init.js') }}"></script>
+  @endif
 @endsection

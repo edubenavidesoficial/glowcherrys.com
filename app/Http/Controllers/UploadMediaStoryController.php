@@ -2,18 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Http\File;
-use Illuminate\Support\Facades\Storage;
-use App\Models\User;
-use App\Models\Updates;
-use App\Models\Messages;
-use App\Models\AdminSettings;
-use App\Models\MediaStories;
-use Carbon\Carbon;
 use App\Helper;
-use Image;
 use FileUploader;
+use Illuminate\Http\File;
+use App\Models\MediaStories;
+use Illuminate\Http\Request;
+use App\Models\AdminSettings;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Laravel\Facades\Image;
+use Intervention\Image\Typography\FontFactory;
 
 class UploadMediaStoryController extends Controller
 {
@@ -111,11 +108,11 @@ class UploadMediaStoryController extends Controller
 		$fileName = $image;
 		$image = public_path('temp/').$image;
 		$path = config('path.stories');
-		$img   = Image::make($image);
-		$url   = ucfirst(Helper::urlToDomain(url('/')));
+		$img  = Image::read($image);
+		$url  = ucfirst(Helper::urlToDomain(url('/')));
+		$username = auth()->user()->username;
 
-		$width     = $img->width();
-		$height    = $img->height();
+		$width = $img->width();
 
 		if ($extension == 'gif') {
 			$this->insertImage($fileName);
@@ -124,46 +121,26 @@ class UploadMediaStoryController extends Controller
 			$this->moveFileStorage($fileName, $path);
 
 		} else {
-			//=============== Image Large =================//
-			if ($width > 2000) {
-				$scale = 2000;
-			} else {
-				$scale = $width;
+			// Image Large
+			$scale = $width > 2000 ? 2000 : $width;
+
+			$img = $img->scale(width: $scale);
+
+			$fontSize = max(12, round($img->width() * 0.03));
+
+			if (config('settings.watermark') == 'on') {
+				$img->text($url . '/' . $username, $img->width() - 20, $img->height() - 10, function (FontFactory $font)
+				use ($fontSize) {
+					$font->filename(public_path('webfonts/arial.TTF'));
+					$font->size($fontSize);
+					$font->color('#eaeaea');
+					$font->stroke('000000', 1);
+					$font->align('right');
+					$font->valign('bottom');
+				});
 			}
 
-			// Calculate font size
-			if ($width >= 400 && $width < 900) {
-				$fontSize = 18;
-			} elseif ($width >= 800 && $width < 1200) {
-				$fontSize = 24;
-			} elseif ($width >= 1200 && $width < 2000) {
-				$fontSize = 32;
-			} elseif ($width >= 2000 && $width < 3000) {
-				$fontSize = 50;
-			} elseif ($width >= 3000) {
-				$fontSize = 75;
-			} else {
-				$fontSize = 0;
-			}
-
-			if ($this->settings->watermark == 'on') {
-				$img->orientate()->resize($scale, null, function ($constraint) {
-					$constraint->aspectRatio();
-					$constraint->upsize();
-				})->text($url.'/'.auth()->user()->username, $img->width() - 20, $img->height() - 10, function($font)
-						use ($fontSize) {
-						$font->file(public_path('webfonts/arial.TTF'));
-						$font->size($fontSize);
-						$font->color('#eaeaea');
-						$font->align('right');
-						$font->valign('bottom');
-				})->save();
-			} else {
-				$img->orientate()->resize($scale, null, function ($constraint) {
-					$constraint->aspectRatio();
-					$constraint->upsize();
-				})->save();
-			}
+			$img->save();
 
 			// Insert in Database
 			$this->insertImage($fileName);

@@ -25,6 +25,17 @@
 							</div>
 
 							@if ($product->type == 'physical')
+
+							@if ($settings->allow_external_links_shop)
+							<div class="form-group">
+							<input type="text" value="{{ $product->external_link }}" class="form-control" name="external_link" placeholder="https://yourwebsite.com/purchase-url">
+							<div class="text-muted btn-block small mt-1">
+								<i class="bi-info-circle mr-1"></i> {{ __('general.external_link_buy') }}
+							</div>
+							
+							</div>
+							@endif
+
 							<div class="form-group">
 								<input type="text" class="form-control isNumber" value="{{ $product->shipping_fee }}" autocomplete="off" name="shipping_fee" placeholder="{{ __('general.shipping_fee') }}">
 							</div>

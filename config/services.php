@@ -55,4 +55,8 @@ return [
         'redirect' => env('APP_URL').'/oauth/twitter/callback',
     ],
 
+    'openpix' => [
+        'app_id' => env('OPENPIX_APP_ID', 'openpix'),
+        'base_uri' => env('OPENPIX_BASE_URI', 'https://api.openpix.com.br'),
+    ],
 ];

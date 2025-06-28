@@ -15,49 +15,50 @@
 			<div class="card shadow-custom border-0">
 				<div class="card-body p-lg-4">
 
-					@if ($data->total() !=  0)
-					<div class="d-block mb-2 w-100">
-						<!-- form -->
-            <form class="mt-lg-0 mt-2 position-relative" role="search" autocomplete="off" action="{{ url('panel/admin/transactions') }}" method="get">
-							<i class="bi bi-search btn-search bar-search"></i>
-             <input type="text" name="q" class="form-control ps-5 w-auto" value="" placeholder="{{ trans('admin.transaction_id') }}">
-          </form><!-- form -->
-				</div>
-			@endif
+					@if ($data->isNotEmpty())
+					<div class="d-lg-flex justify-content-lg-between align-items-center mb-2 w-100">
+					<!-- form -->
+					<form class="mt-lg-0 mt-2 position-relative" role="search" autocomplete="off" action="{{ url()->current() }}"
+						method="get">
+						<i class="bi bi-search btn-search bar-search"></i>
+						<input type="text" name="q" class="form-control ps-5 w-auto" value="{{ $query }}" required minlength="2"  placeholder="{{ __('general.search') }}">
+					</form><!-- form -->
+					</div>
+					@endif
 
 					<div class="table-responsive p-0">
 						<table class="table table-hover">
 						 <tbody>
 
-               @if ($data->total() !=  0 && $data->count() != 0)
+               @if ($data->isNotEmpty())
                   <tr>
-                     <th class="active">ID</th>
-										 <th class="active">{{ trans('admin.transaction_id') }}</th>
-										 <th class="active">{{ trans('general.user') }}</th>
-										 <th class="active">{{ trans('general.creator') }}</th>
-										 <th class="active">{{ trans('admin.type') }}</th>
-										 <th class="active">{{ trans('admin.amount') }}</th>
-										 <th class="active">{{ trans('admin.earnings_admin') }}</th>
-										 <th class="active">{{ trans('general.payment_gateway') }}</th>
-										 <th class="active">{{ trans('admin.date') }}</th>
-										 <th class="active">{{ trans('admin.status') }}</th>
+					<th class="active">ID</th>
+					<th class="active">{{ __('admin.transaction_id') }}</th>
+					<th class="active">{{ __('general.user') }}</th>
+					<th class="active">{{ __('general.creator') }}</th>
+					<th class="active">{{ __('admin.type') }}</th>
+					<th class="active">{{ __('admin.amount') }}</th>
+					<th class="active">{{ __('admin.earnings_admin') }}</th>
+					<th class="active">{{ __('general.payment_gateway') }}</th>
+					<th class="active">{{ __('admin.date') }}</th>
+					<th class="active">{{ __('admin.status') }}</th>
                    </tr>
 
                  @foreach ($data as $transaction)
 									 <tr>
-										 <td>{{ str_pad($transaction->id, 4, "0", STR_PAD_LEFT) }}</td>
+										<td>{{ str_pad($transaction->id, 4, "0", STR_PAD_LEFT) }}</td>
 										 <td>
 											@if ($transaction->approved == 1)
-											<a href="{{ url('payments/invoice', $transaction->id) }} " target="_blank" title="{{ __('general.invoice') }}">
-												{{ $transaction->txn_id }}  <i class="bi-box-arrow-up-right"></i>
+											<a href="{{ url('payments/invoice', $transaction->id) }} " target="_blank" title="{{ __('general.invoice') }} - {{ $transaction->txn_id }}">
+												{{ str_limit($transaction->txn_id, 25) }}  <i class="bi-box-arrow-up-right"></i>
 											</a>
 											@else
-											{{ $transaction->txn_id }}
+											{{ str_limit($transaction->txn_id, 25) }}
 											@endif
 										 </td>
 										 <td>
 											 @if (! isset($transaction->user()->username))
-												 <em>{{ trans('general.no_available') }}</em>
+												 <em>{{ __('general.no_available') }}</em>
 											 @else
 												 <a href="{{url($transaction->user()->username)}}" target="_blank">
 												 {{$transaction->user()->name}} <i class="bi-box-arrow-up-right"></i>
@@ -66,7 +67,7 @@
 									 </td>
 									 <td>
 										 @if (! isset($transaction->subscribed()->username))
-											 <em>{{ trans('general.no_available') }}</em>
+											 <em>{{ __('general.no_available') }}</em>
 										 @else
 											 <a href="{{url($transaction->subscribed()->username)}}" target="_blank">
 											 {{$transaction->subscribed()->name}} <i class="bi-box-arrow-up-right"></i>
@@ -80,36 +81,42 @@
 											 {{ Helper::amountFormatDecimal($transaction->earning_net_admin) }}
 
 											 @if ($transaction->referred_commission)
-													 <i class="fa fa-info-circle text-muted showTooltip" title="{{trans('general.referral_commission_applied')}}"></i>
+													 <i class="fa fa-info-circle text-muted showTooltip" title="{{__('general.referral_commission_applied')}}"></i>
 											 @endif
 										 </td>
 										 <td>{{ $transaction->payment_gateway }}</td>
 										 <td>{{ Helper::formatDate($transaction->created_at) }}</td>
 										 <td>
 											 @if ($transaction->approved == '0')
-											 <span class="rounded-pill badge bg-warning mb-2 text-uppercase">{{trans('admin.pending')}}</span>
+											 <span class="rounded-pill badge bg-warning mb-2 text-uppercase">{{__('admin.pending')}}</span>
 										 @elseif ($transaction->approved == '1')
-											 <span class="rounded-pill badge bg-success mb-2 text-uppercase">{{trans('admin.approved')}}</span>
+											 <span class="rounded-pill badge bg-success mb-2 text-uppercase">{{__('admin.approved')}}</span>
 										 @else
-											 <span class="rounded-pill badge bg-danger mb-2 text-uppercase">{{trans('general.canceled')}}</span>
+											 <span class="rounded-pill badge bg-danger mb-2 text-uppercase">{{__('general.canceled')}}</span>
 										 @endif
 
 									 @if ($transaction->approved == '1')
-												 {!! Form::open([
-												 'method' => 'POST',
-												 'url' => url('panel/admin/transactions/cancel', $transaction->id),
-												 'class' => 'displayInline'
-											 ]) !!}
-											{!! Form::button(trans('admin.cancel'), ['class' => 'btn btn-danger btn-sm padding-btn rounded-pill cancel_payment']) !!}
-
-												{!! Form::close() !!}
+									 <form method="POST" action="{{ url('panel/admin/transactions/cancel', $transaction->id) }}" class="displayInline">
+										@csrf
+										<button type="submit" class="btn btn-danger btn-sm padding-btn rounded-pill cancel_payment">
+											{{ __('admin.cancel') }}
+										</button>
+									</form>
 											@endif
 											</td>
 									 </tr><!-- /.TR -->
                    @endforeach
 
 									@else
-										<h5 class="text-center p-5 text-muted fw-light m-0">{{ trans('general.no_results_found') }}</h5>
+										<h5 class="text-center p-5 text-muted fw-light m-0">{{ __('general.no_results_found') }}
+
+
+											@if (isset($query))
+												<div class="d-block w-100 mt-2">
+												<a href="{{url()->current()}}"><i class="bi-arrow-left me-1"></i> {{ __('auth.back') }}</a>
+												</div>
+											@endif
+										</h5>
 									@endif
 
 								</tbody>

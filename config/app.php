@@ -169,14 +169,13 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\ViewServiceProvider::class,
-
-        Intervention\Image\ImageServiceProvider::class,
-        Collective\Html\HtmlServiceProvider::class,
+        
         Laravel\Cashier\CashierServiceProvider::class,
         Stevebauman\Purify\PurifyServiceProvider::class,
         Phattarachai\LaravelMobileDetect\AgentServiceProvider::class,
         ProtoneMedia\LaravelFFMpeg\Support\ServiceProvider::class,
-        Anhskohbo\NoCaptcha\NoCaptchaServiceProvider::class,
+
+        App\Providers\OpenPixServiceProvider::class,
     ])->toArray(),
 
     /*
@@ -191,9 +190,6 @@ return [
     */
 
     'aliases' => Facade::defaultAliases()->merge([
-        'Image' => Intervention\Image\Facades\Image::class,
-        'Form' => Collective\Html\FormFacade::class,
-        'Html' => Collective\Html\HtmlFacade::class,
         'FFMpeg' => ProtoneMedia\LaravelFFMpeg\Support\FFMpeg::class,
         'Purify' => Stevebauman\Purify\Facades\Purify::class,
         'AdminSettings' => App\Models\AdminSettings::class,
@@ -214,12 +210,9 @@ return [
         'Conversations' => App\Models\Conversations::class,
         'Messages' => App\Models\Messages::class,
         'Transactions' => App\Models\Transactions::class,
-        'FFMpeg' => ProtoneMedia\LaravelFFMpeg\Support\FFMpeg::class,
-        'QrCode' => SimpleSoftwareIO\QrCode\Facades\QrCode::class,
         'Products' => App\Models\Products::class,
         'Blogs' => App\Models\Blogs::class,
         'Agent' => Phattarachai\LaravelMobileDetect\Facades\Agent::class,
-        'NoCaptcha' => Anhskohbo\NoCaptcha\Facades\NoCaptcha::class,
     ])->toArray(),
 
 ];

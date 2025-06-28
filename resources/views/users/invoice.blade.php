@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="_token" content="{!! csrf_token() !!}"/>
-    <title>{{trans('general.invoice')}} #{{str_pad($data->id, 4, "0", STR_PAD_LEFT)}}</title>
+    <title>{{__('general.invoice')}} #{{str_pad($data->id, 4, "0", STR_PAD_LEFT)}}</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 
@@ -11,7 +11,7 @@
 
     <!-- AdminLTE Skins. Choose a skin from the css/skins
         folder instead of downloading all of them to reduce the load. -->
-    <link rel="shortcut icon" href="{{ url('/img', $settings->favicon) }}" />
+    <link rel="shortcut icon" href="{{ url('public/img', $settings->favicon) }}" />
   </head>
 
   <body class="bg-light">
@@ -22,8 +22,8 @@
     <div class="row">
       <div class="col-12">
         <h2 class="border-bottom pb-3">
-          <img src="{{ url('/img', $settings->logo_2)}}" width="110">
-          <small class="float-end date-invoice mt-3">{{trans('admin.date')}}: {{Helper::formatDate($data->created_at)}}</small>
+          <img src="{{ url('public/img', $settings->logo_2)}}" width="110">
+          <small class="float-end date-invoice mt-3">{{__('admin.date')}}: {{Helper::formatDate($data->created_at)}}</small>
         </h2>
       </div>
       <!-- /.col -->
@@ -31,7 +31,7 @@
     <!-- info row -->
     <div class="row invoice-info mb-3">
       <div class="col-sm-4 invoice-col">
-        {{trans('general.from')}}
+        {{__('general.from')}}
         <address>
           @if ($settings->company)
             <span class="w-100 d-block mb-1 fw-bold">{{$settings->company}}</span>
@@ -49,16 +49,24 @@
             <span class="w-100 d-block mb-1">{{$settings->country}}</span>
           @endif
 
-          <span class="w-100 d-block mb-1">{{trans('auth.email')}}: {{$settings->email_admin}}</span>
+          <span class="w-100 d-block mb-1">{{__('auth.email')}}: {{$settings->email_admin}}</span>
+
+          @if ($settings->phone)
+          <span class="w-100 d-block mb-1">
+            {{__('general.phone')}}: {{$settings->phone}}
+          </span>
+          @endif
 
           @if ($settings->vat)
-            {{trans('general.vat')}}: {{$settings->vat}}
+            {{__('general.vat')}}: {{$settings->vat}}
           @endif
+
+          
         </address>
       </div>
       <!-- /.col -->
       <div class="col-sm-4 invoice-col">
-        {{trans('general.to')}}
+        {{__('general.to')}}
         <address>
           @if (isset($data->user()->username))
           <span class="w-100 d-block mb-1 fw-bold">
@@ -77,7 +85,7 @@
             <span class="w-100 d-block mb-1">{{$data->user()->country()->country_name}}</span>
           @endif
 
-          {{trans('auth.email')}}: {{$data->user()->email}}
+          {{__('auth.email')}}: {{$data->user()->email}}
 
           @else 
           {{ __('general.no_available') }}
@@ -86,8 +94,8 @@
       </div>
       <!-- /.col -->
       <div class="col-sm-4 invoice-col">
-        <b>{{trans('general.invoice')}} #{{str_pad($data->id, 4, "0", STR_PAD_LEFT)}}</b><br>
-        <b>{{trans('general.payment_due')}}</b> {{Helper::formatDate($data->created_at)}}<br>
+        <b>{{__('general.invoice')}} #{{str_pad($data->id, 4, "0", STR_PAD_LEFT)}}</b><br>
+        <b>{{__('general.payment_due')}}</b> {{Helper::formatDate($data->created_at)}}<br>
       </div>
       <!-- /.col -->
     </div>
@@ -99,9 +107,9 @@
         <table class="table table-borderless table-striped">
           <thead>
           <tr>
-            <th>{{trans('general.qty')}}</th>
-            <th class="text-center">{{trans('general.description')}}</th>
-            <th class="text-end">{{trans('general.subtotal')}}</th>
+            <th>{{__('general.qty')}}</th>
+            <th class="text-center">{{__('general.description')}}</th>
+            <th class="text-end">{{__('general.subtotal')}}</th>
           </tr>
           </thead>
           <tbody>
@@ -109,13 +117,17 @@
             <td>1</td>
 
             @if ($data->type == 'subscription')
-              <td class="text-center">{{trans('general.subscription_for').$creator}}</td>
+              <td class="text-center">{{__('general.subscription_for').$creator}}</td>
             @elseif ($data->type == 'ppv')
-              <td class="text-center">{{trans('general.ppv').$creator}}</td>
+              <td class="text-center">{{__('general.ppv').$creator}}</td>
             @elseif ($data->type == 'purchase')
-              <td class="text-center">{{trans('general.purchase_item').$creator}}</td>
+              <td class="text-center">{{__('general.purchase_item').$creator}}</td>
+            @elseif ($data->type == 'live_streaming_private')
+              <td class="text-center">{{__('general.live_streaming_private').$creator}}</td>
+            @elseif ($data->type == 'gift')
+              <td class="text-center">{{__('general.single_payment').' ('.__('general.gift').')'.$creator}}</td>
             @else
-              <td class="text-center">{{trans('general.single_payment').' ('.trans('general.tip').')'.$creator}}</td>
+              <td class="text-center">{{__('general.single_payment').' ('.__('general.tip').')'.$creator}}</td>
             @endif
 
             <td class="text-end">{{Helper::amountFormatDecimal($data->amount)}} {{ $settings->currency_code }}</td>
@@ -135,7 +147,7 @@
         <div class="table-responsive">
           <table class="table">
             <tr class="border-bottom">
-              <th class="w-50 text-end">{{trans('general.subtotal')}}:</th>
+              <th class="w-50 text-end">{{__('general.subtotal')}}:</th>
               <td class="text-end">{{Helper::amountFormatDecimal($data->amount)}} {{ $settings->currency_code }}</td>
             </tr>
 
@@ -147,7 +159,7 @@
               @endforeach
 
             <tr class="h5 text-end">
-              <th class="text-end">{{trans('general.total')}}:</th>
+              <th class="text-end">{{__('general.total')}}:</th>
               <td><strong>{{Helper::amountFormatDecimal($total)}} {{ $settings->currency_code }}</strong></td>
             </tr>
           </table>
@@ -158,7 +170,7 @@
     <!-- /.row -->
     <div class="row no-print">
         <div class="col-12">
-          <a href="javascript:void(0);" onclick="window.print();" class="btn btn-light border"><i class="fa fa-print"></i> {{trans('general.print')}}</a>
+          <a href="javascript:void(0);" onclick="window.print();" class="btn btn-light border"><i class="fa fa-print"></i> {{__('general.print')}}</a>
         </div>
       </div>
   </section>

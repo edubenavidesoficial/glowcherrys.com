@@ -69,18 +69,14 @@
 
                   @if ($data->count() != 1)
 
-                     {!! Form::open([
-  			            'method' => 'POST',
-  			            'url' => url('panel/admin/pages', $page->id),
-  			            'id' => 'form'.$page->id,
-  			            'class' => 'd-inline-block align-top'
-  				        ]) !!}
-  	            	{!! Form::button('<i class="bi-trash-fill"></i>', ['data-url' => $page->id, 'class' => 'btn btn-danger btn-sm rounded-pill actionDelete']) !!}
-  	        			{!! Form::close() !!}
-
-                        		@endif
-
-													</div>
+						<form method="POST" action="{{ url('panel/admin/pages', $page->id) }}" id="form{{ $page->id }}" class="d-inline-block align-top">
+							@csrf
+							<button type="submit" data-url="{{ $page->id }}" class="btn btn-danger btn-sm rounded-pill actionDelete">
+								<i class="bi-trash-fill"></i>
+							</button>
+						</form>
+						@endif
+					</div>
                         		</td>
                       </tr><!-- /.TR -->
                       @endforeach

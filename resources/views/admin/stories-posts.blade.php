@@ -1,7 +1,7 @@
 @extends('admin.layout')
 
 @section('css')
-<link href="{{ asset('/js/plyr/plyr.css')}}?v={{$settings->version}}" rel="stylesheet" type="text/css" />
+<link href="{{ asset('public/js/plyr/plyr.css')}}?v={{$settings->version}}" rel="stylesheet" type="text/css" />
 @endsection
 
 @section('content')
@@ -68,9 +68,9 @@
 										</td>
 
 										<td>
-											@if (isset($story->user()->username))
-												<a href="{{url($story->user()->username)}}" target="_blank">
-													{{$story->user()->username}} <i class="fa fa-external-link-square-alt"></i>
+											@if (isset($story->user->username))
+												<a href="{{url($story->user->username)}}" target="_blank">
+													{{$story->user->username}} <i class="fa fa-external-link-square-alt"></i>
 												</a>
 											@else
 												<em>{{ trans('general.no_available') }}</em>
@@ -86,15 +86,12 @@
 											</a>
 											@endif
 
-										 {!! Form::open([
-											 'method' => 'POST',
-											 'url' => "panel/admin/stories/posts/delete/$story->id",
-											 'class' => 'displayInline'
-										 ]) !!}
-										 
-										 {!! Form::button('<i class="bi-trash-fill"></i>', ['class' => 'btn btn-danger btn-sm padding-btn rounded-pill actionDelete']) !!}
-
-										 {!! Form::close() !!}
+											<form method="POST" action="{{ url('panel/admin/stories/posts/delete', $story->id) }}" class="displayInline">
+												@csrf
+												<button type="submit" class="btn btn-danger btn-sm padding-btn rounded-pill actionDelete">
+													<i class="bi-trash-fill"></i>
+												</button>
+											</form>
 
 									 </div>
 									</td>
@@ -123,6 +120,6 @@
 @endsection
 
 @section('javascript')
-<script src="{{ asset('/js/plyr/plyr.min.js') }}?v={{$settings->version}}"></script>
-<script src="{{ asset('/js/plyr/plyr.polyfilled.min.js') }}?v={{$settings->version}}"></script>
+<script src="{{ asset('public/js/plyr/plyr.min.js') }}?v={{$settings->version}}"></script>
+<script src="{{ asset('public/js/plyr/plyr.polyfilled.min.js') }}?v={{$settings->version}}"></script>
 @endsection

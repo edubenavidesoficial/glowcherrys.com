@@ -8,13 +8,13 @@
 				: '<i class="bi-lightning-charge mr-2"></i>'. __('general.custom_content'))
 			!!}
 		</span>
-	<div class="card-cover position-relative" style="background: url({{ Helper::getFile(config('path.shop').$product->previews[0]->name) }}) #efefef center center; background-size: cover; height:300px;">
+	<div class="card-cover position-relative" style="background: url({{ route('resize', ['path' => 'shop', 'file' => $product->previews[0]->name, 'size' => 480]) }}) #efefef center center; background-size: cover; height:300px;">
 
-		<span class="price-shop">
+		<span @class(['price-shop', 'bg-danger' => $product->type == 'physical' && $product->quantity == 0])>
 			@if ($product->type == 'physical' && $product->quantity == 0)
 				{{ __('general.sold_out') }}
 			@else
-				{{ Helper::amountFormatDecimal($product->price) }}
+				{{ $product->price === '0.00' ? __('general.free') : Helper::amountFormatDecimal($product->price) }}
 			@endif
 		</span>
 	</div>

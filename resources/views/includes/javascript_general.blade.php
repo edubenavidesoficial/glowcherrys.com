@@ -1,42 +1,51 @@
-<script>
-window.paceOptions = {
-    ajax: false,
-    restartOnRequestAfter: false,
-};
-</script>
-<script src="{{ asset('/js/core.min.js') }}?v={{$settings->version}}"></script>
-<script src="{{ asset('/js/bootstrap.bundle.min.js') }}"></script>
-<script src="{{ asset('/js/jqueryTimeago_'.Lang::locale().'.js') }}"></script>
-<script src="{{ asset('/js/lazysizes.min.js') }}" async=""></script>
-<script src="{{ asset('/js/plyr/plyr.min.js') }}?v={{$settings->version}}"></script>
-<script src="{{ asset('/js/plyr/plyr.polyfilled.min.js') }}?v={{$settings->version}}"></script>
-<script src="{{ asset('/js/app-functions.js') }}?v={{$settings->version}}"></script>
+<script src="{{ asset('public/js/core.min.js') }}?v={{$settings->version}}"></script>
+<script src="{{ asset('public/js/bootstrap.bundle.min.js') }}"></script>
+<script src="{{ asset('public/js/jqueryTimeago_'.Lang::locale().'.js') }}"></script>
+<script src="{{ asset('public/js/lazysizes.min.js') }}" async=""></script>
+<script src="{{ asset('public/js/plyr/plyr.min.js') }}?v={{$settings->version}}"></script>
+<script src="{{ asset('public/js/plyr/plyr.polyfilled.min.js') }}?v={{$settings->version}}"></script>
+<script src="{{ asset('public/js/app-functions.js') }}?v={{$settings->version}}"></script>
+
+@if (request()->routeIs('reels.section.*') || request()->routeIs('profile') && request('media') == 'reels')
+<script src="{{ asset('public/js/reels/reels.js') }}?v={{$settings->version}}"></script>
+<script src="{{ asset('public/js/reels/comments-reels.js') }}?v={{$settings->version}}"></script>
+@endif
 
 @if (! request()->is('live/*'))
-<script src="{{ asset('/js/install-app.js') }}?v={{$settings->version}}"></script>
+<script src="{{ asset('public/js/install-app.js') }}?v={{$settings->version}}"></script>
 @endif
 
 @auth
-  <script src="{{ asset('/js/fileuploader/jquery.fileuploader.min.js') }}"></script>
-  <script src="{{ asset('/js/fileuploader/fileuploader-post.js') }}?v={{$settings->version}}"></script>
-  <script src="{{ asset('/js/jquery-ui/jquery-ui.min.js') }}"></script>
-  @if (request()->path() == '/' && auth()->user()->verified_id == 'yes' || request()->route()->named('profile') && request()->path() == auth()->user()->username  && auth()->user()->verified_id == 'yes')
-  <script src="{{ asset('/js/jquery-ui/mentions.js') }}"></script>
+  <script src="{{ asset('public/js/fileuploader/jquery.fileuploader.min.js') }}"></script>
+  <script src="{{ asset('public/js/fileuploader/fileuploader-post.js') }}?v={{$settings->version}}"></script>
+  <script src="{{ asset('public/js/jquery-ui/jquery-ui.min.js') }}"></script>
+  @if (request()->path() == '/' 
+  		&& auth()->user()->verified_id == 'yes' 
+		|| request()->routeIs('profile') 
+		&& request()->path() == auth()->user()->username  
+		&& auth()->user()->verified_id == 'yes'
+		)
+  <script src="{{ asset('public/js/jquery-ui/mentions.js') }}"></script>
 @endif
 
 @if ($settings->story_status)
-<script src="{{ asset('/js/story/zuck.min.js') }}?v={{$settings->version}}"></script>
+<script src="{{ asset('public/js/story/zuck.min.js') }}?v={{$settings->version}}"></script>
+@endif
+
+@if ($settings->video_call_status)
+<script src="{{ asset('public/js/calls.js') }}?v={{$settings->version}}"></script>
 @endif
 
 <script src="https://js.stripe.com/v3/"></script>
 <script src='https://checkout.razorpay.com/v1/checkout.js'></script>
 <script src='https://js.paystack.co/v1/inline.js'></script>
 @if (request()->is('my/wallet'))
-<script src="{{ asset('/js/add-funds.js') }}?v={{$settings->version}}"></script>
+<script src="{{ asset('public/js/add-funds.js') }}?v={{$settings->version}}"></script>
 @else
-<script src="{{ asset('/js/payment.js') }}?v={{$settings->version}}"></script>
-<script src="{{ asset('/js/payments-ppv.js') }}?v={{$settings->version}}"></script>
+<script src="{{ asset('public/js/payment.js') }}?v={{$settings->version}}"></script>
+<script src="{{ asset('public/js/payments-ppv.js') }}?v={{$settings->version}}"></script>
 @endif
+<script src="{{ asset('public/js/send-gift.js') }}?v={{$settings->version}}"></script>
 @endauth
 
 @if ($settings->custom_js)
@@ -52,11 +61,18 @@ const lightbox = GLightbox({
     closeEffect: 'fade'
 });
 
-@if (auth()->check())
+@auth
 $('.btnMultipleUpload').on('click', function() {
   $('.fileuploader').toggleClass('d-block');
 });
-@endif
+
+	@if (request()->routeIs('post.edit') && $preloadedFile)
+	$(document).ready(function() {
+		$('.fileuploader').addClass('d-block');
+	});
+	@endif
+
+@endauth
 </script>
 
 @if (auth()->guest()

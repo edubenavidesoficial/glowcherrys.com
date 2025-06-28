@@ -5,12 +5,9 @@
 @section('content')
   <div class="jumbotron home m-0 bg-gradient">
     <div class="container pt-lg-md">
-      <div class="row">
-        <div class="col-lg-7">
-          <img src="{{url('/img', $settings->home_index)}}" class="img-center img-fluid d-lg-block d-none">
-        </div>
+      <div class="row justify-content-center">
         <div class="col-lg-5">
-          <div class="card bg-white shadow border-0">
+          <div class="card bg-white shadow border-0 b-radio-custom">
 
             <div class="card-body px-lg-5 py-lg-5">
 
@@ -38,13 +35,13 @@
 
                 @if ($settings->twitter_login == 'on')
                 <a href="{{url('oauth/twitter')}}" class="btn btn-twitter auth-form-btn mb-2 w-100">
-                  <i class="fab fa-twitter mr-2"></i> {{ __('auth.sign_up_with') }} Twitter
+                  <i class="bi-twitter-x mr-2"></i> {{ __('auth.sign_up_with') }} X
                 </a>
               @endif
 
                   @if ($settings->google_login == 'on')
                   <a href="{{url('oauth/google')}}" class="btn btn-google auth-form-btn flex-grow w-100">
-                    <img src="{{ url('/img/google.svg') }}" class="mr-2" width="18" height="18"> {{ __('auth.sign_up_with') }} Google
+                    <img src="{{ url('public/img/google.svg') }}" class="mr-2" width="18" height="18"> {{ __('auth.sign_up_with') }} Google
                   </a>
                 @endif
                 </div>

@@ -1,6 +1,6 @@
 <?php
 
-return array(
+return [
 
     /*
     |--------------------------------------------------------------------------
@@ -19,6 +19,7 @@ return array(
     'music' => 'uploads/updates/music/',
     'videos' => 'uploads/updates/videos/',
     'messages' => 'uploads/messages/',
+    'welcome_messages' => 'uploads/messages/welcome/',
 
     // Verification User
     'verification' => 'uploads/verification/',
@@ -31,4 +32,10 @@ return array(
 
     // Stories
     'stories' => 'uploads/stories/',
-);
+
+    // Advertising
+    'ads' => 'uploads/ads/',
+
+    // Reels
+    'reels' => 'uploads/reels/',
+];

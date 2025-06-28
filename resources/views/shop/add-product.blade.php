@@ -27,20 +27,25 @@
               </div>
 
               <div class="form-group">
-                <input type="text" class="form-control" name="name" placeholder="{{ __('admin.name') }}">
+                <input type="text" class="form-control" name="name" placeholder="{{ __('admin.name') }} *">
               </div>
 
                 <div class="form-group">
-                  <input type="text" class="form-control isNumber" name="price" autocomplete="off" placeholder="{{ __('general.price') }}">
+                  <input type="text" class="form-control isNumber" name="price" autocomplete="off" placeholder="{{ __('general.price') }} *">
+                  @if ($settings->allow_free_items_shop)
+                  <div class="text-muted btn-block small mt-1">
+                    <i class="bi-info-circle mr-1"></i> {{ __('general.free_item_shop') }}
+                  </div>
+                  @endif
                 </div>
-
+                
                 <div class="form-group">
-                  <input type="text" class="form-control" name="tags" placeholder="{{ __('general.tags') }} ({{ __('general.separate_with_comma') }})">
+                  <input type="text" class="form-control" name="tags" placeholder="{{ __('general.tags') }} * ({{ __('general.separate_with_comma') }})">
                 </div>
 
                 <div class="form-group">
                   <select name="category" class="form-control custom-select">
-                    <option disabled value="" selected>{{ __('general.category') }}</option>
+                    <option disabled value="" selected>{{ __('general.category') }}  *</option>
                     @foreach (App\Models\ShopCategories::orderBy('name')->get() as $category)
                       <option value="{{ $category->id }}">
                         {{ Lang::has('shop-categories.' . $category->slug) ? __('shop-categories.' . $category->slug) : $category->name }}
@@ -50,7 +55,7 @@
                 </div>
 
               <div class="form-group">
-                <textarea class="form-control textareaAutoSize" name="description" placeholder="{{ __('general.description') }}" rows="3"></textarea>
+                <textarea class="form-control textareaAutoSize" name="description" placeholder="{{ __('general.description') }} *" rows="3"></textarea>
               </div>
 
               <div class="form-group file-shop mb-4">
@@ -75,7 +80,7 @@
 @endsection
 
 @section('javascript')
-  <script src="{{ asset('/js/fileuploader/fileuploader-shop-preview.js') }}"></script>
-  <script src="{{ asset('/js/fileuploader/fileuploader-shop-file.js') }}"></script>
-  <script src="{{ asset('/js/shop.js') }}"></script>
+  <script src="{{ asset('public/js/fileuploader/fileuploader-shop-preview.js') }}"></script>
+  <script src="{{ asset('public/js/fileuploader/fileuploader-shop-file.js') }}"></script>
+  <script src="{{ asset('public/js/shop.js') }}"></script>
 @endsection

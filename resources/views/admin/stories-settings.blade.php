@@ -69,7 +69,6 @@
 						<option @if ($settings->story_max_videos_length == 30) selected="selected" @endif value="30">30 {{ trans('general.seconds') }}</option>
 						<option @if ($settings->story_max_videos_length == 60) selected="selected" @endif value="60">60 {{ trans('general.seconds') }}</option>
 					 </select>
-					 <small class="d-block">{{ __('general.video_encoding_alert') }}</small>
 					</div>
 				  </div>
 

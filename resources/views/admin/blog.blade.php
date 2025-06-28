@@ -35,10 +35,10 @@
 
                   @if ($data->count() !=  0)
                      <tr>
-											 <th class="active">ID</th>
-											 <th class="active">{{ trans('general.title') }}</th>
-											 <th class="active">{{ trans('admin.date') }}</th>
-											 <th class="active">{{ trans('admin.actions') }}</th>
+						<th class="active">ID</th>
+						<th class="active">{{ trans('general.title') }}</th>
+						<th class="active">{{ trans('admin.date') }}</th>
+						<th class="active">{{ trans('admin.actions') }}</th>
                       </tr>
 
                     @foreach ($data as $blog)
@@ -48,20 +48,17 @@
                         <td>{{ date('d M, Y', strtotime($blog->date)) }}</td>
                         <td>
                         	<div class="d-flex">
-														<a href="{{ url('panel/admin/blog', $blog->id) }}" class="btn btn-success rounded-pill btn-sm me-2">
+								<a href="{{ url('panel/admin/blog', $blog->id) }}" class="btn btn-success rounded-pill btn-sm me-2">
 	                        		<i class="bi-pencil"></i>
 	                        	</a>
 
-														{!! Form::open([
-		        			            'method' => 'post',
-		        			            'url' => url('panel/admin/blog/delete', $blog->id),
-		        			            'class' => 'displayInline'
-		        				        ]) !!}
-		        	            	{!! Form::button('<i class="bi-trash-fill"></i>', ['class' => 'btn btn-danger rounded-pill btn-sm actionDeleteBlog']) !!}
-		        	        	{!! Form::close() !!}
-
-													</div>
-
+									<form method="POST" action="{{ url('panel/admin/blog/delete', $blog->id) }}" class="displayInline">
+										@csrf
+										<button type="submit" class="btn btn-danger rounded-pill btn-sm actionDeleteBlog">
+											<i class="bi-trash-fill"></i>
+										</button>
+									</form>
+								</div>
                         		</td>
                       </tr><!-- /.TR -->
                       @endforeach

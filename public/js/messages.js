@@ -45,8 +45,6 @@
 	 var _message    = $('#message').val();
 	 var file        = $('#file').val();
 	 var zipFile     = $('#zipFile').val();
-	 var dataWait    = '<i class="spinner-border spinner-border-sm"></i>';
-	 var dataSent    = '<i class="far fa-paper-plane"></i>';
 	 var input       = $('input[name=price]');
 
 	 if (trimSpace(_message).length == 0 && file == '' && zipFile == '') {
@@ -55,7 +53,7 @@
 	 }
 
 	 if (error == false) {
-		 $('#button-reply-msg').attr({'disabled' : 'true'}).html(dataWait);
+		 $('#button-reply-msg').attr({'disabled' : 'true'});
 	   $('.blocked').show();
 
 	     $('.progress-upload-cover').show();
@@ -71,12 +69,12 @@
 	     percent.width(percentVal);
 
 	     $('.popout').removeClass('popout-success').addClass('popout-error').html(error_occurred + ' ' + xhr).fadeIn('500').delay('5000').fadeOut('500');
-	     $('#button-reply-msg').removeAttr('disabled').html(dataSent);
+	     $('#button-reply-msg').removeAttr('disabled');
 	     $('.blocked').hide();
 			 $('#file').val('');
 			 $('#zipFile').val('');
-			 $('#removePhoto').hide();
-			 $('#previewImage').html('');
+			 $('#removePhoto, #removeEpub').hide();
+			 $('#previewImage, #previewEpub').html('');
 	    },
 	    beforeSend: function() {
 	       percent.width(percentVal);
@@ -114,7 +112,7 @@
 			//===== SUCCESS =====//
 			if (result.success != false) {
 
-				$('#message').val('');
+				$('#message').val('').css({height: '44px', transition: 'height .6s ease'});
 
 	       $('#file').val('');
 				 $('#zipFile').val('');
@@ -123,12 +121,12 @@
 	       $('#previewFile').html('');
 					$('#errorMsg').fadeOut();
 	        $('#showErrorMsg').html('');
-					$('#button-reply-msg').attr({'disabled' : 'true'}).html(dataSent).addClass('e-none');
+					$('#button-reply-msg').attr({'disabled' : 'true'}).addClass('e-none');
 	        $('.blocked').hide();
 	        $('.progress-upload-cover').hide();
 	        percent.width(percentVal);
-					$('#removePhoto').hide();
-					$('#previewImage').html('');
+					$('#removePhoto, #removeEpub').hide();
+					$('#previewImage, #previewEpub').html('');
 
 					if (input.hasClass('active')) {
 			 		 input.val('');
@@ -141,7 +139,7 @@
 				removeItemsUploader();
 
 			 } else if (result.error_custom ) {
-				 $('#button-reply-msg').removeAttr('disabled').html(dataSent);
+				 $('#button-reply-msg').removeAttr('disabled');
 	       $('.blocked').hide();
 	       $('#errorMsg').fadeIn();
 				 $('#showErrorMsg').html(result.error_custom).fadeIn(500);
@@ -149,8 +147,8 @@
 	       percent.width(percentVal);
 				 $('#file').val('');
 				 $('#zipFile').val('');
-				 $('#removePhoto').hide();
-				 $('#previewImage').html('');
+				 $('#removePhoto, #removeEpub').hide();
+				 $('#previewImage, #previewEpub').html('');
 
 				 removeItemsUploader();
 
@@ -165,7 +163,7 @@
 
 	       $('#errorMsg').fadeIn();
 	    	 $('#showErrorMsg').html(error).fadeIn(500);
-	       $('#button-reply-msg').removeAttr('disabled').html(dataSent);
+	       $('#button-reply-msg').removeAttr('disabled');
 	       $('.blocked').hide();
 	       $('.progress-upload-cover').hide();
 	       percent.width(percentVal);
@@ -220,8 +218,7 @@
 			}).done(function(res) {
 
 			if (res) {
-
-				$('.popout').slideUp('500');
+				$('.popout:not(.error-video-call)').slideUp('500');
 
 	      if (res.userOnline) {
 	        $('#lastSeen').hide();
@@ -250,7 +247,7 @@
 				   	var myDiv = $("#contentDIV").get(0);
 				   	myDiv.scrollTop = myDiv.scrollHeight;
 
-						const players = Plyr.setup('.js-player');
+						const players = Plyr.setup('.js-player', {ratio: '4:3'});
 
 						const lightbox = GLightbox({
 						    touchNavigation: true,
@@ -265,7 +262,7 @@
 		}// End Request
 	}//End Function TimeLine
 
-	setInterval(Chat, 1000);
+	setInterval(Chat, 1500);
 
 	//<---------- * Remove Message * ---------->
 	 $(document).on('click','.removeMsg',function(){
@@ -324,70 +321,6 @@
 	  });
 	});//<---- * End Remove Message * ---->
 
-	//<---------- * Desactivar Message * ---------->
-    $(document).on('click','.removeMsgPersonal',function(){
-
-        var element   = $(this);
-        var data      = element.attr('data');
-        var deleteMsg = element.attr('data-delete');
-        var query     = 'message_id='+data;
-
-        swal(
-            {
-           title: delete_confirm,
-               text: confirm_delete_message,
-                type: "error",
-                showLoaderOnConfirm: true,
-                showCancelButton: true,
-                confirmButtonColor: "#DD6B55",
-                   confirmButtonText: yes_confirm,
-                   cancelButtonText: cancel_confirm,
-                    closeOnConfirm: false,
-                    },
-                    function(isConfirm){
-               if (isConfirm) {
-                 console.log('url', URL_BASE+'/message/desactivate')
-       $.ajax({
-          headers: {
-              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-          type : 'POST',
-          url  : URL_BASE+'/message/desactivate',
-          dataType: 'json',
-          data : query,
-
-        }).done(function(data) {
-            console.log('respuesta',data)
-          if (! data.success) {
-                  swal.close();
-            $('.popout').removeClass('popout-success').addClass('popout-error').html(error_occurred).slideDown('500').delay('5000').slideUp('500');
-            return false;
-          } else {
-              element.parents('div.chatlist').fadeTo( 200,0.00, function(){
-                       element.parents('div.chatlist').slideUp( 200, function(){
-                         element.parents('div.chatlist').remove();
-                        });
-                     });
-
-                  swal.close();
-              }
-
-          if (data.session_null) {
-          window.location.reload();
-        }
-        })
-        .fail(function(xhr, status, error) {
-            console.log('Error:', error);
-            console.error('Error details:', xhr.responseText);
-            // Aquí puedes manejar el error de manera más específica
-        });//<--- Done
-
-          }
-        });
-      });//<---- * End Remove Message * ---->
-
-
-
 	//<<==================== PAGINATOR Messages Chat
 	$(document).on('click','.loadMoreMessages', function(e) {
 
@@ -400,7 +333,7 @@
 	var user_id = $(this).parents('.wrap-container').attr('data-id');
 	var wrapContainer = $(this).parents('.wrap-container');
 
-	wrapContainer.html('<span class="spinner-border align-middle text-primary mb-2"></span>');
+	wrapContainer.html('<span class="spinner-border align-middle text-primary mb-2 spinnerLoadMsg"></span>');
 
 	$.ajax({
 	  url: URL_BASE+'/loadmore/messages?id=' + user_id + '&skip=' + allElements
@@ -418,7 +351,7 @@
 
 	    jQuery(".timeAgo").timeago();
 
-	    const players = Plyr.setup('.js-player');
+	    const players = Plyr.setup('.js-player', {ratio: '4:3'});
 
 			const lightbox = GLightbox({
 					touchNavigation: true,
@@ -427,7 +360,7 @@
 			});
 
 	  } else {
-	    $('.popout').addClass('popout-error').html(error_reload_page).slideDown('500').delay('5000').slideUp('500');
+	    $('.spinnerLoadMsg').remove();
 	  }
 	  //<**** - Tooltip
 	}).fail(function(jqXHR, ajaxOptions, thrownError)
@@ -591,7 +524,7 @@
 		 		return false;
 		 	 }
 
-			 $('#previewImage').html('<i class="fa fa-paperclip text-info"></i> <strong>' + oFile.name + '</strong>');
+			 $('#previewImage').html('<em><strong>' + oFile.name + '</strong></em>');
 			 $('#removePhoto').show();
 
 		  }
@@ -648,7 +581,7 @@
 
 			    jQuery(".timeAgo").timeago();
 
-			    const players = Plyr.setup('.js-player');
+			    const players = Plyr.setup('.js-player', {ratio: '4:3'});
 
 					const lightbox = GLightbox({
 							touchNavigation: true,

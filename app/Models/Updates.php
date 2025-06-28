@@ -2,13 +2,18 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use App\Helper;
+use Illuminate\Database\Eloquent\Model;
 
 class Updates extends Model
 {
 	protected $guarded = [];
 	public $timestamps = false;
+
+	protected $casts = [
+		'likes_extras' => 'integer',
+		'date' => 'datetime',
+	];
 
 	public function user()
 	{
@@ -68,10 +73,12 @@ class Updates extends Model
                 'updates.fixed_post',
                 'updates.price',
                 'updates.status',
-                'updates.video_views'
+                'updates.video_views',
+				'updates.scheduled_date',
+				'updates.likes_extras',
                 )
           ->with([
-            'creator:id,name,username,avatar,hide_name,verified_id,plan,free_subscription', 
+            'creator:id,name,username,avatar,hide_name,verified_id,plan,free_subscription,cover,allow_comments', 
             'creator.plans:user_id,name,status', 
             'media', 
             'comments:id,updates_id',
@@ -91,7 +98,8 @@ class Updates extends Model
 		'updates.fixed_post',
 		'updates.price',
 		'updates.status',
-		'updates.video_views'
+		'updates.video_views',
+		'updates.scheduled_date'
 	  );
 	}
 
@@ -101,5 +109,4 @@ class Updates extends Model
 			$sql->where('blocked_countries', 'NOT LIKE', '%'.Helper::userCountry().'%')
 		]);
 	}
-
 }

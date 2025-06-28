@@ -17,13 +17,13 @@
 
 							@if ($settings->twitter_login == 'on')
 							<a href="{{url('oauth/twitter')}}" class="btn btn-twitter auth-form-btn mb-2 w-100">
-								<i class="fab fa-twitter mr-2"></i> <span class="loginRegisterWith">{{ __('auth.login_with') }}</span> Twitter
+								<i class="bi-twitter-x mr-2"></i> <span class="loginRegisterWith">{{ __('auth.login_with') }}</span> X
 							</a>
 						@endif
 
 								@if ($settings->google_login == 'on')
 								<a href="{{url('oauth/google')}}" class="btn btn-google auth-form-btn flex-grow w-100">
-									<img src="{{ url('/img/google.svg') }}" class="mr-2" width="18" height="18"> <span class="loginRegisterWith">{{ __('auth.login_with') }}</span> Google
+									<img src="{{ url('public/img/google.svg') }}" class="mr-2" width="18" height="18"> <span class="loginRegisterWith">{{ __('auth.login_with') }}</span> Google
 								</a>
 							@endif
 							</div>
@@ -103,15 +103,8 @@
                         			{{ __('general.and') }}
 									<a href="{{$settings->link_privacy}}" target="_blank">{{__('admin.privacy_policy')}}</a>
 								</span>
-								</label>
-								<input class="custom-control-input" id="customCheckAge" type="checkbox" name="agree_gdpr">
-								<label class="custom-control-label" for="customCheckAge">
-									<span>
-										{{__('admin.age')}}
-									</span>
-								</label>
-								<p id="error-msg" style="color:red; display:none;"></p>
-							</div>
+							</label>
+					</div>
 
 					<div class="alert alert-danger display-none mb-0 mt-3" id="errorLogin">
 							<ul class="list-unstyled m-0" id="showErrorsLogin"></ul>
@@ -164,58 +157,3 @@
 	</div>
  </div>
 </div>
-
-<script>
-  const blockedRegions = [
-    'alabama', 'virginia', 'utah', 'arkansas', 'louisiana', 'montana',
-    'texas', 'mississippi', 'california',
-    'europe', 'india', 'china', 'south korea', 'indonesia',
-    'united arab emirates', 'egypt', 'turkey', 'iran'
-  ];
-
-  async function getLocationData() {
-    try {
-      const res = await fetch('https://ipapi.co/json/');
-      return await res.json();
-    } catch (error) {
-      console.error('Error al obtener la ubicación:', error);
-      return null;
-    }
-  }
-
-  function isBlockedLocation(location) {
-    const region = (location.region || '').toLowerCase();
-    const country = (location.country_name || '').toLowerCase();
-    const continent = (location.continent_code || '').toLowerCase();
-
-    return blockedRegions.some(blocked => 
-      region.includes(blocked) || 
-      country.includes(blocked) ||
-      (blocked === 'europe' && continent === 'eu')
-    );
-  }
-
-  document.getElementById('formLoginRegister').addEventListener('submit', async function (e) {
-    e.preventDefault();
-    const checkbox = document.getElementById('customCheckAge');
-    const errorMsg = document.getElementById('error-msg');
-
-    if (!checkbox.checked) {
-      errorMsg.textContent = 'Debes aceptar que eres mayor de edad.';
-      errorMsg.style.display = 'block';
-      return;
-    }
-
-    const location = await getLocationData();
-
-    if (location && isBlockedLocation(location)) {
-      errorMsg.textContent = 'El acceso está restringido en tu ubicación.';
-      errorMsg.style.display = 'block';
-      return;
-    }
-
-    // Si todo está bien
-    errorMsg.style.display = 'none';
-    alert('Acceso concedido. Puedes continuar.');
-  });
-</script>

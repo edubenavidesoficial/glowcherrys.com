@@ -3,84 +3,78 @@
 namespace App\Http\Controllers\Traits;
 
 use DB;
-use Mail;
 use App\Helper;
-use App\Models\User;
-use App\Models\AdminSettings;
-use App\Models\Subscriptions;
-use App\Models\Plans;
-use App\Models\Notifications;
-use App\Models\Comments;
-use App\Models\Like;
-use App\Models\Updates;
-use App\Models\Countries;
-use App\Models\TaxRates;
-use App\Models\Reports;
-use App\Models\VerificationRequests;
-use App\Models\Referrals;
-use App\Models\ReferralTransactions;
-use App\Models\PaymentGateways;
-use App\Models\Conversations;
-use App\Models\Messages;
-use App\Models\Bookmarks;
-use App\Models\Transactions;
-use App\Models\PayPerViews;
-use App\Models\Deposits;
-use App\Models\LoginSessions;
-use App\Notifications\TipReceived;
-use App\Notifications\PayPerViewReceived;
-use App\Models\TwoFactorCodes;
-use App\Notifications\SendTwoFactorCode;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Auth;
-use Phattarachai\LaravelMobileDetect\Agent;
 use Carbon\Carbon;
+use App\Models\User;
+use App\Models\Media;
+use App\Models\Plans;
+use App\Models\Updates;
+use App\Models\Deposits;
+use App\Models\Messages;
+use App\Models\TaxRates;
+use App\Jobs\EncodeVideo;
+use App\Models\Countries;
+use App\Models\Referrals;
+use App\Models\PayPerViews;
+use App\Models\Withdrawals;
+use Illuminate\Support\Str;
+use App\Models\Transactions;
+use App\Models\LoginSessions;
+use App\Models\MediaMessages;
+use App\Models\Notifications;
+use App\Models\Subscriptions;
+use App\Models\TwoFactorCodes;
+use App\Models\PaymentGateways;
+use App\Notifications\TipReceived;
+use App\Models\ReferralTransactions;
+use App\Services\CoconutVideoService;
+use Illuminate\Support\Facades\Storage;
+use App\Models\AdminSettings as Setting;
+use App\Notifications\SendTwoFactorCode;
+use App\Actions\SendWelcomeMessageAction;
+use App\Notifications\PayPerViewReceived;
+use App\Models\LiveStreamingPrivateRequest;
+use Phattarachai\LaravelMobileDetect\Agent;
 
-trait Functions {
-
+trait Functions
+{
 	// Users on Card Explore
 	public function userExplore($type = false)
 	{
 		if ($type) {
-			return User::selectFieldsUserExplorer()->where('status','active')
+			return User::selectFieldsUserExplorer()->where('status', 'active')
 				->where('id', '<>', auth()->id() ?? 0)
-					->whereVerifiedId('yes')
-					->where('id', '<>', config('settings.hide_admin_profile') == 'on' ? 1 : 0)
-					->whereFreeSubscription('yes')
-					->whereHideProfile('no')
-					->where('blocked_countries', 'NOT LIKE', '%'.Helper::userCountry().'%')
-					->with(['media' => fn ($q) => 
-                  $q->select('type')
-                ])
-				->inRandomOrder()
+				->whereVerifiedId('yes')
+				->where('id', '<>', config('settings.hide_admin_profile') == 'on' ? 1 : 0)
+				->whereFreeSubscription('yes')
+				->whereHideProfile('no')
+				->where('blocked_countries', 'NOT LIKE', '%' . Helper::userCountry() . '%')
+				->orderByRaw('rand( ' . time() . ' * ' . time() . ')')
 				->take(3)
 				->get();
 		}
 
-		return User::selectFieldsUserExplorer()->where('status','active')
+		return User::selectFieldsUserExplorer()->where('status', 'active')
 			->where('id', '<>', auth()->id() ?? 0)
-				->whereVerifiedId('yes')
-				->where('id', '<>', config('settings.hide_admin_profile') == 'on' ? 1 : 0)
-				->whereHas('plans', function($query) {
-					$query->where('status', '1');
-				})
-				->whereFreeSubscription('no')
-				->whereHideProfile('no')
-				->where('blocked_countries', 'NOT LIKE', '%'.Helper::userCountry().'%')
-			->orWhere('status','active')
-				->where('id', '<>', auth()->id() ?? 0)
-					->whereVerifiedId('yes')
-					->where('id', '<>', config('settings.hide_admin_profile') == 'on' ? 1 : 0)
-					->whereFreeSubscription('yes')
-					->whereHideProfile('no')
-					->where('blocked_countries', 'NOT LIKE', '%'.Helper::userCountry().'%')
-					->with(['media' => fn ($q) => 
-                  	$q->select('type')
-                ])
-				->inRandomOrder()
-				->take(3)
-				->get();
-	}// End Method
+			->whereVerifiedId('yes')
+			->where('id', '<>', config('settings.hide_admin_profile') == 'on' ? 1 : 0)
+			->whereHas('plans', function ($query) {
+				$query->where('status', '1');
+			})
+			->whereFreeSubscription('no')
+			->whereHideProfile('no')
+			->where('blocked_countries', 'NOT LIKE', '%' . Helper::userCountry() . '%')
+			->orWhere('status', 'active')
+			->where('id', '<>', auth()->id() ?? 0)
+			->whereVerifiedId('yes')
+			->where('id', '<>', config('settings.hide_admin_profile') == 'on' ? 1 : 0)
+			->whereFreeSubscription('yes')
+			->whereHideProfile('no')
+			->where('blocked_countries', 'NOT LIKE', '%' . Helper::userCountry() . '%')
+			->orderByRaw('rand( ' . time() . ' * ' . time() . ')')
+			->take(3)
+			->get();
+	}
 
 	// CCBill Form
 	public function ccbillForm($price, $userAuth, $type, $creator = null, $isMessage = null)
@@ -89,7 +83,7 @@ trait Functions {
 		$payment = PaymentGateways::whereName('CCBill')->firstOrFail();
 
 		if ($creator) {
-		$user  = User::whereVerifiedId('yes')->whereId($creator)->firstOrFail();
+			$user  = User::whereVerifiedId('yes')->whereId($creator)->firstOrFail();
 		}
 
 		$currencyCodes = [
@@ -105,7 +99,7 @@ trait Functions {
 
 			$taxes = config('settings.tax_on_wallet') ? ($this->request->amount * auth()->user()->isTaxable()->sum('percentage') / 100) : 0;
 
-			if (config('settings.currency_code') == 'JPY') {
+			if (in_array(config('settings.currency_code'), config('currencies.zero-decimal'))) {
 				$formPrice = round($price + ($price * $payment->fee / 100) + $payment->fee_cents + $taxes, 2, '.', '');
 			} else {
 				$formPrice = number_format($price + ($price * $payment->fee / 100) + $payment->fee_cents + $taxes, 2, '.', '');
@@ -142,45 +136,44 @@ trait Functions {
 		$redirectUrl = $baseURL . '?' . $inputs;
 
 		return response()->json([
-								'success' => true,
-								'url' => $redirectUrl,
-						]);
-
-	}// End Method
+			'success' => true,
+			'url' => $redirectUrl,
+		]);
+	} // End Method
 
 	// Admin and user earnings calculation
 	public function earningsAdminUser($userCustomFee, $amount, $paymentFee, $paymentFeeCents)
 	{
-		$settings = AdminSettings::first();
+		$settings = Setting::first();
 
 		$feeCommission = $userCustomFee == 0 ? $settings->fee_commission : $userCustomFee;
 
 		if (isset($paymentFee)) {
-			$processorFees = $amount - ($amount * $paymentFee/100) - $paymentFeeCents;
+			$processorFees = $amount - ($amount * $paymentFee / 100) - $paymentFeeCents;
 
 			// Earnings Net User
-			$earningNetUser = $processorFees - ($processorFees * $feeCommission/100);
+			$earningNetUser = $processorFees - ($processorFees * $feeCommission / 100);
 			// Earnings Net Admin
 			$earningNetAdmin = $processorFees - $earningNetUser;
 		} else {
 			// Earnings Net User
-      $earningNetUser = $amount - ($amount * $feeCommission/100);
+			$earningNetUser = $amount - ($amount * $feeCommission / 100);
 
-      // Earnings Net Admin
-      $earningNetAdmin = ($amount - $earningNetUser);
+			// Earnings Net Admin
+			$earningNetAdmin = ($amount - $earningNetUser);
 		}
 
 		if (isset($paymentFee)) {
-			$paymentFees =  $paymentFeeCents == 0.00 ? $paymentFee.'% + ' : $paymentFee.'%'.' + '.$paymentFeeCents.' + ';
+			$paymentFees =  $paymentFeeCents == 0.00 ? $paymentFee . '% + ' : $paymentFee . '%' . ' + ' . $paymentFeeCents . ' + ';
 		} else {
 			$paymentFees = null;
 		}
 
 		// Percentage applied
-		$percentageApplied = $paymentFees.$feeCommission.'%';
+		$percentageApplied = $paymentFees . $feeCommission . '%';
 
 
-		if ($settings->currency_code == 'JPY') {
+		if (in_array(config('settings.currency_code'), config('currencies.zero-decimal'))) {
 			$userEarning = floor($earningNetUser);
 			$adminEarning = floor($earningNetAdmin);
 		} else {
@@ -193,8 +186,7 @@ trait Functions {
 			'admin' => $adminEarning,
 			'percentageApplied' => $percentageApplied
 		];
-
-	}// End Method
+	} // End Method
 
 	// Insert Transaction
 	public function transaction(
@@ -210,49 +202,49 @@ trait Functions {
 		$percentageApplied,
 		$taxes,
 		$approved = '1'
+	) {
+		// Referred
+		$referred = $approved == '1' ? $this->referred($userId, $adminEarning, $type) : null;
+
+		// Stripe Connect
+		if (
+			$paymentGateway == 'Stripe' && $type == 'subscription'
+			|| $paymentGateway == 'Stripe' && $type == 'tip'
+			|| $paymentGateway == 'Stripe' && $type == 'ppv'
 		) {
-				$settings = AdminSettings::first();
+			$stripeConnect = $approved == '1' ? $this->stripeConnect($subscribed, $type, $userEarning) : null;
+		}
 
-				// Referred
-				$referred = $approved == '1' ? $this->referred($userId, $adminEarning, $type) : null;
+		// Insert Transaction
+		$txn = new Transactions();
+		$txn->txn_id  = $txnId;
+		$txn->user_id = $userId;
+		$txn->subscriptions_id = $subscriptionsId;
+		$txn->subscribed = $subscribed;
+		$txn->amount   = $amount;
+		$txn->earning_net_user  =  $userEarning;
+		$txn->earning_net_admin = $referred ? $referred['adminEarning'] : $adminEarning;
+		$txn->payment_gateway = $paymentGateway;
+		$txn->type = $type;
+		$txn->percentage_applied = $percentageApplied;
+		$txn->approved = $approved;
+		$txn->referred_commission = $referred ? true : false;
+		$txn->taxes = $taxes;
+		$txn->direct_payment = $stripeConnect ?? false;
+		$txn->save();
 
-				// Stripe Connect
-				if ($paymentGateway == 'Stripe' && $type == 'subscription'
-						|| $paymentGateway == 'Stripe' && $type == 'tip'
-						|| $paymentGateway == 'Stripe' && $type == 'ppv')
-					{
-						$stripeConnect = $approved == '1' ? $this->stripeConnect($subscribed, $type, $userEarning) : null;
-					}
+		// Update Transaction ID on ReferralTransactions
+		if ($referred) {
+			ReferralTransactions::whereId($referred['txnId'])->update([
+				'transactions_id' => $txn->id
+			]);
+		}
 
-					// Insert Transaction
-					$txn = new Transactions();
-					$txn->txn_id  = $txnId;
-					$txn->user_id = $userId;
-					$txn->subscriptions_id = $subscriptionsId;
-					$txn->subscribed = $subscribed;
-					$txn->amount   = $amount;
-					$txn->earning_net_user  =  $userEarning;
-					$txn->earning_net_admin = $referred ? $referred['adminEarning'] : $adminEarning;
-					$txn->payment_gateway = $paymentGateway;
-					$txn->type = $type;
-					$txn->percentage_applied = $percentageApplied;
-					$txn->approved = $approved;
-					$txn->referred_commission = $referred ? true : false;
-					$txn->taxes = $taxes;
-					$txn->direct_payment = $stripeConnect ?? false;
-					$txn->save();
+		// Send push notification to Admin
+		Notifications::sendPushNotificationAdmin($txn->user_id);
 
-					// Update Transaction ID on ReferralTransactions
-					if ($referred) {
-						ReferralTransactions::whereId($referred['txnId'])->update([
-							'transactions_id' => $txn->id
-						]);
-					}
-
-					return $txn;
-
-		}// End Method Insert Transaction
-
+		return $txn;
+	}
 	// Insert PayPerViews
 	public function payPerViews($user_id, $updates_id, $messages_id)
 	{
@@ -261,38 +253,37 @@ trait Functions {
 		$sql->updates_id = $updates_id;
 		$sql->messages_id = $messages_id;
 		$sql->save();
-
-	}// End Method
+	}
 
 	// Send notification via Email to creator that you have received a tip
 	protected function notifyEmailNewTip($user, $tipper, $amount)
 	{
 		$data = [
-				'tipper' => $tipper,
-				'amount' => $amount
-			];
+			'tipper' => $tipper,
+			'amount' => $amount
+		];
 
-			try {
-				$user->notify(new TipReceived($data));
-			} catch (\Exception $e) {
-				\Log::info($e->getMessage());
-			}
+		try {
+			$user->notify(new TipReceived($data));
+		} catch (\Exception $e) {
+			\Log::info($e->getMessage());
+		}
 	} // End Method
 
 	// Send notification via Email to creator that you have received a PPV
 	protected function notifyEmailNewPPV($user, $buyer, $media, $type)
 	{
 		$data = [
-				'buyer' => $buyer,
-				'content' => $media,
-				'type' => $type
-			];
+			'buyer' => $buyer,
+			'content' => $media,
+			'type' => $type
+		];
 
-			try {
-				$user->notify(new PayPerViewReceived($data));
-			} catch (\Exception $e) {
-				\Log::info($e->getMessage());
-			}
+		try {
+			$user->notify(new PayPerViewReceived($data));
+		} catch (\Exception $e) {
+			\Log::info($e->getMessage());
+		}
 	} // End Method
 
 	// Insert Deposit (Add funds user wallet)
@@ -304,8 +295,8 @@ trait Functions {
 
 		// Percentage applied
 		$percentageApplied =  $paymentFeeCents == 0.00 ?
-				(($paymentFee != 0.0) ? $paymentFee.'%' : null)
-				: (($paymentFee != 0.0) ? $paymentFee.'% + ' : null).$paymentFeeCents;
+			(($paymentFee != 0.0) ? $paymentFee . '%' : null)
+			: (($paymentFee != 0.0) ? $paymentFee . '% + ' : null) . $paymentFeeCents;
 
 		// Percentage applied amount
 		$transactionFeeAmount = number_format($amount + ($amount * $paymentFee / 100) + $paymentFeeCents, 2, '.', '');
@@ -317,40 +308,38 @@ trait Functions {
 		$sql->amount = $amount;
 		$sql->payment_gateway = $paymentGateway;
 		$sql->status = $paymentGateway == 'Bank' ? 'pending' : 'active';
-    	$sql->screenshot_transfer = $screenshotTransfer;
+		$sql->screenshot_transfer = $screenshotTransfer;
 		$sql->percentage_applied = $percentageApplied;
 		$sql->transaction_fee = $transactionFee;
 		$sql->taxes = $taxes;
 		$sql->save();
 
 		return $sql;
-
-	}// End Method
+	} // End Method
 
 	public function generateTwofaCode($user)
-  {
-    $code = rand(1000, 9999);
+	{
+		$code = rand(1000, 9999);
 
-    // Delete old session user id
-    session()->forget('user:id');
+		// Delete old session user id
+		session()->forget('user:id');
 
-    // Create session user
-    session()->put('user:id', $user->id);
+		// Create session user
+		session()->put('user:id', $user->id);
 
-        TwoFactorCodes::updateOrCreate([
-          'user_id' => $user->id,
-          'code' => $code
-        ]);
+		TwoFactorCodes::updateOrCreate([
+			'user_id' => $user->id,
+			'code' => $code
+		]);
 
-        try {
-            $data = ['code' => $code];
+		try {
+			$data = ['code' => $code];
 
-            $user->notify(new SendTwoFactorCode($data));
-
-        } catch (Exception $e) {
-            \Log::info("Error Two Factor Code: ". $e->getMessage());
-        }
-  }// End method
+			$user->notify(new SendTwoFactorCode($data));
+		} catch (Exception $e) {
+			\Log::info("Error Two Factor Code: " . $e->getMessage());
+		}
+	} // End method
 
 	public function createTaxStripe($id, $name, $country, $stateCode, $percentage)
 	{
@@ -359,42 +348,40 @@ trait Functions {
 			->where('key_secret', '<>', '')
 			->first();
 
-			if ($payment) {
-				try {
-					$stripe = new \Stripe\StripeClient($payment->key_secret);
+		if ($payment) {
+			try {
+				$stripe = new \Stripe\StripeClient($payment->key_secret);
 
-					if ($stateCode) {
-						$tax = $stripe->taxRates->create([
-							'display_name' => $name,
-							'description' => $name.' - '.$country->country_name,
-							'country' => $country->country_code,
-							'jurisdiction' => $country->country_code,
-							'state' => $stateCode,
-							'percentage' => $percentage,
-							'inclusive' => false,
-						]);
-					} else {
-						$tax = $stripe->taxRates->create([
-							'display_name' => $name,
-							'description' => $name.' - '.$country->country_name,
-							'country' => $country->country_code,
-							'jurisdiction' => $country->country_code,
-							'percentage' => $percentage,
-							'inclusive' => false,
-						]);
-					}
-
-					// Insert ID to tax_rates table
-					TaxRates::whereId($id)->update([
-						'stripe_id' => $tax->id
+				if ($stateCode) {
+					$tax = $stripe->taxRates->create([
+						'display_name' => $name,
+						'description' => $name . ' - ' . $country->country_name,
+						'country' => $country->country_code,
+						'jurisdiction' => $country->country_code,
+						'state' => $stateCode,
+						'percentage' => $percentage,
+						'inclusive' => false,
 					]);
-
-
-				} catch (\Exception $e) {
-					\Log::debug($e->getMessage());
+				} else {
+					$tax = $stripe->taxRates->create([
+						'display_name' => $name,
+						'description' => $name . ' - ' . $country->country_name,
+						'country' => $country->country_code,
+						'jurisdiction' => $country->country_code,
+						'percentage' => $percentage,
+						'inclusive' => false,
+					]);
 				}
+
+				// Insert ID to tax_rates table
+				TaxRates::whereId($id)->update([
+					'stripe_id' => $tax->id
+				]);
+			} catch (\Exception $e) {
+				\Log::debug($e->getMessage());
 			}
-	}// End method
+		}
+	} // End method
 
 	public function updateTaxStripe($stripe_id, $name, $status)
 	{
@@ -403,86 +390,87 @@ trait Functions {
 			->where('key_secret', '<>', '')
 			->first();
 
-			if ($payment) {
-				try {
-					$stripe = new \Stripe\StripeClient($payment->key_secret);
+		if ($payment) {
+			try {
+				$stripe = new \Stripe\StripeClient($payment->key_secret);
 
-					$stripe->taxRates->update($stripe_id,
-					['active' => $status ? 'true' : 'false',
-					'display_name' => $name
-					]);
-
-				} catch (\Exception $e) {
-					\Log::debug($e->getMessage());
-				}
+				$stripe->taxRates->update(
+					$stripe_id,
+					[
+						'active' => $status ? 'true' : 'false',
+						'display_name' => $name
+					]
+				);
+			} catch (\Exception $e) {
+				\Log::debug($e->getMessage());
 			}
-	}// End method
+		}
+	} // End method
 
 	protected function referred($userId, $adminEarning, $type)
 	{
 		// Check Referred
 		if (config('settings.referral_system') == 'on') {
-
 			// Check for referred
 			$referred = Referrals::whereUserId($userId)->first();
 
-					if ($referred) {
-						// Check if the user who referred exists
-						$referredBy = User::find($referred->referred_by);
+			if ($referred) {
+				// Check if the user who referred exists
+				$referredBy = User::find($referred->referred_by);
 
-						if ($referredBy) {
-							// Check numbers of transactions
-							$transactions = ReferralTransactions::whereUserId($userId)->count();
+				if ($referredBy) {
+					// Check numbers of transactions
+					$transactions = ReferralTransactions::whereUserId($userId)->count();
 
-							if (config('settings.referral_transaction_limit') == 'unlimited'
-									|| $transactions < config('settings.referral_transaction_limit')
-								) {
+					if (
+						config('settings.referral_transaction_limit') == 'unlimited'
+						|| $transactions < config('settings.referral_transaction_limit')
+					) {
+						$percentageReferred = $referred->referredBy()->custom_profit_referral ?: config('settings.percentage_referred');
+						$adminEarningFinal = $adminEarning - ($adminEarning * $percentageReferred / 100);
 
-									$adminEarningFinal = $adminEarning - ($adminEarning * config('settings.percentage_referred')/100);
+						$earningNetUser = ($adminEarning - $adminEarningFinal);
+						$adminEarning   = ($adminEarning - $earningNetUser);
 
-									$earningNetUser = ($adminEarning - $adminEarningFinal);
-									$adminEarning   = ($adminEarning - $earningNetUser);
+						if (in_array(config('settings.currency_code'), config('currencies.zero-decimal'))) {
+							$earningNetUser = floor($earningNetUser);
+							$adminEarning   = floor($adminEarning);
+						} else {
+							$earningNetUser = round($earningNetUser, 2, PHP_ROUND_HALF_DOWN);
+							$adminEarning   = round($adminEarning, 2, PHP_ROUND_HALF_DOWN);
+						}
 
-									if (config('settings.currency_code') == 'JPY') {
-										$earningNetUser = floor($earningNetUser);
-										$adminEarning   = floor($adminEarning);
-									} else {
-										$earningNetUser = round($earningNetUser, 2, PHP_ROUND_HALF_DOWN);
-										$adminEarning   = round($adminEarning, 2, PHP_ROUND_HALF_DOWN);
-									}
+						if ($earningNetUser != 0) {
+							$newTransaction = new ReferralTransactions();
+							$newTransaction->referrals_id = $referred->id;
+							$newTransaction->user_id = $referred->user_id;
+							$newTransaction->referred_by = $referred->referred_by;
+							$newTransaction->earnings = $earningNetUser;
+							$newTransaction->type = $type;
+							$newTransaction->save();
 
-									if ($earningNetUser != 0) {
-										// Insert User Earning
-										$newTransaction = new ReferralTransactions();
-										$newTransaction->referrals_id = $referred->id;
-										$newTransaction->user_id = $referred->user_id;
-										$newTransaction->referred_by = $referred->referred_by;
-										$newTransaction->earnings = $earningNetUser;
-										$newTransaction->type = $type;
-										$newTransaction->save();
+							// Add Earnings to User
+							$referred->referredBy()->increment('balance', $earningNetUser);
 
-										// Add Earnings to User
-										$referred->referredBy()->increment('balance', $earningNetUser);
+							// Notify to user - destination, author, type, target
+							Notifications::send($referred->referred_by, $referred->referred_by, 11, $referred->referred_by);
 
-										// Notify to user - destination, author, type, target
-										Notifications::send($referred->referred_by, $referred->referred_by, 11, $referred->referred_by);
-
-										return [
-											'txnId' => $newTransaction->id,
-											'adminEarning' => $adminEarning
-										];
-									}
-							}
-						}//=== $referredBy
-					}// $referred
-		}// referral_system On
+							return [
+								'txnId' => $newTransaction->id,
+								'adminEarning' => $adminEarning
+							];
+						}
+					}
+				} //=== $referredBy
+			} // $referred
+		} // referral_system On
 
 		return false;
-	}// End Method referred
+	} // End Method referred
 
 	protected function stripeConnect($user, $type, $earnings)
 	{
-		$settings = AdminSettings::first();
+		$settings = Setting::first();
 
 		// Get Payment Gateway
 		$payment = PaymentGateways::whereName('Stripe')->first();
@@ -491,25 +479,25 @@ trait Functions {
 		$user = User::find($user);
 
 		// Stripe Connect
-		if ($user->stripe_connect_id && $user->completed_stripe_onboarding) {
+		if ($settings->stripe_connect && $user->stripe_connect_id && $user->completed_stripe_onboarding) {
 			try {
 				// Stripe Client
 				$stripe = new \Stripe\StripeClient($payment->key_secret);
 
-				$earningsUser = $settings->currency_code == 'JPY' ? $earnings : ($earnings*100);
+				$earningsUser = in_array(config('settings.currency_code'), config('currencies.zero-decimal')) ? $earnings : ($earnings * 100);
 
 				switch ($type) {
 					case 'tip':
 						$description = __('general.tip');
 						break;
 
-						case 'ppv':
-							$description = __('general.ppv');
-							break;
+					case 'ppv':
+						$description = __('general.ppv');
+						break;
 
-							case 'subscription':
-								$description = __('general.subscription');
-								break;
+					case 'subscription':
+						$description = __('general.subscription');
+						break;
 				}
 
 				$stripe->transfers->create([
@@ -523,15 +511,14 @@ trait Functions {
 				$user->decrement('balance', $earnings);
 
 				return true;
-
 			} catch (\Exception $e) {
 				return false;
 
-				\Log::info('Error Stripe Connect Transfer --- '. $e->getMessage());
+				\Log::info('Error Stripe Connect Transfer --- ' . $e->getMessage());
 			}
 		}
 		return false;
-	}// End Method stripeConnect
+	}
 
 	protected function deductReferredBalanceByRefund($transaction)
 	{
@@ -545,51 +532,54 @@ trait Functions {
 	protected function autoFollowAdmin($user)
 	{
 		// Find user
-    $admin = User::wherePermissions('full_access')
-        ->whereFreeSubscription('yes')
-        ->whereVerifiedId('yes')
-          ->first();
+		$admin = User::wherePermissions('full_access')
+			->whereFreeSubscription('yes')
+			->whereVerifiedId('yes')
+			->first();
 
-					if (! $admin) {
-						return false;
-					}
+		if (!$admin) {
+			return false;
+		}
 
-    // Verify plan no is empty
-    if (! $admin->plan) {
-       $admin->plan = 'user_'.$admin->id;
-       $admin->save();
-    }
+		// Verify plan no is empty
+		if (!$admin->plan) {
+			$admin->plan = 'user_' . $admin->id;
+			$admin->save();
+		}
 
-    // Check if not plans
-    if ($admin->plans()->count() == 0) {
+		// Check if not plans
+		if ($admin->plans()->count() == 0) {
+			Plans::updateOrCreate(
+				[
+					'user_id' => $admin->id,
+					'name' => 'user_' . $admin->id
+				],
+				[
+					'interval' => 'monthly',
+					'status' => '1'
+				]
+			);
+		}
 
-        Plans::updateOrCreate(
-          [
-            'user_id' => $admin->id,
-            'name' => 'user_'.$admin->id
-          ],
-         [
-           'interval' => 'monthly',
-           'status' => '1'
-        ]);
-    }
+		// Verify subscription exists
+		$subscription = Subscriptions::whereUserId($user)
+			->whereStripePrice($admin->plan)
+			->whereFree('yes')
+			->first();
 
-    // Verify subscription exists
-    $subscription = Subscriptions::whereUserId($user)
-        ->whereStripePrice($admin->plan)
-          ->whereFree('yes')
-            ->first();
+		if ($subscription) {
+			return false;
+		}
 
-      if ($subscription) {
-        return false;
-      }
+		// Insert DB
+		$sql = new Subscriptions();
+		$sql->creator_id = $admin->id;
+		$sql->user_id = $user;
+		$sql->stripe_price = $admin->plan;
+		$sql->free = 'yes';
+		$sql->save();
 
-    // Insert DB
-    $sql          = new Subscriptions();
-    $sql->user_id = $user;
-    $sql->stripe_price = $admin->plan;
-    $sql->free = 'yes';
-    $sql->save();
+		$this->sendWelcomeMessageAction($admin, $user);
 
 		if ($admin->notify_new_subscriber == 'yes') {
 			// Send Notification to User --- destination, author, type, target
@@ -597,9 +587,10 @@ trait Functions {
 		}
 	}
 
-	public function filterByGenderAge($sql) {
+	public function filterByGenderAge($sql)
+	{
 
-		$sql->when(request('gender'), function($q) {
+		$sql->when(request('gender'), function ($q) {
 
 			if (request('gender') == 'all') {
 				$q->where('users.id', '<>', '');
@@ -608,14 +599,14 @@ trait Functions {
 			}
 		});
 
-		$sql->when((int) request('min_age') >= 18, function($q) {
+		$sql->when((int) request('min_age') >= 18, function ($q) {
 			$minAge = Carbon::now()->subYear(request('min_age'));
-			$q->where(DB::raw('STR_TO_DATE(birthdate, "%m/%d/%Y")'),'<', Carbon::parse($minAge->format('m/d/Y')));
+			$q->where(DB::raw('STR_TO_DATE(birthdate, "%m/%d/%Y")'), '<', Carbon::parse($minAge->format('m/d/Y')));
 		});
 
-		$sql->when((int) request('max_age'), function($q) {
+		$sql->when((int) request('max_age'), function ($q) {
 			$maxAge = Carbon::now()->subYear(request('max_age'));
-			$q->where(DB::raw('STR_TO_DATE(birthdate, "%m/%d/%Y")'),'>=', Carbon::parse($maxAge->format('m/d/Y')));
+			$q->where(DB::raw('STR_TO_DATE(birthdate, "%m/%d/%Y")'), '>=', Carbon::parse($maxAge->format('m/d/Y')));
 		});
 	}
 
@@ -631,11 +622,11 @@ trait Functions {
 
 		// Browser
 		$browser = $agent->browser();
-		$browser = $browser . ' '.$agent->version($browser);
+		$browser = $browser . ' ' . $agent->version($browser);
 
 		// Platform
 		$platform = $agent->platform();
-		$platform = $platform . ' '.$agent->version($platform);
+		$platform = $platform . ' ' . $agent->version($platform);
 
 		try {
 			$country = Countries::whereCountryCode(Helper::userCountry())->first();
@@ -654,7 +645,7 @@ trait Functions {
 				'platform' => $platform,
 				'country' => $country->country_name ?? null,
 				'updated_at' => now()
-			]); 
+			]);
 		} catch (\Exception $e) {
 			\Log::debug($e->getMessage());
 		}
@@ -674,22 +665,184 @@ trait Functions {
 
 	/**
 	 * Insert Message Tip
-	 *
-	 * @param  int  $userId
-	 * @param  float  $amount
-	 * @return void
 	 */
 	public function isMessageTip($userId, $fromUserId, $amount): void
 	{
 		$message = new Messages();
 		$message->conversations_id = 0;
-		$message->from_user_id    = $fromUserId;
-		$message->to_user_id      = $userId;
-		$message->message         = '';
-		$message->updated_at      = now();
-		$message->tip             = 'yes';
-		$message->tip_amount      = $amount;
+		$message->from_user_id = $fromUserId;
+		$message->to_user_id = $userId;
+		$message->message = '';
+		$message->updated_at = now();
+		$message->tip = 'yes';
+		$message->tip_amount = $amount;
 		$message->save();
 	}
 
-}// End Class
+	/**
+	 * Validate Phone Number
+	 */
+	public function validatePhone($phone): mixed
+	{
+		return filter_var($phone, FILTER_SANITIZE_NUMBER_INT);
+	}
+
+	/**
+	 * Refund Live Stream Request
+	 */
+	public function refundLiveStreamRequest(LiveStreamingPrivateRequest $live, int $status): void
+	{
+		$taxes = TaxRates::whereIn('id', collect(explode('_', $live->transaction->taxes)))->get();
+		$totalTaxes = ($live->transaction->amount * $taxes->sum('percentage') / 100);
+		$amountRefund = number_format($live->transaction->amount + $totalTaxes, 2, '.', '');
+
+		// Add funds to wallet buyer
+		$live->user->increment('wallet', $amountRefund);
+
+		// Get amount referral (if exist)
+		$this->deductReferredBalanceByRefund($live->transaction);
+
+		// Remove creator funds
+		if ($live->creator->balance <> 0.00) {
+			$live->creator->decrement('balance', $live->transaction->earning_net_user);
+		} else {
+			// If the creator has withdrawn their entire balance remove from withdrawal
+			$withdrawalPending = Withdrawals::whereUserId($live->creator->id)->whereStatus('pending')->first();
+
+			if ($withdrawalPending) {
+				$withdrawalPending->decrement('amount', $amountRefund);
+			}
+		}
+
+		// Update Live to Rejected/Expired
+		$live->update([
+			'status' => $status
+		]);
+
+		// Update Transaction Cancel
+		$live->transaction->update([
+			'approved' => '2'
+		]);
+	}
+
+	public function sendWelcomeMessageAction($creator, $userId)
+	{
+		(new SendWelcomeMessageAction())->execute($creator, $userId);
+	}
+
+	public function uploadMediaFileMsg($request, $msgId, $type = 'zip')
+	{
+		$file = $this->getDataMedia($request)->file;
+
+		$request->storePubliclyAs(config('path.messages'), $file);
+
+		MediaMessages::create([
+			'messages_id' => $msgId,
+			'type' => $type,
+			'file' => $file,
+			'file_name' => $this->getDataMedia($request)->originalName,
+			'file_size' => $this->getDataMedia($request)->size,
+			'token' => $this->mediaToken(),
+			'status' => 'active',
+			'created_at' => now()
+		  ]);
+	}
+
+	public function uploadMediaFile($request, $postId, $type = 'file')
+	{
+		$this->deleteOldMediaFile($postId, $type);
+
+		$file = $this->getDataMedia($request)->file;
+
+		$request->storePubliclyAs(config('path.files'), $file);
+
+		Media::create([
+			'updates_id' => $postId,
+			'user_id' => auth()->id(),
+			'type' => $type,
+			'image' => '',
+			'video' => '',
+			'video_embed' => '',
+			'music' => '',
+			'file' => $file,
+			'file_name' => $this->getDataMedia($request)->originalName,
+			'file_size' => $this->getDataMedia($request)->size,
+			'img_type' => '',
+			'token' => $this->mediaToken(),
+			'status' => 'active',
+			'created_at' => now()
+		]);
+	}
+
+	protected function deleteOldMediaFile($postId, $type)
+	{
+		$query = Media::whereUpdatesId($postId)->whereType($type)->first();
+
+		if ($query) {
+			Storage::delete(config('path.files') . $query->file);
+
+			$query->delete();
+		}
+	}
+
+	public function getDataMedia($request)
+	{
+		$file = $request;
+		$extension = $file->getClientOriginalExtension();
+		$size = Helper::formatBytes($file->getSize(), 1);
+		$originalName = Helper::fileNameOriginal($file->getClientOriginalName());
+		$fileName = strtolower(auth()->id() . time() . Str::random(20) . '.' . $extension);
+
+		$data = [
+			'size' => $size,
+			'originalName' => $originalName,
+			'file' => $fileName
+		];
+
+		return (object) $data;
+	}
+
+	protected function mediaToken()
+	{
+		return Str::random(150) . uniqid() . now()->timestamp;
+	}
+
+	public function getAllVideosEncode($videos, $postId, $editing = false)
+	{
+		try {
+			foreach ($videos as $video) {
+				if (config('settings.encoding_method') == 'ffmpeg') {
+					$this->dispatch(new EncodeVideo($video));
+				} else {
+					CoconutVideoService::handle($video, 'post');
+				}
+			}
+
+			// Change status Pending to Encode
+			Updates::whereId($postId)->update([
+				'status' => 'encode',
+				'editing' => $editing ? 1 : 0
+			]);
+
+			if ($editing) {
+				return response()->json([
+					'success' => true,
+					'url' => route('post.edit.pending'),
+				]);
+			}
+
+			return response()->json([
+				'success' => true,
+				'pending' => true,
+				'encode' => true
+			]);
+		} catch (\Exception $e) {
+			\Log::info($e->getMessage());
+
+			return response()->json([
+				'success' => false,
+				'errors' => ['error' => $e->getMessage()],
+			]);
+		}
+	}
+}

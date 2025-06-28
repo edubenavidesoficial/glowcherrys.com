@@ -1,6 +1,13 @@
 <div class="card border-0 bg-transparent">
   <div class="card-body p-0">
-    <small class="text-muted">&copy; {{date('Y')}} {{$settings->title}}, {{__('emails.rights_reserved')}}</small>
+    <small class="text-muted">
+      &copy; {{date('Y')}} {{$settings->title}}, {{__('emails.rights_reserved')}}
+
+      @if ($settings->show_address_company_footer)
+          {{ $settings->company }} - {{ __('general.address') }}: {{ $settings->address }} {{ $settings->city }} {{ $settings->country }}
+        @endif
+    </small>
+
     <ul class="list-inline mb-0 small">
 
       @foreach (Helper::pages() as $page)

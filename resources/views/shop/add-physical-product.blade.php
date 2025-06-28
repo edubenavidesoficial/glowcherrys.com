@@ -34,6 +34,16 @@
                   <input type="text" class="form-control isNumber" name="price" autocomplete="off" placeholder="{{ __('general.price') }}">
                 </div>
 
+                @if ($settings->allow_external_links_shop)
+                <div class="form-group">
+                  <input type="text" class="form-control" name="external_link" placeholder="https://yourwebsite.com/purchase-url">
+                  <div class="text-muted btn-block small mt-1">
+                    <i class="bi-info-circle mr-1"></i> {{ __('general.external_link_buy') }}
+                  </div>
+                  
+                </div>
+                @endif
+
                 <div class="form-group">
                   <input type="text" class="form-control isNumber" name="shipping_fee" autocomplete="off" placeholder="{{ __('general.shipping_fee') }}">
                 </div>
@@ -93,6 +103,6 @@
 @endsection
 
 @section('javascript')
-  <script src="{{ asset('/js/fileuploader/fileuploader-shop-preview.js') }}"></script>
-  <script src="{{ asset('/js/shop.js') }}"></script>
+  <script src="{{ asset('public/js/fileuploader/fileuploader-shop-preview.js') }}"></script>
+  <script src="{{ asset('public/js/shop.js') }}"></script>
 @endsection

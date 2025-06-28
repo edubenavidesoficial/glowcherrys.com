@@ -1,8 +1,8 @@
 @extends('admin.layout')
 
 @section('css')
-<link href="{{ asset('/js/select2/select2.min.css') }}" rel="stylesheet" type="text/css" />
-<link href="{{ asset('/js/select2/select2-bootstrap-5-theme.min.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ asset('public/js/select2/select2.min.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ asset('public/js/select2/select2-bootstrap-5-theme.min.css') }}" rel="stylesheet" type="text/css" />
 @endsection
 
 @section('content')
@@ -65,7 +65,7 @@
 		          <label class="col-sm-2 col-form-labe text-lg-end">{{ trans('general.percentage_referred') }}</label>
 		          <div class="col-sm-10">
 		            <select name="percentage_referred" class="form-select">
-                  @for ($i=1; $i <= 30; ++$i)
+                  @for ($i=1; $i <= 50; ++$i)
                     <option @if ($settings->percentage_referred == $i) selected="selected" @endif value="{{$i}}">{{$i}}%</option>
                     @endfor
 		           </select>
@@ -269,6 +269,28 @@
 								<small class="d-block">{{ trans('general.payout_method_desc') }}</small>
 		          </div>
 		        </div>
+
+				<div class="row mb-3">
+					<label class="col-sm-2 col-form-labe text-lg-end">{{ __('users.payout_method') }} (Bitcoin)</label>
+					<div class="col-sm-10">
+					  <select name="payout_method_crypto" class="form-select">
+					<option @if ($settings->payout_method_crypto == 'on') selected="selected" @endif value="on">{{ __('general.enabled') }}</option>
+					<option @if ($settings->payout_method_crypto == 'off') selected="selected" @endif value="off">{{ __('general.disabled') }}</option>
+				  </select>
+					  <small class="d-block">{{ trans('general.payout_method_desc') }}</small>
+					</div>
+				  </div>
+
+				  <div class="row mb-3">
+					<label class="col-sm-2 col-form-labe text-lg-end">{{ __('users.payout_method') }} (Mercado Pago)</label>
+					<div class="col-sm-10">
+					  <select name="payout_method_mercadopago" class="form-select">
+					<option @selected($settings->payout_method_mercadopago == 'on') value="on">{{ __('general.enabled') }}</option>
+					<option @selected($settings->payout_method_mercadopago == 'off') value="off">{{ __('general.disabled') }}</option>
+				  </select>
+					  <small class="d-block">{{ trans('general.payout_method_desc') }}</small>
+					</div>
+				  </div>
 
 						<div class="row mb-3">
 		          <label class="col-sm-2 col-form-labe text-lg-end">{{ __('general.wallet') }}</label>

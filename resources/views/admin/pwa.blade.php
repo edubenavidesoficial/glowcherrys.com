@@ -137,7 +137,7 @@
 					<div class="row">
 						<div class="col-sm-10 offset-sm-2">
 							<div class="alert alert-primary py-2">
-							 PNG SPLASH screens for the PWA <a class="text-white text-decoration-underline" href="https://appsco.pe/developer/splash-screens" target="_blank">https://appsco.pe/developer/splash-screens <i class="bi-box-arrow-up-right ms-1"></i></a>
+							 PNG SPLASH screens for the PWA <a class="text-white text-decoration-underline" href="https://mittl-medien.de/pwa-asset-generator" target="_blank">https://mittl-medien.de/pwa-asset-generator <i class="bi-box-arrow-up-right ms-1"></i></a>
 							</div>
 						</div>
 					</div>

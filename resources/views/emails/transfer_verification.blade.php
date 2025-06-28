@@ -40,7 +40,7 @@
 
                             <!-- Intro -->
                             <p style="margin-top: 0; color: #74787E; font-size: 16px; line-height: 1.5em;">
-                              {{$body}}
+                                {!! $body !!}
 
                               @if ($type == 'approve')
                                 <a href="{{ url('my/wallet') }}">{{ __('general.wallet') }}</a>

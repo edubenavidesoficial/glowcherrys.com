@@ -13,14 +13,19 @@ class MediaMessages extends Model
     'width',
     'height',
     'video_poster',
+    'duration_video',
+    'quality_video',
     'file_name',
     'file_size',
     'token',
+    'encoded',
+    'job_id',
     'status',
     'created_at'
   ];
 
-  public function messages() {
-        return $this->belongsTo('App\Models\Messages');
-    }
+  public function messages()
+  {
+    return $this->belongsTo(Messages::class);
+  }
 }

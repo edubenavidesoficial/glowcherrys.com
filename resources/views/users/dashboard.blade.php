@@ -34,7 +34,7 @@
                     <h4><i class="fas fa-wallet mr-2 text-primary icon-dashboard"></i> {{ Helper::amountFormatDecimal(auth()->user()->balance) }}</h4>
                     <small>{{ __('general.balance') }}
                       @if (auth()->user()->balance >= $settings->amount_min_withdrawal)
-                      <a href="{{ url('settings/withdrawals')}}" class="link-border">  {{ __('general.make_withdrawal') }}</a>
+                      <a href="{{ url('settings/withdrawals')}}" class="link-border"> {{ __('general.make_withdrawal') }}</a>
                     @endif
                     </small>
 
@@ -148,10 +148,10 @@
                      <select class="custom-select mb-4 mb-lg-0 w-auto d-block filterEarnings">
                       <option selected="" value="month">{{ __('general.this_month') }}</option>
                       <option value="last-month">{{ __('general.last_month') }}</option>
-                      <option value="year">{{ __('general.this_year') }}</option>
+                      <option value="year">{{ __('general.this_year') }}</option>       
                     </select>
                     </div>
-
+                     
                      <div class="d-block position-relative" style="height: 350px">
                         <div class="blocked display-none" id="loadChart">
                           <span class="d-flex justify-content-center align-items-center text-center w-100 h-100">
@@ -163,6 +163,148 @@
                    </div>
                  </div>
               </div>
+          
+            <div class="col-md-6 mb-5 mb-lg-0">
+              <div class="card shadow-sm">
+                <div class="card-body pb-0">
+                  <h6>{{ __('admin.recent_subscriptions') }}</h6>
+                </div>
+                <div class="table-responsive">
+                  <table class="table table-striped m-0">
+                    <thead>
+                      <tr>
+                        <th scope="col">{{__('general.subscriber')}}</th>
+                        <th scope="col">{{__('admin.date')}}</th>
+                        <th scope="col">{{__('admin.status')}}</th>
+                      </tr>
+                    </thead>
+            
+                    <tbody>
+            
+                      @foreach ($subscriptions as $subscription)
+                      <tr>
+                        <td>
+                          @if (! isset($subscription->subscriber->username))
+                          {{ __('general.no_available') }}
+                          @else
+                          <a href="{{url($subscription->subscriber->username)}}" class="mr-1">
+                            <img src="{{Helper::getFile(config('path.avatar').$subscription->subscriber->avatar)}}" width="35"
+                              height="35" class="rounded-circle mr-2">
+            
+                            {{$subscription->subscriber->hide_name == 'yes' ? $subscription->subscriber->username :
+                            $subscription->subscriber->name}}
+                          </a>
+            
+                          <a href="{{url('messages/'.$subscription->subscriber->id, $subscription->subscriber->username)}}"
+                            title="{{__('general.message')}}">
+                            <i class="feather icon-send mr-1 mr-lg-0"></i>
+                          </a>
+                          @endif
+                        </td>
+                        <td>{{Helper::formatDate($subscription->created_at)}}</td>
+                        </td>            
+                        <td>
+                          @if ($subscription->stripe_id == ''
+                          && strtotime($subscription->ends_at) > strtotime(now()->format('Y-m-d H:i:s'))
+                          && $subscription->cancelled == 'no'
+                          || $subscription->stripe_id != '' && $subscription->stripe_status == 'active'
+                          || $subscription->stripe_id == '' && $subscription->free == 'yes'
+                          )
+                          <span class="badge badge-pill badge-success text-uppercase">{{__('general.active')}}</span>
+                          @elseif ($subscription->stripe_id != '' && $subscription->stripe_status == 'incomplete')
+                          <span class="badge badge-pill badge-warning text-uppercase">{{__('general.incomplete')}}</span>
+                          @else
+                          <span class="badge badge-pill badge-danger text-uppercase">{{__('general.cancelled')}}</span>
+                          @endif
+                        </td>
+                      </tr>
+                      @endforeach
+
+                      @if ($subscriptions->isEmpty())
+                      <tr>
+                        <td colspan="12" class="text-center">{{ __('users.not_subscribers') }}</td>
+                      </tr>
+                      @endif
+
+                    </tbody>
+                  </table>
+                </div>
+
+                @if ($subscriptions->isNotEmpty())
+                <div class="card-footer">
+                  <a href="{{ url('my/subscribers') }}" class="text-muted font-weight-medium d-flex align-items-center justify-content-center arrow">
+                    {{ __('general.view_all') }}
+                  </a>
+                </div>
+                @endif
+              </div><!-- card -->
+            </div><!-- end col-md-6 -->
+
+            <div class="col-md-6 mb-5 mb-lg-0">
+              <div class="card shadow-sm">
+                <div class="card-body pb-0">
+                  <h6>{{ __('general.payments_received') }}</h6>
+                </div>
+                <div class="table-responsive">
+                  <table class="table table-striped m-0">
+                    <thead>
+                      <tr>
+                        <th scope="col">{{__('admin.date')}}</th>
+                        <th scope="col">{{__('admin.amount')}}</th>
+                        <th scope="col">{{__('admin.type')}}</th>
+                        <th scope="col">{{__('general.earnings')}}</th>
+                      </tr>
+                    </thead>
+            
+                    <tbody>
+            
+                      @foreach ($transactions as $transaction)
+                      <tr>
+                        <td>{{ Helper::formatDate($transaction->created_at) }}</td>
+                        <td>{{ Helper::amountFormatDecimal($transaction->amount) }}</td>
+                        <td>
+                          {{ __('general.'.$transaction->type) }}
+
+                          @if (isset($transaction->gift->id) && request()->is('my/payments/received'))
+                          <span class="d-block mt-2">
+                            <img src="{{ url('public/img/gifts', $transaction->gift->image) }}" width="25">
+                          </span>
+                          @endif
+                      </td>
+                      <td>
+                        {{ Helper::amountFormatDecimal($transaction->earning_net_user) }}
+  
+                        @if ($transaction->percentage_applied)
+                          <a tabindex="0" role="button" data-container="body" data-toggle="popover" data-trigger="focus" data-placement="top" data-content="{{trans('general.percentage_applied')}} {{ $transaction->percentage_applied }} {{trans('general.platform')}} @if ($transaction->direct_payment) ({{ __('general.direct_payment') }}) @endif">
+                            <i class="far fa-question-circle"></i>
+                          </a>
+                        @endif
+                        
+                      </td>
+                      </tr>
+                      @endforeach
+
+                      @if ($transactions->isEmpty())
+                      <tr>
+                        <td colspan="12" class="text-center">{{ __('general.not_payment_received') }}</td>
+                      </tr>
+                      @endif
+
+                    </tbody>
+                  </table>
+                </div>
+
+                @if ($transactions->isNotEmpty())
+                <div class="card-footer">
+                  <a href="{{ url('my/payments/received') }}" class="text-muted font-weight-medium d-flex align-items-center justify-content-center arrow">
+                    {{ __('general.view_all') }}
+                  </a>
+                </div>
+                @endif
+
+              </div><!-- card -->
+            </div><!-- end col-md-6 -->
+
             </div><!-- end row -->
           </div><!-- end content -->
 
@@ -174,7 +316,7 @@
 @endsection
 
 @section('javascript')
-  <script src="{{ asset('/js/Chart.min.js') }}"></script>
+  <script src="{{ asset('public/js/Chart.min.js') }}"></script>
 
   <script type="text/javascript">
 
@@ -318,7 +460,7 @@ $(document).on('change','.filterEarnings', function(e) {
   var range = $(this).val();
 
   $(this).blur();
-
+  
   $('#loadChart').show();
 
   $.ajax({
@@ -327,7 +469,7 @@ $(document).on('change','.filterEarnings', function(e) {
       // Empty any previous chart data
       ChartArea.data.labels = [];
       ChartArea.data.datasets[0].data = [];
-
+      
       ChartArea.data.labels = data.labels;
       ChartArea.data.datasets.forEach((dataset) => {
           dataset.data = data.datasets;

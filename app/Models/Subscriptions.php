@@ -2,11 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use App\Models\AdminSettings;
+use Mail;
 use App\Models\User;
 use App\Models\Notifications;
-use Mail;
+use Illuminate\Database\Eloquent\Model;
 
 class Subscriptions extends Model
 {
@@ -19,14 +18,7 @@ class Subscriptions extends Model
 
 	public function creator()
 	{
-		return $this->belongsToMany(
-			User::class,
-			Plans::class,
-			'name',
-			'user_id',
-			'stripe_price',
-			'id'
-		);
+		return $this->belongsTo(User::class);
 	}
 
 	public function user()
@@ -36,26 +28,19 @@ class Subscriptions extends Model
 
 	public function subscribed()
 	{
-		return $this->belongsToMany(
-					User::class,
-					Plans::class,
-					'name',
-					'user_id',
-					'stripe_price',
-					'id'
-				)->first();
+		return $this->belongsTo(User::class, 'creator_id', 'id')->first();
 	}
 
 	public static function sendEmailAndNotify($subscriber, $user)
 	{
 		$user = User::select([
-			'id', 
-			'language', 
-			'email', 
-			'name', 
-			'email_new_subscriber', 
+			'id',
+			'language',
+			'email',
+			'name',
+			'email_new_subscriber',
 			'notify_new_subscriber'
-			])->whereId($user)->first();
+		])->whereId($user)->first();
 
 		// Set Lang user
 		app()->setLocale($user->language);
@@ -64,33 +49,31 @@ class Subscriptions extends Model
 		$sender       = config('settings.email_no_reply');
 		$emailUser    = $user->email;
 		$fullNameUser = $user->name;
-		$subject      = $subscriber.' '.__('users.has_subscribed');
-		
-		try {
-			if ($user->email_new_subscriber == 'yes') {				
-			//<------ Send Email to User ---------->>>
-			Mail::send('emails.new_subscriber', [
-				'body' => $subject,
-				'title_site' => $titleSite,
-				'fullname' => $fullNameUser
-			],
-				function($message) use ($sender, $subject, $fullNameUser, $titleSite, $emailUser)
-					{
-					$message->from($sender, $titleSite)
-						->to($emailUser, $fullNameUser)
-						->subject($subject.' - '.$titleSite);
-					});
-				//<------ End Send Email to User ---------->>>
-			}
+		$subject      = $subscriber . ' ' . __('users.has_subscribed');
 
+		try {
+			if ($user->email_new_subscriber == 'yes') {
+				Mail::send(
+					'emails.new_subscriber',
+					[
+						'body' => $subject,
+						'title_site' => $titleSite,
+						'fullname' => $fullNameUser
+					],
+					function ($message) use ($sender, $subject, $fullNameUser, $titleSite, $emailUser) {
+						$message->from($sender, $titleSite)
+							->to($emailUser, $fullNameUser)
+							->subject($subject . ' - ' . $titleSite);
+					}
+				);
+			}
 		} catch (\Exception $e) {
-			\Log::info('Error send email new Subscriber ---'. $e->getMessage());
+			\Log::info('Error send email new Subscriber ---' . $e->getMessage());
 		}
-		
+
 		if ($user->notify_new_subscriber == 'yes') {
-			// Send Notification to User --- destination, author, type, target
+			// send(destination, author, type, target)
 			Notifications::send($user->id, auth()->id(), '1', $user->id);
 		}
 	}
-
 }

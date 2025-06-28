@@ -40,7 +40,6 @@
 										<th class="active">{{ trans('general.percentage') }}</th>
 										<th class="active">{{ trans('admin.status') }}</th>
 										<th class="active">{{ trans('admin.actions') }}</th>
-                                        <th class="active">{{ trans('admin.delete') }}</th>
 									</tr>
 
 								@foreach ($taxes as $tax)
@@ -54,11 +53,6 @@
 										<td>
 											<a href="{{ url('panel/admin/tax-rates/edit', $tax->id) }}" class="btn btn-success rounded-pill btn-sm">
 											 <i class="bi-pencil"></i>
-											</a>
-										</td>
-                                        <td>
-											<a href="{{ url('panel/admin/tax-rates/delete', $tax->id) }}" class="btn btn-danger rounded-pill btn-sm">
-											 <i class="bi-trash"></i>
 											</a>
 										</td>
 

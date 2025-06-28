@@ -135,6 +135,10 @@ $(document).ready(function() {
 
               $('.btn-blocked').show();
 
+              if (typeof postId !== 'undefined') {
+                item.upload.data.postId = postId;
+              }
+
         // here you can create upload headers
         item.upload.headers = {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

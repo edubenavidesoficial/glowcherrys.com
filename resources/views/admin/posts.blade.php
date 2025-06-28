@@ -29,8 +29,8 @@
 					<div class="d-lg-flex justify-content-lg-between align-items-center mb-2 w-100">
 						<form action="{{ url('panel/admin/posts') }}" id="formSort" method="get">
 							 <select name="sort" id="sort" class="form-select d-inline-block w-auto filter">
-									<option @if ($sort == '') selected="selected" @endif value="">{{ trans('admin.sort_id') }}</option>
-									<option @if ($sort == 'pending') selected="selected" @endif value="pending">{{ trans('admin.pending') }}</option>
+									<option @if ($sort == '') selected="selected" @endif value="">{{ __('admin.sort_id') }}</option>
+									<option @if ($sort == 'pending') selected="selected" @endif value="pending">{{ __('admin.pending') }}</option>
 								</select>
 								</form><!-- form -->
 						</div>
@@ -43,13 +43,13 @@
 							@if ($data->count() !=  0)
 								 <tr>
 									  <th class="active">ID</th>
-										<th class="active">{{ trans('admin.description') }}</th>
-										<th class="active">{{ trans('admin.content') }}</th>
-										<th class="active">{{ trans('admin.type') }}</th>
-										<th class="active">{{ trans('general.creator') }}</th>
-										<th class="active">{{ trans('admin.date') }}</th>
-										<th class="active">{{ trans('admin.status') }}</th>
-										<th class="active">{{ trans('admin.actions') }}</th>
+										<th class="active">{{ __('admin.description') }}</th>
+										<th class="active">{{ __('admin.content') }}</th>
+										<th class="active">{{ __('admin.type') }}</th>
+										<th class="active">{{ __('general.creator') }}</th>
+										<th class="active">{{ __('admin.date') }}</th>
+										<th class="active">{{ __('admin.status') }}</th>
+										<th class="active">{{ __('admin.actions') }}</th>
 									</tr>
 
 								@foreach ($data as $post)
@@ -67,19 +67,23 @@
 												@foreach ($allFiles as $media)
 
 													@if ($media->type == 'image')
-														<i class="far fa-image myicon-right"></i>
+														<i class="far fa-image"></i>
 													@endif
 
 													@if ($media->type == 'video')
-														<i class="far fa-play-circle myicon-right"></i>
+														<i class="far fa-play-circle"></i>
 													@endif
 
 													@if ($media->type == 'music')
-														<i class="fa fa-microphone myicon-right"></i>
+														<i class="fa fa-microphone"></i>
 														@endif
 
 														@if ($media->type == 'file')
 													<i class="far fa-file-archive"></i>
+													@endif
+
+													@if ($media->type == 'epub')
+													<i class="fas fa-book-open"></i>
 													@endif
 
 												@endforeach
@@ -96,59 +100,144 @@
 													{{$post->user()->username}} <i class="fa fa-external-link-square-alt"></i>
 												</a>
 											@else
-												<em>{{ trans('general.no_available') }}</em>
+												<em>{{ __('general.no_available') }}</em>
 											@endif
 
 											</td>
-										<td>{{ Helper::formatDate($post->date) }}</td>
+										<td>{{ Helper::formatDate($post->date) }}
+
+											<a href="#" class="ms-1" data-bs-toggle="modal" data-bs-target="#editDate{{ $post->id }}" >
+												<i class="bi-pencil-square"></i>
+											</a>
+										</td>
 										<td>
-											<span class="rounded-pill badge bg-{{ $post->status == 'active' ? 'success' : ($post->status == 'pending' ? 'warning' : 'info') }}">
-												{{ $post->status == 'active' ? trans('admin.active') :  ($post->status == 'pending' ? trans('admin.pending') : trans('general.encode')) }}
-											</span>
+											@switch($post->status)
+												@case('active')
+												<span class="rounded-pill badge bg-success">
+													{{ __('admin.active') }}
+												</span>
+													@break
+
+												@case('pending')
+													<span class="rounded-pill badge bg-warning">
+													{{ __('admin.pending') }}
+													</span>
+													@break
+
+												@case('encode')
+												<span class="rounded-pill badge bg-info">
+													{{ __('general.encode') }}
+													</span>
+													@break
+
+												@case('schedule')
+												<span class="rounded-pill badge bg-info">
+													{{ __('general.scheduled') }}
+													</span>
+													<a tabindex="0" role="button" data-bs-container="body" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-placement="top" data-bs-content="{{ __('general.date_schedule') }} {{ Helper::formatDateSchedule($post->scheduled_date) }}">
+														<i class="far fa-question-circle"></i>
+													  </a>
+													@break
+											@endswitch
 											</td>
 										<td>
 											<div class="d-flex">
 											@if (isset($post->user()->username) && $post->status != 'encode')
-											<a href="{{ url($post->user()->username, 'post').'/'.$post->id }}" target="_blank" class="btn btn-success btn-sm rounded-pill me-2" title="{{ trans('admin.view') }}">
+
+											@if ($post->status == 'active')
+												<button type="button" class="btn btn-primary btn-sm padding-btn rounded-pill me-2" data-bs-toggle="modal" data-bs-target="#likeExtras{{ $post->id }}" >
+													<i class="bi-plus-lg"></i>
+												</button>
+											@endif
+
+											<a href="{{ url($post->user()->username, 'post').'/'.$post->id }}" target="_blank" class="btn btn-success btn-sm rounded-pill me-2" title="{{ __('admin.view') }}">
 												<i class="bi-eye"></i>
 											</a>
 										@endif
 
 											@if ($post->status == 'pending')
-											{!! Form::open([
-												'method' => 'POST',
-												'url' => "panel/admin/posts/approve/$post->id",
-												'class' => 'displayInline'
-											]) !!}
-
-											{!! Form::button(trans('admin.approve'), ['class' => 'btn btn-success btn-sm padding-btn rounded-pill me-2 actionApprovePost']) !!}
-											{!! Form::close() !!}
+											<form method="POST" action="{{ url('panel/admin/posts/approve/'.$post->id) }}" class="displayInline">
+												@csrf
+												<button type="submit" class="btn btn-success btn-sm padding-btn rounded-pill me-2 actionApprovePost">
+													{{ __('admin.approve') }}
+												</button>
+											</form>
 											@endif
 
-										 {!! Form::open([
-											 'method' => 'POST',
-											 'url' => "panel/admin/posts/delete/$post->id",
-											 'class' => 'displayInline'
-										 ]) !!}
-
-										 @if ($post->status == 'active' || $post->status == 'encode')
-											 {!! Form::button('<i class="bi-trash-fill"></i>', ['class' => 'btn btn-danger btn-sm padding-btn rounded-pill actionDelete']) !!}
-
-										 @else
-											 {!! Form::button(trans('general.reject'), ['class' => 'btn btn-danger btn-sm padding-btn rounded-pill actionDeletePost']) !!}
-										 @endif
-
-										 {!! Form::close() !!}
+											<form method="POST" action="{{ url('panel/admin/posts/delete/'.$post->id) }}" class="displayInline">
+												@csrf
+												@if ($post->status == 'active' || $post->status == 'encode' || $post->status == 'schedule')
+													<button type="submit" class="btn btn-danger btn-sm padding-btn rounded-pill actionDelete">
+														<i class="bi-trash-fill"></i>
+													</button>
+												@else
+													<button type="submit" class="btn btn-danger btn-sm padding-btn rounded-pill actionDeletePost">
+														{{ __('general.reject') }}
+													</button>
+												@endif
+											</form>
 
 									 </div>
-
-												</td>
-
+									</td>
 									</tr><!-- /.TR -->
+
+
+									<div class="modal fade" id="likeExtras{{ $post->id }}" tabindex="-1" role="dialog" aria-hidden="true">
+									<div class="modal-dialog">
+									<div class="modal-content">
+										<div class="modal-header border-bottom-0">
+										<h5 class="modal-title">{{__('general.increase_number_likes')}}</h5>
+										<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+										</div>
+										<div class="modal-body">
+										<form method="POST" action="{{ url('panel/admin/likes/extras/add', $post->id) }}" enctype="multipart/form-data">
+											@csrf
+											<select name="likes" class="form-select">
+												@for ($i = 10; $i <= 500; $i+=10)
+													<option value="{{$i}}">{{$i}}</option>
+													
+												@endfor												
+											</select>
+										<div class="modal-footer border-0">
+											<button type="submit" class="btn btn-dark rounded-pill float-right"><i></i> {{__('users.save')}}</button>
+										</div>
+										</form>
+									</div><!-- modal-body -->
+									</div><!-- modal-content -->
+									</div><!-- modal-dialog -->
+								</div><!-- modal -->
+
+								<div class="modal fade" id="editDate{{ $post->id }}" tabindex="-1" role="dialog" aria-hidden="true">
+									<div class="modal-dialog">
+									<div class="modal-content">
+										<div class="modal-header border-bottom-0">
+										<h5 class="modal-title">{{__('general.edit_date_post')}}</h5>
+										<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+										</div>
+										<div class="modal-body">
+										<form method="POST" action="{{ url('panel/admin/edit/date', $post->id) }}" enctype="multipart/form-data">
+											@csrf
+											<select name="days" class="form-select">
+												<option value="2">{{ __('general.two_days_ago') }}</option>
+												<option value="30">{{ __('general.one_month_ago') }}</option>
+												<option value="90">{{ __('general.three_months_ago') }}</option>
+												<option value="180">{{ __('general.six_months_ago') }}</option>
+												<option value="365">{{ __('general.one_year_ago') }}</option>
+											</select>
+										<div class="modal-footer border-0">
+											<button type="submit" class="btn btn-dark rounded-pill float-right"><i></i> {{__('users.save')}}</button>
+										</div>
+										</form>
+									</div><!-- modal-body -->
+									</div><!-- modal-content -->
+									</div><!-- modal-dialog -->
+								</div><!-- modal -->
+
+
 									@endforeach
 
 									@else
-										<h5 class="text-center p-5 text-muted fw-light m-0">{{ trans('general.no_results_found') }}</h5>
+										<h5 class="text-center p-5 text-muted fw-light m-0">{{ __('general.no_results_found') }}</h5>
 									@endif
 
 								</tbody>

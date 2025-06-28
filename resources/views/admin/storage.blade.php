@@ -22,7 +22,15 @@
                 </div>
               @endif
 
-  				@include('errors.errors-forms')
+			  @if (count($errors) > 0)
+			  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+					  {{ __('auth.error_desc') }}
+		  
+					  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+						<i class="bi bi-x-lg"></i>
+					  </button>
+						  </div>
+							  @endif
 
 			<div class="card shadow-custom border-0">
 				<div class="card-body p-lg-5">
@@ -38,6 +46,16 @@
 		          </div>
 		        </div>
 
+				<div class="row mb-5">
+					<label class="col-sm-2 col-form-labe text-lg-end">{{__('general.force_https')}}</label>
+					<div class="col-sm-10">
+					  <select name="FORCE_HTTPS" class="form-select">
+						<option @selected(env('FORCE_HTTPS')) value="1">{{__('general.enabled')}}</option>
+						<option @selected(!env('FORCE_HTTPS')) value="0">{{__('general.disabled')}}</option>
+					 </select>
+					</div>
+				  </div>
+
 		        <div class="row mb-5">
 		          <label class="col-sm-2 col-form-labe text-lg-end">{{__('admin.disk')}}</label>
 		          <div class="col-sm-10">
@@ -46,8 +64,9 @@
 	 								 <option @if (config('filesystems.default') == 's3') selected @endif value="s3">Amazon S3</option>
 	 								 <option @if (config('filesystems.default') == 'dospace') selected @endif value="dospace">DigitalOcean</option>
 	 								 <option @if (config('filesystems.default') == 'wasabi') selected @endif value="wasabi">Wasabi</option>
-										 <option @if (config('filesystems.default') == 'backblaze') selected @endif value="backblaze">Backblaze B2</option>
+									 <option @if (config('filesystems.default') == 'backblaze') selected @endif value="backblaze">Backblaze B2</option>
 									 <option @if (config('filesystems.default') == 'vultr') selected @endif value="vultr">Vultr</option>
+									 <option @if (config('filesystems.default') == 'pushr') selected @endif value="pushr">Pushr</option>
 		           </select>
 		          </div>
 		        </div>
@@ -153,44 +172,36 @@
 		            <input value="{{ config('filesystems.disks.wasabi.bucket') }}" name="WAS_BUCKET" type="text" class="form-control @error('WAS_BUCKET') is-invalid @endif">
 		          </div>
 		        </div>
+					<hr />
 
-						<hr />
-
-				<div class="row mb-3">
-		          <label class="col-sm-2 col-form-label text-lg-end">Backblaze Account ID</label>
-		          <div class="col-sm-10">
-		            <input value="{{ config('filesystems.disks.backblaze.accountId') }}" name="BACKBLAZE_ACCOUNT_ID" type="text" class="form-control @error('BACKBLAZE_ACCOUNT_ID') is-invalid @endif">
-		          </div>
-		        </div>
-
-				<div class="row mb-3">
-		          <label class="col-sm-2 col-form-label text-lg-end">Backblaze Master Application Key</label>
-		          <div class="col-sm-10">
-		            <input value="{{ config('filesystems.disks.backblaze.applicationKey') }}" name="BACKBLAZE_APP_KEY" type="text" class="form-control @error('BACKBLAZE_APP_KEY') is-invalid @endif">
-		          </div>
-		        </div>
-
-				<div class="row mb-3">
-		          <label class="col-sm-2 col-form-label text-lg-end">Backblaze Bucket Name</label>
-		          <div class="col-sm-10">
-		            <input value="{{ config('filesystems.disks.backblaze.bucketName') }}" name="BACKBLAZE_BUCKET" type="text" class="form-control @error('BACKBLAZE_BUCKET') is-invalid @endif">
-		          </div>
-		        </div>
-
-				<div class="row mb-3">
-		          <label class="col-sm-2 col-form-label text-lg-end">Backblaze Bucket ID</label>
-		          <div class="col-sm-10">
-		            <input value="{{ config('filesystems.disks.backblaze.bucketId') }}" name="BACKBLAZE_BUCKET_ID" type="text" class="form-control @error('BACKBLAZE_BUCKET_ID') is-invalid @endif">
-		          </div>
-		        </div>
-
-				<div class="row mb-3">
-					<label class="col-sm-2 col-form-label text-lg-end">Backblaze Bucket Region</label>
-					<div class="col-sm-10">
-					  <input value="{{ env('BACKBLAZE_BUCKET_REGION') }}" name="BACKBLAZE_BUCKET_REGION" type="text" class="form-control @error('BACKBLAZE_BUCKET_REGION') is-invalid @endif" placeholder="s3.us-west-000.backblazeb2.com">
-					</div>
-				  </div>
-						<hr />
+					<div class="row mb-3">
+						<label class="col-sm-2 col-form-label text-lg-end">Backblaze Account ID</label>
+						<div class="col-sm-10">
+						  <input value="{{ config('filesystems.disks.backblaze.key') }}" name="BACKBLAZE_ACCOUNT_ID" type="text" class="form-control @error('BACKBLAZE_ACCOUNT_ID') is-invalid @endif">
+						</div>
+					  </div>
+	  
+					  <div class="row mb-3">
+						<label class="col-sm-2 col-form-label text-lg-end">Backblaze Master Application Key</label>
+						<div class="col-sm-10">
+						  <input value="{{ config('filesystems.disks.backblaze.secret') }}" name="BACKBLAZE_APP_KEY" type="text" class="form-control @error('BACKBLAZE_APP_KEY') is-invalid @endif">
+						</div>
+					  </div>
+	  
+					  <div class="row mb-3">
+						<label class="col-sm-2 col-form-label text-lg-end">Backblaze Bucket Name</label>
+						<div class="col-sm-10">
+						  <input value="{{ config('filesystems.disks.backblaze.bucket') }}" name="BACKBLAZE_BUCKET" type="text" class="form-control @error('BACKBLAZE_BUCKET') is-invalid @endif">
+						</div>
+					  </div>
+	  	  
+					  <div class="row mb-3">
+						  <label class="col-sm-2 col-form-label text-lg-end">Backblaze Bucket Region</label>
+						  <div class="col-sm-10">
+							<input value="{{ env('BACKBLAZE_BUCKET_REGION') }}" name="BACKBLAZE_BUCKET_REGION" type="text" class="form-control @error('BACKBLAZE_BUCKET_REGION') is-invalid @endif" placeholder="us-west-000">
+						  </div>
+						</div>
+							  <hr />
 
 						<div class="row mb-3">
 		          <label class="col-sm-2 col-form-label text-lg-end">Vultr Key</label>
@@ -219,6 +230,44 @@
 		            <input value="{{ config('filesystems.disks.vultr.bucket') }}" name="VULTR_BUCKET" type="text" class="form-control @error('VULTR_BUCKET') is-invalid @endif">
 		          </div>
 		        </div>
+
+				<hr />
+
+						  <div class="row mb-3">
+							<label class="col-sm-2 col-form-label text-lg-end">Pushr Access Key</label>
+							<div class="col-sm-10">
+							  <input value="{{ env('PUSHR_ACCESS_KEY') }}" name="PUSHR_ACCESS_KEY" type="text" class="form-control @error('PUSHR_ACCESS_KEY') is-invalid @endif">
+							</div>
+						  </div>
+		  
+								  <div class="row mb-3">
+							<label class="col-sm-2 col-form-label text-lg-end">Pushr Secret Key</label>
+							<div class="col-sm-10">
+							  <input value="{{ env('PUSHR_SECRET_KEY') }}" name="PUSHR_SECRET_KEY" type="text" class="form-control @error('PUSHR_SECRET_KEY') is-invalid @endif">
+							</div>
+						  </div>
+		  		  
+						<div class="row mb-3">
+							<label class="col-sm-2 col-form-label text-lg-end">Pushr Bucket</label>
+							<div class="col-sm-10">
+							  <input value="{{ env('PUSHR_BUCKET') }}" name="PUSHR_BUCKET" type="text" class="form-control @error('PUSHR_BUCKET') is-invalid @endif">
+							</div>
+						  </div>
+
+						  <div class="row mb-3">
+							<label class="col-sm-2 col-form-label text-lg-end">Pushr S3 Endpoint</label>
+							<div class="col-sm-10">
+							  <input value="{{ env('PUSHR_ENDPOINT') }}" name="PUSHR_ENDPOINT" type="text" class="form-control @error('PUSHR_ENDPOINT') is-invalid @endif">
+							</div>
+						  </div>
+
+						  <div class="row mb-3">
+							<label class="col-sm-2 col-form-label text-lg-end">Pushr CDN Hostname</label>
+							<div class="col-sm-10">
+							  <input value="{{ env('PUSHR_URL') }}" name="PUSHR_URL" type="text" class="form-control @error('PUSHR_URL') is-invalid @endif">
+							  <small class="d-block mt-1"><strong>Important:</strong> Must contain the https:// prefix</small>
+							</div>
+						  </div>
 
 						<div class="row mb-3">
 		          <div class="col-sm-10 offset-sm-2">

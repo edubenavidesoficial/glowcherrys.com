@@ -32,109 +32,159 @@
                @if ($data->count() !=  0)
                   <tr>
                      <th class="active">ID</th>
-                     <th class="active">{{ trans('admin.report_by') }}</th>
-                     <th class="active">{{ trans('admin.reported') }}</th>
-										 <th class="active">{{ trans('admin.type_report') }}</th>
-                     <th class="active">{{ trans('admin.reason') }}</th>
-                     <th class="active">{{ trans('admin.date') }}</th>
-                     <th class="active">{{ trans('admin.actions') }}</th>
+                     <th class="active">{{ __('admin.report_by') }}</th>
+                     <th class="active">{{ __('admin.reported') }}</th>
+					 <th class="active">{{ __('admin.type') }}</th>
+					 <th class="active">{{ __('general.message') }}</th>
+                     <th class="active">{{ __('admin.reason') }}</th>
+                     <th class="active">{{ __('admin.date') }}</th>
+                     <th class="active">{{ __('admin.actions') }}</th>
                    </tr>
 
                  @foreach ($data as $report)
-									 <tr>
-										 <td>{{ $report->id }}</td>
-										 <td><a href="{{ url($report->user()->username) }}" target="_blank">{{ $report->user()->name }} <i class="fa fa-external-link-square-alt"></i></a></td>
+					<tr>
+						<td>{{ $report->id }}</td>
+						<td>
+							@if ($report->user())
+								<a href="{{ url($report->user()->username) }}" target="_blank">{{ $report->user()->name }} <i class="fa fa-external-link-square-alt"></i></a>
+								@else
+							{{ __('general.no_available') }}
+							@endif
+						</td>
 
-										 <td>
-										 @if ($report->type == 'update')
-											 <a href="{{ url($report->updates()->user()->username.'/post', $report->report_id) }}" target="_blank">
-											 {{ str_limit($report->updates()->description, 40, '...') }} <i class="fa fa-external-link-square-alt"></i>
-										 </a>
+						<td>
+							@switch($report->type)
+								@case('user')
+									@if ($report->userReported())
+									<a href="{{ url('panel/admin/members/edit', $report->report_id) }}" target="_blank">
+										{{ str_limit($report->userReported()->name, 15, '...') }} <i class="fa fa-external-link-square-alt"></i>
+									</a>
+										@else
+										{{ __('general.no_available') }}
+										@endif
+									@break
 
-									 @elseif ($report->type == 'item')
-										 <a href="{{ url('shop/product', $report->report_id) }}" target="_blank">
-										 {{ str_limit($report->products()->name, 40, '...') }} <i class="fa fa-external-link-square-alt"></i>
-									 </a>
+								@case('update')
+									@if ($report->updates())
+									<a href="{{ url($report->updates()->user()->username.'/post', $report->report_id) }}" target="_blank">
+										{{ str_limit($report->updates()->description, 40, '...') }} <i class="fa fa-external-link-square-alt"></i>
+									</a>
+										@else
+										{{ __('general.no_available') }}
+										@endif
+									@break
+							
+								@case('item')
+									@if ($report->products())
+									<a href="{{ url('shop/product', $report->report_id) }}" target="_blank">
+										{{ str_limit($report->products()->name, 40, '...') }} <i class="fa fa-external-link-square-alt"></i>
+									</a>
+										@else
+										{{ __('general.no_available') }}
+									@endif
+									@break
 
-								 @else
+								@case('live')
+									@if ($report->live())
+										<a href="{{ url('live', $report->live()->username) }}" target="_blank">
+											{{ str_limit($report->live()->name, 40, '...') }} <i class="fa fa-external-link-square-alt"></i>
+										</a>
+										@else
+									{{ __('general.no_available') }}
+									@endif
+									@break								
+						@endswitch
+					</td>
 
-									 <a href="{{ url('panel/admin/members/edit', $report->report_id) }}" target="_blank">
-										 {{ str_limit($report->userReported()->name, 15, '...') }} <i class="fa fa-external-link-square-alt"></i>
-									 </a>
+					<td>
+						@switch($report->type)
+							@case('user')
+								{{ __('admin.user') }}
+								@break
 
-									 @endif
-									 </td>
+							@case('update')
+								{{ __('general.post') }}
+								@break
 
-									 <td>{{ $report->type == 'user' ? trans('admin.user') : (($report->type == 'item') ? trans('general.item') : trans('general.post')) }}</td>
+							@case('item')
+								{{ __('general.item') }}
+								@break							
 
-									 @php
-										 switch ($report->reason) {
-											 case 'copyright':
-												 $reason = __('admin.copyright');
-												 break;
+							@case('live')
+								{{ __('general.live') }}
+								@break
+						@endswitch
+					</td>
 
-											 case 'privacy_issue':
-												 $reason = __('admin.privacy_issue');
-												 break;
+					<td>
+						{{ $report->message ?? '--' }}
+					</td>
 
-												 case 'violent_sexual':
-													 $reason = __('admin.violent_sexual_content');
-													 break;
+					@php
+						switch ($report->reason) {
+							case 'copyright':
+								$reason = __('admin.copyright');
+								break;
 
-													 case 'spoofing':
-														 $reason = __('admin.spoofing');
-														 break;
+							case 'privacy_issue':
+								$reason = __('admin.privacy_issue');
+								break;
 
-														 case 'spam':
-															 $reason = __('general.spam');
-															 break;
+								case 'violent_sexual':
+									$reason = __('admin.violent_sexual_content');
+									break;
 
-															 case 'fraud':
-																 $reason = __('general.fraud');
-																 break;
+									case 'spoofing':
+										$reason = __('admin.spoofing');
+										break;
 
-																 case 'under_age':
-																	 $reason = __('general.under_age');
-																	 break;
+										case 'spam':
+											$reason = __('general.spam');
+											break;
 
-																	 case 'item_not_received':
-																		 $reason = __('general.item_not_received');
-																		 break;
-										 }
-									 @endphp
+											case 'fraud':
+												$reason = __('general.fraud');
+												break;
 
-										 <td>{{ $reason }}</td>
+												case 'under_age':
+													$reason = __('general.under_age');
+													break;
 
-										 <td>{{ Helper::formatDate($report->created_at) }}</td>
-										 <td>
+													case 'item_not_received':
+														$reason = __('general.item_not_received');
+														break;
+						}
+					@endphp
 
+						<td>{{ $reason }}</td>
 
-											 {!! Form::open([
-											 'method' => 'POST',
-											 'url' => url('panel/admin/reports/delete',$report->id),
-											 'class' => 'displayInline'
-										 ]) !!}
-										{!! Form::button('<i class="bi-trash-fill"></i>', ['class' => 'btn btn-danger rounded-pill btn-sm actionDelete']) !!}
+						<td>{{ Helper::formatDate($report->created_at) }}</td>
+						<td>
+							
+						<form method="POST" action="{{ url('panel/admin/reports/delete', $report->id) }}" class="displayInline">
+							@csrf
+							<button type="submit" class="btn btn-danger rounded-pill btn-sm actionDelete">
+								<i class="bi-trash-fill"></i>
+							</button>
+						</form>
 
-											{!! Form::close() !!}
+								</td>
 
-												 </td>
-
-									 </tr><!-- /.TR -->
+					</tr><!-- /.TR -->
                    @endforeach
 
-									@else
-										<h5 class="text-center p-5 text-muted fw-light m-0">{{ trans('general.no_results_found') }}</h5>
-									@endif
+						@else
+							<h5 class="text-center p-5 text-muted fw-light m-0">{{ __('general.no_results_found') }}</h5>
+						@endif
 
-								</tbody>
-								</table>
-							</div><!-- /.box-body -->
+					</tbody>
+					</table>
+				</div><!-- /.box-body -->
 
-				 </div><!-- card-body -->
- 			</div><!-- card  -->
+				</div><!-- card-body -->
+		</div><!-- card  -->
 
- 		</div><!-- col-lg-12 -->
-	</div><!-- end row -->
+	</div><!-- col-lg-12 -->
+</div><!-- end row -->
 </div><!-- end content -->
 @endsection

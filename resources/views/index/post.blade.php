@@ -47,7 +47,7 @@
                     </a>
 
                     <a target="_blank" href="https://twitter.com/intent/tweet?url={{url()->current()}}&text={{ $response->title }}">
-                      <i class="fab fa-twitter mr-1"></i> Tweet
+                      <i class="bi-twitter-x mr-1"></i> Tweet
                     </a>
                   </div>
 

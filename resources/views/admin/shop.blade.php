@@ -30,14 +30,35 @@
 					 <form method="POST" action="{{ url('panel/admin/shop') }}" enctype="multipart/form-data">
 						 @csrf
 
-						 <fieldset class="row mb-3">
+					<fieldset class="row mb-3">
 			         <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ __('admin.status') }}</legend>
 			         <div class="col-sm-10">
 			           <div class="form-check form-switch form-switch-md">
-			            <input class="form-check-input" type="checkbox" name="shop" @if ($settings->shop) checked="checked" @endif value="1" role="switch">
+			            <input class="form-check-input" type="checkbox" name="shop" @checked($settings->shop) value="1" role="switch">
 			          </div>
 			         </div>
-			       </fieldset><!-- end row -->
+			       </fieldset>
+				   <!-- end row -->
+
+				   <fieldset class="row mb-3">
+					<legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ __('general.allow_free_items_shop') }}</legend>
+					<div class="col-sm-10">
+					  <div class="form-check form-switch form-switch-md">
+					   <input class="form-check-input" type="checkbox" name="allow_free_items_shop" @checked($settings->allow_free_items_shop) value="1" role="switch">
+					 </div>
+					</div>
+				  </fieldset>
+				  <!-- end row -->
+
+				  <fieldset class="row mb-3">
+					<legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ __('general.allow_external_links_shop') }}</legend>
+					<div class="col-sm-10">
+					  <div class="form-check form-switch form-switch-md">
+					   <input class="form-check-input" type="checkbox" name="allow_external_links_shop" @checked($settings->allow_external_links_shop) value="1" role="switch">
+					 </div>
+					</div>
+				  </fieldset>
+				  <!-- end row -->
 
 						 <div class="row mt-3 mb-2">
 							<div class="col-sm-10 offset-sm-2">

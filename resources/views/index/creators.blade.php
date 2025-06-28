@@ -16,7 +16,9 @@
           @endguest
 
           @auth
-            <a href="{{url('explore')}}" class="link-border">{{ __('general.explore_posts') }}</a>
+            @if (!$settings->disable_explore_section)
+              <a href="{{url('explore')}}" class="link-border">{{ __('general.explore_posts') }}</a>
+            @endif
           @endauth
         </p>
         </div>
@@ -26,7 +28,9 @@
 
   <div class="col-md-3 mb-4">
 
-    @include('includes.menu-filters-creators')
+    @if (!$settings->disable_creators_section)
+       @include('includes.menu-filters-creators')
+    @endif
 
     @include('includes.listing-categories')
   </div><!-- end col-md-3 -->
@@ -63,5 +67,5 @@
 @endsection
 
 @section('javascript')
-<script src="{{ url('/js/paginator-creators.js') }}?v={{$settings->version}}"></script>
+<script src="{{ url('public/js/paginator-creators.js') }}?v={{$settings->version}}"></script>
 @endsection

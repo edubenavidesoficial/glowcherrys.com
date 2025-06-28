@@ -5,23 +5,23 @@
     <div class="container pt-lg-md">
       <div class="row">
         <div class="col-lg-7">
-          <img src="{{url('/img', $settings->home_index)}}" class="img-center img-fluid d-lg-block d-none">
+          <img src="{{url('public/img', $settings->home_index)}}" class="img-center img-fluid d-lg-block d-none">
         </div>
         <div class="col-lg-5">
 
           <div class="text-center d-block w-100">
-            <img src="{{url('/img', $settings->logo)}}" alt="{{$settings->title}}" width="50%" class="logo align-baseline mb-1" />
+            <img src="{{url('public/img', $settings->logo)}}" alt="{{$settings->title}}" width="50%" class="logo align-baseline mb-1" />
           </div>
 
-          <div class="card bg-white shadow border-0">
+          <div class="card bg-white shadow border-0 b-radio-custom">
 
             <div class="card-body px-lg-5 py-lg-5 pt-4">
 
-              <small class="btn-block text-center pb-4 h6">{{ trans('general.title_home_login') }}</small>
+              <small class="btn-block text-center pb-4 h6">{{ __('general.title_home_login') }}</small>
 
         @if (session('login_required'))
     			<div class="alert alert-danger" id="dangerAlert">
-                		<i class="fa fa-exclamation-triangle"></i> {{trans('auth.login_required')}}
+                		<i class="fa fa-exclamation-triangle"></i> {{session('login_required')}}
                 		</div>
                 	@endif
 
@@ -36,13 +36,13 @@
 
                 @if ($settings->twitter_login == 'on')
                 <a href="{{url('oauth/twitter')}}" class="btn btn-twitter auth-form-btn mb-2 w-100">
-                  <i class="fab fa-twitter mr-2"></i> <span class="loginRegisterWith">{{ __('auth.login_with') }}</span> Twitter
+                  <i class="bi-twitter-x mr-2"></i> <span class="loginRegisterWith">{{ __('auth.login_with') }}</span> Twitter
                 </a>
               @endif
 
                   @if ($settings->google_login == 'on')
                   <a href="{{url('oauth/google')}}" class="btn btn-google auth-form-btn flex-grow w-100">
-                    <img src="{{ url('/img/google.svg') }}" class="mr-2" width="18" height="18"> <span class="loginRegisterWith">{{ __('auth.login_with') }}</span> Google
+                    <img src="{{ url('public/img/google.svg') }}" class="mr-2" width="18" height="18"> <span class="loginRegisterWith">{{ __('auth.login_with') }}</span> Google
                   </a>
                 @endif
                 </div>
@@ -59,16 +59,12 @@
 
                   <input type="hidden" name="return" value="{{ count($errors) > 0 ? old('return') : url()->previous() }}">
 
-                  @if ($settings->captcha == 'on')
-                    @captcha
-                  @endif
-
                   <div class="form-group mb-3 display-none" id="full_name">
                     <div class="input-group input-group-alternative">
                       <div class="input-group-prepend">
                         <span class="input-group-text"><i class="feather icon-user"></i></span>
                       </div>
-                      <input class="form-control"  value="{{ old('name')}}" placeholder="{{trans('auth.full_name')}}" name="name" type="text">
+                      <input class="form-control"  value="{{ old('name')}}" placeholder="{{__('auth.full_name')}}" name="name" type="text">
                     </div>
                   </div>
 
@@ -77,7 +73,7 @@
                     <div class="input-group-prepend">
                       <span class="input-group-text"><i class="feather icon-mail"></i></span>
                     </div>
-                    <input class="form-control" value="{{ old('email')}}" placeholder="{{trans('auth.email')}}" name="email" type="text">
+                    <input class="form-control" value="{{ old('email')}}" placeholder="{{__('auth.email')}}" name="email" type="text">
                   </div>
                 </div>
 
@@ -86,7 +82,7 @@
                     <div class="input-group-prepend">
                       <span class="input-group-text"><i class="feather icon-mail"></i></span>
                     </div>
-                    <input class="form-control" value="{{ old('username_email') }}" placeholder="{{ trans('auth.username_or_email') }}" name="username_email" type="text">
+                    <input class="form-control" value="{{ old('username_email') }}" placeholder="{{ __('auth.username_or_email') }}" name="username_email" type="text">
 
                   </div>
                 </div>
@@ -95,14 +91,14 @@
                     <div class="input-group-prepend">
                       <span class="input-group-text"><i class="iconmoon icon-Key"></i></span>
                     </div>
-                    <input name="password" type="password" class="form-control" placeholder="{{ trans('auth.password') }}">
+                    <input name="password" type="password" class="form-control" placeholder="{{ __('auth.password') }}">
                     <div class="input-group-append">
                       <span class="input-group-text c-pointer"><i class="feather icon-eye-off"></i></span>
                   </div>
                 </div>
                 <small class="form-text text-muted">
                   <a href="{{url('password/reset')}}" id="forgotPassword">
-                    {{trans('auth.forgot_password')}}
+                    {{__('auth.forgot_password')}}
                   </a>
                 </small>
                 </div>
@@ -113,7 +109,7 @@
                     <span class="input-group-text"><i class="fa fa-globe"></i></span>
                   </div>
                   <select name="countries_id" class="form-control custom-select">
-                    <option value="">{{trans('general.select_your_country')}}</option>
+                    <option value="">{{__('general.select_your_country')}}</option>
                         @foreach(  Countries::orderBy('country_name')->get() as $country )
                           <option id="{{$country->country_code}}" value="{{$country->id}}">{{ $country->country_name }}</option>
                           @endforeach
@@ -124,7 +120,7 @@
                 <div class="custom-control custom-control-alternative custom-checkbox" id="remember">
                   <input class="custom-control-input" id=" customCheckLogin" type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}>
                   <label class="custom-control-label" for=" customCheckLogin">
-                    <span>{{trans('auth.remember_me')}}</span>
+                    <span>{{__('auth.remember_me')}}</span>
                   </label>
                 </div>
 
@@ -132,10 +128,10 @@
                   <input class="custom-control-input" id="customCheckRegister" type="checkbox" name="agree_gdpr">
                     <label class="custom-control-label" for="customCheckRegister">
                       <span>
-                        {{trans('admin.i_agree_gdpr')}}
+                        {{__('admin.i_agree_gdpr')}}
                         <a href="{{$settings->link_terms}}" target="_blank">{{__('admin.terms_conditions')}}</a>
                         {{ __('general.and') }}
-                        <a href="{{$settings->link_privacy}}" target="_blank">{{trans('admin.privacy_policy')}}</a>
+                        <a href="{{$settings->link_privacy}}" target="_blank">{{__('admin.privacy_policy')}}</a>
                       </span>
                     </label>
                 </div>
@@ -147,19 +143,26 @@
                   <div class="alert alert-success display-none mb-0 mt-3" id="checkAccount"></div>
 
                 <div class="text-center">
-                  <button type="submit" id="btnLoginRegister" class="btn btn-primary mt-4 w-100"><i></i> {{trans('auth.login')}}</button>
+                  @if ($settings->captcha == 'on')
+                  {!! NoCaptcha::displaySubmit('formLoginRegister', '<i></i> '.__('auth.login'), ['data-size' => 'invisible', 'id' => 'btnLoginRegister', 'class' => 'btn btn-primary mt-4 w-100']) !!}
+
+                  {!! NoCaptcha::renderJs() !!}
+
+                  @else
+                  <button type="submit" id="btnLoginRegister" class="btn btn-primary mt-4 w-100"><i></i> {{__('auth.login')}}</button>
+                  @endif
                 </div>
               </form>
 
               @if ($settings->captcha == 'on')
-                <small class="btn-block text-center mt-3">{{trans('auth.protected_recaptcha')}} <a href="https://policies.google.com/privacy" target="_blank">{{trans('general.privacy')}}</a> - <a href="https://policies.google.com/terms" target="_blank">{{trans('general.terms')}}</a></small>
+                <small class="btn-block text-center mt-3">{{__('auth.protected_recaptcha')}} <a href="https://policies.google.com/privacy" target="_blank">{{__('general.privacy')}}</a> - <a href="https://policies.google.com/terms" target="_blank">{{__('general.terms')}}</a></small>
               @endif
 
               @if ($settings->registration_active == '1')
               <div class="row mt-3">
                 <div class="col-12 text-center">
-                  <a href="javascript:void(0);" id="toggleLogin" data-not-account="{{trans('auth.not_have_account')}}" data-already-account="{{trans('auth.already_have_an_account')}}" data-text-login="{{trans('auth.login')}}" data-text-register="{{trans('auth.sign_up')}}">
-                    <strong>{{trans('auth.not_have_account')}}</strong>
+                  <a href="javascript:void(0);" id="toggleLogin" data-not-account="{{__('auth.not_have_account')}}" data-already-account="{{__('auth.already_have_an_account')}}" data-text-login="{{__('auth.login')}}" data-text-register="{{__('auth.sign_up')}}">
+                    <strong>{{__('auth.not_have_account')}}</strong>
                   </a>
                 </div>
               </div>
@@ -168,8 +171,8 @@
           @else
             <div class="row mt-3">
               <div class="col-12 text-center">
-                <a href="javascript:void(0);" id="toggleLogin" data-not-account="{{trans('auth.not_have_account')}}" data-already-account="{{trans('auth.already_have_an_account')}}" data-text-login="{{trans('auth.login')}}" data-text-register="{{trans('auth.sign_up')}}">
-                  <strong>{{trans('auth.not_have_account')}}</strong>
+                <a href="javascript:void(0);" id="toggleLogin" data-not-account="{{__('auth.not_have_account')}}" data-already-account="{{__('auth.already_have_an_account')}}" data-text-login="{{__('auth.login')}}" data-text-register="{{__('auth.sign_up')}}">
+                  <strong>{{__('auth.not_have_account')}}</strong>
                 </a>
               </div>
             </div>
@@ -183,7 +186,7 @@
     </div>
   </div>
 
-  <div class="text-center py-3 px-3">
+  <div class="text-center py-3 px-3 footer_background_color footer_text_color">
     @include('includes.footer-tiny')
   </div>
 @endsection
@@ -201,19 +204,19 @@
 
   @if (session('success_verify'))
   	swal({
-  		title: "{{ trans('general.welcome') }}",
-  		text: "{{ trans('users.account_validated') }}",
+  		title: "{{ __('general.welcome') }}",
+  		text: "{{ __('users.account_validated') }}",
   		type: "success",
-  		confirmButtonText: "{{ trans('users.ok') }}"
+  		confirmButtonText: "{{ __('users.ok') }}"
   		});
   	 @endif
 
   	 @if (session('error_verify'))
   	swal({
-  		title: "{{ trans('general.error_oops') }}",
-  		text: "{{ trans('users.code_not_valid') }}",
+  		title: "{{ __('general.error_oops') }}",
+  		text: "{{ __('users.code_not_valid') }}",
   		type: "error",
-  		confirmButtonText: "{{ trans('users.ok') }}"
+  		confirmButtonText: "{{ __('users.ok') }}"
   		});
   	 @endif
 </script>

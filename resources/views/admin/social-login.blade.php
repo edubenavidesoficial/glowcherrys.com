@@ -57,14 +57,14 @@
 						<hr />
 
 						<div class="row mb-3">
-		          <label class="col-sm-2 col-form-label text-lg-end">Twitter API key</label>
+		          <label class="col-sm-2 col-form-label text-lg-end">X API key</label>
 		          <div class="col-sm-10">
 		            <input value="{{ config('services.twitter.client_id') }}" name="TWITTER_CLIENT_ID" type="password" class="form-control">
 		          </div>
 		        </div>
 
 						<div class="row mb-3">
-		          <label class="col-sm-2 col-form-label text-lg-end">Twitter API secret key</label>
+		          <label class="col-sm-2 col-form-label text-lg-end">X API secret key</label>
 		          <div class="col-sm-10">
 		            <input value="{{ config('services.twitter.client_secret') }}" name="TWITTER_CLIENT_SECRET" type="password" class="form-control">
 								<small class="d-block text-muted">URL Callback: <strong>{{url('oauth/twitter/callback')}}</strong></small>

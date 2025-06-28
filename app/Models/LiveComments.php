@@ -18,4 +18,9 @@ class LiveComments extends Model
     {
       return $this->belongsTo(User::class)->first();
     }
+
+    public function gift()
+    {
+      return $this->belongsTo(Gift::class)->where('status', true);
+    }
 }

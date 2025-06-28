@@ -20,18 +20,21 @@ class Media extends Model
     'file',
     'file_name',
     'file_size',
+    'bytes',
+    'mime',
     'img_type',
     'token',
     'status',
     'created_at'
   ];
 
-  public function user() {
-        return $this->belongsTo('App\Models\User')->first();
-    }
+  public function user()
+  {
+    return $this->belongsTo(User::class)->first();
+  }
 
-  public function updates() {
-        return $this->belongsTo('App\Models\Updates');
-    }
-
+  public function updates()
+  {
+    return $this->belongsTo(Updates::class);
+  }
 }

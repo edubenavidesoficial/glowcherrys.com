@@ -3,7 +3,13 @@
 namespace App\Console;
 
 use App\Jobs\DeleteMedia;
+use App\Jobs\SalesRefund;
 use App\Jobs\RebillWallet;
+use App\Jobs\PostScheduled;
+use App\Jobs\RebillCardinity;
+use App\Jobs\ExpiredAdvertising;
+use App\Jobs\DeleteInactiveUsers;
+use App\Jobs\LiveStreamingPrivateExpired;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -15,7 +21,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-      //
+        //
     ];
 
     /**
@@ -28,16 +34,22 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
         $schedule->command('queue:work --tries=3 --timeout=8600')
-        ->cron('* * * * *')
-        ->withoutOverlapping();
+            ->cron('* * * * *')
+            ->withoutOverlapping();
 
         $schedule->command('cache:clear')
-        ->weekly()
-        ->withoutOverlapping();
+            ->weekly()
+            ->withoutOverlapping();
 
-        $schedule->job(new DeleteMedia)->hourly();
-
+        $schedule->job(new DeleteMedia)->everySixHours();
         $schedule->job(new RebillWallet)->hourly();
+        $schedule->job(new RebillCardinity)->hourly();
+        $schedule->job(new PostScheduled)->everyMinute();
+        $schedule->job(new SalesRefund)->daily();
+        $schedule->job(new DeleteInactiveUsers)->everySixHours();
+        $schedule->job(new ExpiredAdvertising)->hourly();
+        $schedule->job(new LiveStreamingPrivateExpired)->everySixHours();
+        
     }
 
     /**
@@ -47,7 +59,7 @@ class Kernel extends ConsoleKernel
      */
     protected function commands()
     {
-        $this->load(__DIR__.'/Commands');
+        $this->load(__DIR__ . '/Commands');
 
         require base_path('routes/console.php');
     }

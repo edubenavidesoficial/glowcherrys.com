@@ -82,7 +82,15 @@
                     @endif
                     <td>{{ Helper::formatDate($transaction->created_at) }}</td>
                     <td>{{ Helper::amountFormatDecimal($transaction->amount) }}</td>
-                    <td>{{ __('general.'.$transaction->type) }}</td>
+                    <td>
+                      {{ __('general.'.$transaction->type) }}
+
+                      @if (isset($transaction->gift->id) && request()->is('my/payments/received'))
+                      <span class="d-block mt-2">
+                        <img src="{{ url('public/img/gifts', $transaction->gift->image) }}" width="25">
+                      </span>
+                      @endif
+                    </td>
                     @if (request()->is('my/payments/received'))
                       <td>{{ $transaction->user()->username ?? trans('general.no_available') }}</td>
                     <td>
@@ -92,8 +100,8 @@
                         <a tabindex="0" role="button" data-container="body" data-toggle="popover" data-trigger="focus" data-placement="top" data-content="{{trans('general.percentage_applied')}} {{ $transaction->percentage_applied }} {{trans('general.platform')}} @if ($transaction->direct_payment) ({{ __('general.direct_payment') }}) @endif">
                           <i class="far fa-question-circle"></i>
                         </a>
-
                       @endif
+                      
                     </td>
                     @endif
                     <td>

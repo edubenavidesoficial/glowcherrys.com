@@ -38,7 +38,7 @@
 		        </div>
 
            <div class="row mb-3">
-             <label class="col-sm-2 col-form-label text-lg-end">Twitter</label>
+             <label class="col-sm-2 col-form-label text-lg-end">X</label>
              <div class="col-sm-10">
                <input value="{{ $settings->twitter }}" name="twitter" type="text" class="form-control" placeholder="{{ trans('admin.url_social') }}">
              </div>
@@ -106,6 +106,13 @@
                <input value="{{ $settings->github }}" name="github" type="text" class="form-control" placeholder="{{ trans('admin.url_social') }}">
              </div>
            </div>
+
+           <div class="row mb-3">
+            <label class="col-sm-2 col-form-label text-lg-end">Threads</label>
+            <div class="col-sm-10">
+              <input value="{{ $settings->threads }}" name="threads" type="text" class="form-control" placeholder="{{ trans('admin.url_social') }}">
+            </div>
+          </div>
 
 						<div class="row mb-3">
 		          <div class="col-sm-10 offset-sm-2">

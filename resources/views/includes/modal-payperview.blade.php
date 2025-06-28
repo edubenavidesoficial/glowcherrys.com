@@ -8,7 +8,8 @@
 					<div class="card-body px-lg-5 py-lg-5 position-relative">
 
 						<div class="mb-3">
-							<i class="feather icon-unlock mr-1"></i> <strong>{{trans('general.unlock_content')}}</strong>
+							<i class="feather icon-unlock mr-1"></i> <strong>{{__('general.unlock_content')}}</strong>
+							<small class="w-100 d-block font-12">* {{ __('general.in_currency', ['currency_code' => $settings->currency_code]) }}</small>
 						</div>
 
 						<form method="post" action="{{url('send/ppv')}}" id="formSendPPV">
@@ -29,11 +30,11 @@
 								@php
 
 								if ($payment->type == 'card' ) {
-									$paymentName = '<i class="far fa-credit-card mr-1"></i> '.trans('general.debit_credit_card') .' <small class="w-100 d-block">'.__('general.powered_by').' '.$payment->name.'</small>';
+									$paymentName = '<i class="far fa-credit-card mr-1"></i> '.__('general.debit_credit_card') .' <small class="w-100 d-block">'.__('general.powered_by').' '.$payment->name.'</small>';
 								} else if ($payment->id == 1) {
-									$paymentName = '<img src="'.url('/img/payments', auth()->user()->dark_mode == 'off' ? $payment->logo : 'paypal-white.png').'" width="70"/> <small class="w-100 d-block">'.trans('general.redirected_to_paypal_website').'</small>';
+									$paymentName = '<img src="'.url('public/img/payments', auth()->user()->dark_mode == 'off' ? $payment->logo : 'paypal-white.png').'" width="70"/> <small class="w-100 d-block">'.__('general.redirected_to_paypal_website').'</small>';
 								} else {
-									$paymentName = '<img src="'.url('/img/payments', $payment->logo).'" width="70"/>';
+									$paymentName = '<img src="'.url('public/img/payments', $payment->logo).'" width="70"/>';
 								}
 
 								$allPayments = $paymentGatewaysSubscription;
@@ -91,12 +92,13 @@
 								</div>
 
 							<div class="text-center">
-								<button type="submit" id="ppvBtn" class="btn btn-primary mt-4 ppvBtn"><i></i> {{trans('general.pay')}} <span class="pricePPV"></span></button>
+								<button type="submit" id="ppvBtn" class="btn btn-primary mt-4 ppvBtn"><i></i> {{__('general.pay')}} <span class="pricePPV"></span></button>
 
 								<div class="w-100 mt-2">
-									<button type="button" class="btn e-none p-0" data-dismiss="modal">{{trans('admin.cancel')}}</button>
+									<button type="button" class="btn e-none p-0" data-dismiss="modal">{{__('admin.cancel')}}</button>
 								</div>
 							</div>
+							@include('includes.site-billing-info')
 						</form>
 					</div>
 				</div>

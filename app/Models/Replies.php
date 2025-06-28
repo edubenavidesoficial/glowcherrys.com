@@ -18,6 +18,11 @@ class Replies extends Model
 		return $this->belongsTo(Updates::class)->first();
 	}
 
+	public function posts()
+	{
+		return $this->belongsTo(Updates::class, 'updates_id');
+	}
+
 	public function comment()
     {
         return $this->belongsTo(Comments::class);

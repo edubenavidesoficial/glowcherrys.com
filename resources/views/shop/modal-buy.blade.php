@@ -9,6 +9,7 @@
 
 						<div class="mb-4">
 							<i class="bi-cart-plus mr-1"></i> <strong>{{ $product->name }}</strong>
+							<small class="w-100 d-block font-12">* {{ __('general.in_currency', ['currency_code' => $settings->currency_code]) }}</small>
 						</div>
 
 						<form method="post" action="{{url('buy/now/product')}}" id="shopProductForm">
@@ -58,7 +59,7 @@
 										<div class="input-group-prepend">
 											<span class="input-group-text"><i class="fa fa-map-marked-alt"></i></span>
 										</div>
-										<input class="form-control" name="address" placeholder="{{trans('general.address')}}"  value="{{auth()->user()->address}}" type="text">
+										<input class="form-control" name="address" placeholder="{{__('general.address')}}"  value="{{auth()->user()->address}}" type="text">
 									</div>
 								</div><!-- ./col-md-6 -->
 
@@ -67,7 +68,7 @@
 											<div class="input-group-prepend">
 												<span class="input-group-text"><i class="fa fa-map-pin"></i></span>
 											</div>
-											<input class="form-control" name="city" placeholder="{{trans('general.city')}}"  value="{{auth()->user()->city}}" type="text">
+											<input class="form-control" name="city" placeholder="{{__('general.city')}}"  value="{{auth()->user()->city}}" type="text">
 										</div>
 									</div><!-- ./col-md-6 -->
 
@@ -76,7 +77,7 @@
 													<div class="input-group-prepend">
 														<span class="input-group-text"><i class="fa fa-map-marker-alt"></i></span>
 													</div>
-													<input class="form-control" name="zip" placeholder="{{trans('general.zip')}}"  value="{{auth()->user()->zip}}" type="text">
+													<input class="form-control" name="zip" placeholder="{{__('general.zip')}}"  value="{{auth()->user()->zip}}" type="text">
 												</div>
 											</div><!-- ./col-md-6 -->
 
@@ -85,7 +86,7 @@
 														<div class="input-group-prepend">
 															<span class="input-group-text"><i class="bi-telephone"></i></span>
 														</div>
-														<input class="form-control" name="phone" placeholder="{{trans('general.phone')}}" type="tel">
+														<input class="form-control" name="phone" placeholder="{{__('general.phone')}}" type="tel">
 													</div>
 												</div><!-- ./col-md-6 -->
 
@@ -102,7 +103,7 @@
 									<li class="list-group-item py-1 list-taxes">
 								    <div class="row">
 								      <div class="col">
-								        <small>{{trans('general.subtotal')}}:</small>
+								        <small>{{__('general.subtotal')}}:</small>
 								      </div>
 								      <div class="col-auto">
 								        <small class="subtotal font-weight-bold">
@@ -131,7 +132,7 @@
 										<li class="list-group-item py-1 list-taxes">
 									    <div class="row">
 									      <div class="col">
-									        <small>{{trans('general.shipping_fee')}}:</small>
+									        <small>{{__('general.shipping_fee')}}:</small>
 									      </div>
 									      <div class="col-auto">
 									        <small class="totalPPV font-weight-bold">
@@ -146,7 +147,7 @@
 									<li class="list-group-item py-1 list-taxes">
 								    <div class="row">
 								      <div class="col">
-								        <small>{{trans('general.total')}}:</small>
+								        <small class="font-weight-bold">{{__('general.total')}}:</small>
 								      </div>
 								      <div class="col-auto">
 								        <small class="totalPPV font-weight-bold">
@@ -164,13 +165,14 @@
 
 							<div class="text-center">
 								<button type="submit" @if (Helper::userWallet('balance') == 0) disabled @endif id="shopProductBtn" class="btn btn-primary mt-4 BuyNowBtn">
-									<i></i> {{trans('general.pay')}} {{Helper::calculateProductPriceOnStore($product->price, $product->country_free_shipping <> auth()->user()->countries_id ? $product->shipping_fee : 0.00)}} <small>{{$settings->currency_code}}</small>
+									<i></i> {{__('general.pay')}} {{Helper::calculateProductPriceOnStore($product->price, $product->country_free_shipping <> auth()->user()->countries_id ? $product->shipping_fee : 0.00)}} <small>{{$settings->currency_code}}</small>
 								</button>
 
 								<div class="w-100 mt-2">
-									<a href="#" class="btn e-none p-0" data-dismiss="modal">{{trans('admin.cancel')}}</a>
+									<a href="#" class="btn e-none p-0" data-dismiss="modal">{{__('admin.cancel')}}</a>
 								</div>
 							</div>
+							@include('includes.site-billing-info')
 						</form>
 					</div>
 				</div>

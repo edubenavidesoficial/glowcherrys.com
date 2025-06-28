@@ -12,6 +12,8 @@
 
 		<div class="col-lg-12">
 
+			@include('errors.errors-forms')
+
 			@if (session('success_message'))
       <div class="alert alert-success alert-dismissible fade show" role="alert">
               <i class="bi bi-check2 me-1"></i>	{{ session('success_message') }}
@@ -29,11 +31,18 @@
 						 @csrf
 
 				<fieldset class="row mb-3">
- 		          <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ __('admin.maintenance_mode') }}</legend>
+ 		          <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ __('admin.maintenance_mode') }}
+
+					<i class="bi-info-circle showTooltip ms-1" title="{{ __('general.maintenance_mode_alert') }}"></i>
+				  </legend>
  		          <div class="col-sm-10">
  		            <div class="form-check form-switch form-switch-md">
  		             <input class="form-check-input" type="checkbox" name="maintenance_mode" @if ($settings->maintenance_mode == 'on') checked="checked" @endif value="on" role="switch">
  		           </div>
+					<small class="d-block w-100 float-start mt-2">
+						<i class="bi-exclamation-triangle-fill me-1 text-warning"></i>
+						{{ __('general.alert_maintenance_mode') }}
+					  </small>
  		          </div>
  		        </fieldset><!-- end row -->
 
@@ -49,8 +58,13 @@
 							(Log File: {{ Helper::formatBytes(filesize(storage_path("logs".DIRECTORY_SEPARATOR."laravel.log"))) }})
 						</small>
 						@endif
-						
 					</a>
+
+					@if (auth()->user()->isSuperAdmin() && file_exists(storage_path("logs".DIRECTORY_SEPARATOR."laravel.log")))
+						<a href="{{ url('panel/admin/download/logs') }}" class="btn btn-link text-reset mt-3 px-3 e-none text-decoration-none">
+							<i class="bi-download me-1"></i> {{ __('general.download') }} Laravel.log
+						</a>
+					@endif
 		          </div>
 		        </div>
 

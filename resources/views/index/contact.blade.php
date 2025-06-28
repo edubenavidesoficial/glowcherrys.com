@@ -13,7 +13,7 @@
     <div class="container pt-lg-md">
       <div class="row justify-content-center">
         <div class="col-lg-6">
-          <div class="card bg-white shadow border-0">
+          <div class="card bg-white shadow border-0 b-radio-custom">
 
           <div class="p-4">
             <h4 class="text-center mb-0 font-weight-bold">

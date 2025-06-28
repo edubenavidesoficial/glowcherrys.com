@@ -1,8 +1,8 @@
 @extends('admin.layout')
 
 @section('css')
-<link href="{{ asset('/js/select2/select2.min.css') }}" rel="stylesheet" type="text/css" />
-<link href="{{ asset('/js/select2/select2-bootstrap-5-theme.min.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ asset('public/js/select2/select2.min.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ asset('public/js/select2/select2-bootstrap-5-theme.min.css') }}" rel="stylesheet" type="text/css" />
 @endsection
 
 @section('content')
@@ -36,28 +36,28 @@
         @csrf
 
        <div class="row mb-3">
-         <label class="col-sm-2 col-form-label text-lg-end">{{ trans('admin.name_site') }}</label>
+         <label class="col-sm-2 col-form-label text-lg-end">{{ __('admin.name_site') }}</label>
          <div class="col-sm-10">
            <input type="text" value="{{ $settings->title }}" name="title" class="form-control">
          </div>
        </div><!-- end row -->
 
 			 <div class="row mb-3">
-         <label class="col-sm-2 col-form-label text-lg-end">{{ trans('admin.email_admin') }}</label>
+         <label class="col-sm-2 col-form-label text-lg-end">{{ __('admin.email_admin') }}</label>
          <div class="col-sm-10">
            <input type="text" value="{{ $settings->email_admin }}" name="email_admin" class="form-control">
          </div>
        </div><!-- end row -->
 
        <div class="row mb-3">
-         <label class="col-sm-2 col-form-labe text-lg-end">{{ trans('admin.link_terms') }}</label>
+         <label class="col-sm-2 col-form-labe text-lg-end">{{ __('admin.link_terms') }}</label>
          <div class="col-sm-10">
            <input type="text" value="{{ $settings->link_terms }}" name="link_terms" class="form-control">
          </div>
        </div><!-- end row -->
 
        <div class="row mb-3">
-         <label class="col-sm-2 col-form-labe text-lg-end">{{ trans('admin.link_privacy') }}</label>
+         <label class="col-sm-2 col-form-labe text-lg-end">{{ __('admin.link_privacy') }}</label>
          <div class="col-sm-10">
            <input type="text" value="{{ $settings->link_privacy }}" name="link_privacy" class="form-control">
            <small class="d-block"></small>
@@ -65,14 +65,14 @@
        </div><!-- end row -->
 
        <div class="row mb-3">
-         <label class="col-sm-2 col-form-labe text-lg-end">{{ trans('admin.link_cookies') }}</label>
+         <label class="col-sm-2 col-form-labe text-lg-end">{{ __('admin.link_cookies') }}</label>
          <div class="col-sm-10">
            <input type="text" value="{{ $settings->link_cookies }}" name="link_cookies" class="form-control">
          </div>
        </div><!-- end row -->
 
 			 <div class="row mb-3">
-				 <label class="col-sm-2 col-form-labe text-lg-end">{{ trans('admin.date_format') }}</label>
+				 <label class="col-sm-2 col-form-labe text-lg-end">{{ __('admin.date_format') }}</label>
 				 <div class="col-sm-10">
 					 <select name="date_format" class="form-select">
 						 <option @if( $settings->date_format == 'M d, Y' ) selected="selected" @endif value="M d, Y"><?php echo date('M d, Y'); ?></option>
@@ -85,7 +85,7 @@
 			 </div>
 
 			 <div class="row mb-3">
-				 <label class="col-sm-2 col-form-labe text-lg-end">{{ trans('general.genders') }}</label>
+				 <label class="col-sm-2 col-form-labe text-lg-end">{{ __('general.genders') }}</label>
 				 <div class="col-sm-10">
 					 <select name="genders[]" multiple class="form-select gendersSelect">
 						 <option @if (in_array('male', $genders)) selected="selected" @endif value="male">{{ __('general.male') }}</option>
@@ -102,7 +102,7 @@
 			 </div>
 
 			 <div class="row mb-3">
-				 <label class="col-sm-2 col-form-labe text-lg-end">{{ trans('general.default_language') }}</label>
+				 <label class="col-sm-2 col-form-labe text-lg-end">{{ __('general.default_language') }}</label>
 				 <div class="col-sm-10">
 					 <select name="default_language" class="form-select">
 						 @foreach (Languages::orderBy('name')->get() as $language)
@@ -114,12 +114,12 @@
 			 </div>
 
        <fieldset class="row mb-3">
-         <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ trans('general.show_errors') }}</legend>
+         <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ __('general.show_errors') }}</legend>
          <div class="col-sm-10">
            <div class="form-check">
              <input class="form-check-input" type="radio" name="app_debug" id="radio1" @if (config('app.debug') == true) checked="checked" @endif value="true">
              <label class="form-check-label" for="radio1">
-               On <small class="text-danger"><i class="bi-exclamation-triangle-fill mx-1"></i> <strong>{{ trans('general.info_show_errors') }}</strong></small>
+               On <small class="text-danger"><i class="bi-exclamation-triangle-fill mx-1"></i> <strong>{{ __('general.info_show_errors') }}</strong></small>
              </label>
            </div>
            <div class="form-check">
@@ -131,26 +131,44 @@
          </div>
        </fieldset><!-- end row -->
 
+       <fieldset class="row mb-3">
+        <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ __('general.default_theme') }}</legend>
+        <div class="col-sm-10">
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="theme" id="light_mode" @if ($settings->theme == 'light') checked="checked" @endif value="light">
+            <label class="form-check-label" for="light_mode">
+              {{ __('general.light_mode') }}
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="theme" id="dark_mode" @if ($settings->theme == 'dark') checked="checked" @endif value="dark">
+            <label class="form-check-label" for="dark_mode">
+              {{ __('general.dark_mode') }}
+            </label>
+          </div>
+        </div>
+      </fieldset><!-- end row -->
+
 			 <fieldset class="row mb-3">
-         <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ trans('general.who_can_see_content') }}</legend>
+         <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ __('general.who_can_see_content') }}</legend>
          <div class="col-sm-10">
            <div class="form-check">
              <input class="form-check-input" type="radio" name="who_can_see_content" id="radioWho1" @if ($settings->who_can_see_content == 'all') checked="checked" @endif value="all">
              <label class="form-check-label" for="radioWho1">
-               {{ trans('general.all') }}
+               {{ __('general.all') }}
              </label>
            </div>
            <div class="form-check">
              <input class="form-check-input" type="radio" name="who_can_see_content" id="radioWho2" @if ($settings->who_can_see_content == 'users') checked="checked" @endif value="users">
              <label class="form-check-label" for="radioWho2">
-               {{ trans('admin.only_users') }}
+               {{ __('admin.only_users') }}
              </label>
            </div>
          </div>
        </fieldset><!-- end row -->
 
 			 <fieldset class="row mb-4">
-         <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ trans('admin.email_verification') }}</legend>
+         <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ __('admin.email_verification') }}</legend>
          <div class="col-sm-10">
            <div class="form-check form-switch form-switch-md">
             <input class="form-check-input" type="checkbox" name="email_verification" @if ($settings->email_verification) checked="checked" @endif value="1" role="switch">
@@ -159,7 +177,7 @@
        </fieldset><!-- end row -->
 
 			 <fieldset class="row mb-4">
-         <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ trans('admin.account_verification') }}</legend>
+         <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ __('admin.account_verification') }}</legend>
          <div class="col-sm-10">
            <div class="form-check form-switch form-switch-md">
             <input class="form-check-input" type="checkbox" name="account_verification" @if ($settings->account_verification) checked="checked" @endif value="1" role="switch">
@@ -177,7 +195,7 @@
        </fieldset><!-- end row -->
 
 			 <fieldset class="row mb-4">
-         <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ trans('general.captcha_contact') }}</legend>
+         <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ __('general.captcha_contact') }}</legend>
          <div class="col-sm-10">
            <div class="form-check form-switch form-switch-md">
             <input class="form-check-input" type="checkbox" name="captcha_contact" @if ($settings->captcha_contact == 'on') checked="checked" @endif value="on" role="switch">
@@ -186,7 +204,7 @@
        </fieldset><!-- end row -->
 
 			 <fieldset class="row mb-4">
-         <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ trans('general.disable_tips') }}</legend>
+         <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ __('general.disable_tips') }}</legend>
          <div class="col-sm-10">
            <div class="form-check form-switch form-switch-md">
             <input class="form-check-input" type="checkbox" name="disable_tips" @if ($settings->disable_tips == 'on') checked="checked" @endif value="on" role="switch">
@@ -195,7 +213,7 @@
        </fieldset><!-- end row -->
 
        <fieldset class="row mb-4">
-         <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ trans('admin.new_registrations') }}</legend>
+         <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ __('admin.new_registrations') }}</legend>
          <div class="col-sm-10">
            <div class="form-check form-switch form-switch-md">
             <input class="form-check-input" type="checkbox" name="registration_active" @if ($settings->registration_active) checked="checked" @endif value="1" role="switch">
@@ -204,7 +222,7 @@
        </fieldset><!-- end row -->
 
 			 <fieldset class="row mb-4">
-         <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ trans('general.show_counter') }}</legend>
+         <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ __('general.show_counter') }}</legend>
          <div class="col-sm-10">
            <div class="form-check form-switch form-switch-md">
             <input class="form-check-input" type="checkbox" name="show_counter" @if ($settings->show_counter == 'on') checked="checked" @endif value="on" role="switch">
@@ -213,7 +231,7 @@
        </fieldset><!-- end row -->
 
 			 <fieldset class="row mb-4">
-         <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ trans('general.disable_registration_login_email') }}</legend>
+         <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ __('general.disable_registration_login_email') }}</legend>
          <div class="col-sm-10">
            <div class="form-check form-switch form-switch-md">
             <input class="form-check-input" type="checkbox" name="disable_login_register_email" @if ($settings->disable_login_register_email) checked="checked" @endif value="1" role="switch">
@@ -227,7 +245,7 @@
        </fieldset><!-- end row -->
 
 			 <fieldset class="row mb-4">
-         <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ trans('general.show_widget_creators') }}</legend>
+         <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ __('general.show_widget_creators') }}</legend>
          <div class="col-sm-10">
            <div class="form-check form-switch form-switch-md">
             <input class="form-check-input" type="checkbox" name="widget_creators_featured" @if ($settings->widget_creators_featured == 'on') checked="checked" @endif value="on" role="switch">
@@ -236,7 +254,7 @@
        </fieldset><!-- end row -->
 
 			 <fieldset class="row mb-4">
-         <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ trans('general.show_earnings_simulator') }}</legend>
+         <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ __('general.show_earnings_simulator') }}</legend>
          <div class="col-sm-10">
            <div class="form-check form-switch form-switch-md">
             <input class="form-check-input" type="checkbox" name="earnings_simulator" @if ($settings->earnings_simulator == 'on') checked="checked" @endif value="on" role="switch">
@@ -245,7 +263,7 @@
        </fieldset><!-- end row -->
 
 			 <fieldset class="row mb-4">
-         <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ trans('general.receive_verification_requests') }}</legend>
+         <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ __('general.receive_verification_requests') }}</legend>
          <div class="col-sm-10">
            <div class="form-check form-switch form-switch-md">
             <input class="form-check-input" type="checkbox" name="requests_verify_account" @if ($settings->requests_verify_account == 'on') checked="checked" @endif value="on" role="switch">
@@ -254,7 +272,7 @@
        </fieldset><!-- end row -->
 
 			 <fieldset class="row mb-4">
-         <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ trans('general.hide_admin_profile') }}</legend>
+         <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ __('general.hide_admin_profile') }}</legend>
          <div class="col-sm-10">
            <div class="form-check form-switch form-switch-md">
             <input class="form-check-input" type="checkbox" name="hide_admin_profile" @if ($settings->hide_admin_profile == 'on') checked="checked" @endif value="on" role="switch">
@@ -263,7 +281,7 @@
        </fieldset><!-- end row -->
 
 			 <fieldset class="row mb-4">
-         <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ trans('general.watermark_on_images') }}</legend>
+         <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ __('general.watermark_on_images') }}</legend>
          <div class="col-sm-10">
            <div class="form-check form-switch form-switch-md">
             <input class="form-check-input" type="checkbox" name="watermark" @if ($settings->watermark == 'on') checked="checked" @endif value="on" role="switch">
@@ -272,16 +290,7 @@
        </fieldset><!-- end row -->
 
 			 <fieldset class="row mb-4">
-         <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ trans('general.watermark_on_videos') }}</legend>
-         <div class="col-sm-10">
-           <div class="form-check form-switch form-switch-md">
-            <input class="form-check-input" type="checkbox" name="watermark_on_videos" @if ($settings->watermark_on_videos == 'on') checked="checked" @endif value="on" role="switch">
-          </div>
-         </div>
-       </fieldset><!-- end row -->
-
-			 <fieldset class="row mb-4">
-         <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ trans('general.show_alert_adult') }}</legend>
+         <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ __('general.show_alert_adult') }}</legend>
          <div class="col-sm-10">
            <div class="form-check form-switch form-switch-md">
             <input class="form-check-input" type="checkbox" name="alert_adult" @if ($settings->alert_adult == 'on') checked="checked" @endif value="on" role="switch">
@@ -290,7 +299,7 @@
        </fieldset><!-- end row -->
 
 			 <fieldset class="row mb-4">
-         <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ trans('general.users_can_edit_post') }}</legend>
+         <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ __('general.users_can_edit_post') }}</legend>
          <div class="col-sm-10">
            <div class="form-check form-switch form-switch-md">
             <input class="form-check-input" type="checkbox" name="users_can_edit_post" @if ($settings->users_can_edit_post == 'on') checked="checked" @endif value="on" role="switch">
@@ -299,7 +308,7 @@
        </fieldset><!-- end row -->
 
 			 <fieldset class="row mb-4">
-         <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ trans('general.disable_banner_cookies') }}</legend>
+         <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ __('general.disable_banner_cookies') }}</legend>
          <div class="col-sm-10">
            <div class="form-check form-switch form-switch-md">
             <input class="form-check-input" type="checkbox" name="disable_banner_cookies" @if ($settings->disable_banner_cookies == 'on') checked="checked" @endif value="on" role="switch">
@@ -308,7 +317,7 @@
        </fieldset><!-- end row -->
 
 			 <fieldset class="row mb-4">
-         <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ trans('general.referral_system') }}</legend>
+         <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ __('general.referral_system') }}</legend>
          <div class="col-sm-10">
            <div class="form-check form-switch form-switch-md">
             <input class="form-check-input" type="checkbox" name="referral_system" @if ($settings->referral_system == 'on') checked="checked" @endif value="on" role="switch">
@@ -316,17 +325,8 @@
          </div>
        </fieldset><!-- end row -->
 
-			 <fieldset class="row mb-4">
-         <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ trans('general.video_encoding') }} <i class="bi-info-circle showTooltip ms-1" title="{{ trans('general.video_encoding_alert') }}"></i></legend>
-         <div class="col-sm-10">
-           <div class="form-check form-switch form-switch-md">
-            <input class="form-check-input" type="checkbox" name="video_encoding" @if ($settings->video_encoding == 'on') checked="checked" @endif value="on" role="switch">
-          </div>
-         </div>
-       </fieldset><!-- end row -->
-
        <fieldset class="row mb-4">
-         <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ trans('general.disable_contact') }}</legend>
+         <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ __('general.disable_contact') }}</legend>
          <div class="col-sm-10">
            <div class="form-check form-switch form-switch-md">
             <input class="form-check-input" type="checkbox" name="disable_contact" @if ($settings->disable_contact) checked="checked" @endif value="1" role="switch">
@@ -335,7 +335,7 @@
        </fieldset><!-- end row -->
 
 			 <fieldset class="row mb-4">
-         <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ trans('general.disable_new_post_email_notification') }}</legend>
+         <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ __('general.disable_new_post_email_notification') }}</legend>
          <div class="col-sm-10">
            <div class="form-check form-switch form-switch-md">
             <input class="form-check-input" type="checkbox" name="disable_new_post_notification" @if ($settings->disable_new_post_notification) checked="checked" @endif value="1" role="switch">
@@ -344,7 +344,7 @@
        </fieldset><!-- end row -->
 
 			 <fieldset class="row mb-4">
-         <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ trans('general.disable_creators_search') }}</legend>
+         <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ __('general.disable_creators_search') }}</legend>
          <div class="col-sm-10">
            <div class="form-check form-switch form-switch-md">
             <input class="form-check-input" type="checkbox" name="disable_search_creators" @if ($settings->disable_search_creators) checked="checked" @endif value="1" role="switch">
@@ -353,7 +353,7 @@
        </fieldset><!-- end row -->
 
 			 <fieldset class="row mb-4">
-         <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ trans('general.browse_creators_by_gender_age') }}</legend>
+         <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ __('general.browse_creators_by_gender_age') }}</legend>
          <div class="col-sm-10">
            <div class="form-check form-switch form-switch-md">
             <input class="form-check-input" type="checkbox" name="search_creators_genders" @if ($settings->search_creators_genders) checked="checked" @endif value="1" role="switch">
@@ -362,7 +362,7 @@
        </fieldset><!-- end row -->
 
 			 <fieldset class="row mb-4">
-         <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ trans('general.allow_qr_code_generate') }}</legend>
+         <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ __('general.allow_qr_code_generate') }}</legend>
          <div class="col-sm-10">
            <div class="form-check form-switch form-switch-md">
             <input class="form-check-input" type="checkbox" name="generate_qr_code" @if ($settings->generate_qr_code) checked="checked" @endif value="1" role="switch">
@@ -371,7 +371,7 @@
        </fieldset><!-- end row -->
 
 			 <fieldset class="row mb-4">
-         <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ trans('general.auto_follow_admin') }}</legend>
+         <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ __('general.auto_follow_admin') }}</legend>
          <div class="col-sm-10">
            <div class="form-check form-switch form-switch-md">
             <input class="form-check-input" type="checkbox" name="autofollow_admin" @if ($settings->autofollow_admin) checked="checked" @endif value="1" role="switch">
@@ -380,19 +380,118 @@
        </fieldset><!-- end row -->
 
 			 <fieldset class="row mb-4">
-         <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ trans('general.allow_zip_files') }}</legend>
+         <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ __('general.allow_zip_files') }}</legend>
          <div class="col-sm-10">
            <div class="form-check form-switch form-switch-md">
-            <input class="form-check-input" type="checkbox" name="allow_zip_files" @if ($settings->allow_zip_files) checked="checked" @endif value="1" role="switch">
+            <input class="form-check-input" type="checkbox" name="allow_zip_files" @checked($settings->allow_zip_files) value="1" role="switch">
           </div>
          </div>
        </fieldset><!-- end row -->
 
        <fieldset class="row mb-4">
-        <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ trans('general.zip_verification_creator') }}</legend>
+        <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ __('general.zip_verification_creator') }}</legend>
         <div class="col-sm-10">
           <div class="form-check form-switch form-switch-md">
-           <input class="form-check-input" type="checkbox" name="zip_verification_creator" @if ($settings->zip_verification_creator) checked="checked" @endif value="1" role="switch">
+           <input class="form-check-input" type="checkbox" name="zip_verification_creator" @checked($settings->zip_verification_creator) value="1" role="switch">
+         </div>
+        </div>
+      </fieldset><!-- end row -->
+
+      <fieldset class="row mb-4">
+        <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ __('general.allow_scheduled_posts') }}</legend>
+        <div class="col-sm-10">
+          <div class="form-check form-switch form-switch-md">
+           <input class="form-check-input" type="checkbox" name="allow_scheduled_posts" @checked($settings->allow_scheduled_posts) value="1" role="switch">
+         </div>
+        </div>
+      </fieldset><!-- end row -->
+
+      <fieldset class="row mb-4">
+        <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ __('general.allow_creators_deactivate_profile') }} ({{ __('general.free_subscription') }})</legend>
+        <div class="col-sm-10">
+          <div class="form-check form-switch form-switch-md">
+           <input class="form-check-input" type="checkbox" name="allow_creators_deactivate_profile" @checked($settings->allow_creators_deactivate_profile) value="1" role="switch">
+         </div>
+        </div>
+      </fieldset><!-- end row -->
+
+      <fieldset class="row mb-4">
+        <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ __('general.allow_epub_files') }}</legend>
+        <div class="col-sm-10">
+          <div class="form-check form-switch form-switch-md">
+           <input class="form-check-input" type="checkbox" name="allow_epub_files" @checked($settings->allow_epub_files) value="1" role="switch">
+         </div>
+        </div>
+      </fieldset><!-- end row -->
+
+      <fieldset class="row mb-4">
+        <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ __('general.allow_sending_gifts') }}</legend>
+        <div class="col-sm-10">
+          <div class="form-check form-switch form-switch-md">
+           <input class="form-check-input" type="checkbox" name="gifts" @checked($settings->gifts) value="1" role="switch">
+         </div>
+        </div>
+      </fieldset><!-- end row -->
+
+      <fieldset class="row mb-4">
+        <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ __('general.disable_free_post') }}</legend>
+        <div class="col-sm-10">
+          <div class="form-check form-switch form-switch-md">
+           <input class="form-check-input" type="checkbox" name="disable_free_post" @checked($settings->disable_free_post) value="1" role="switch">
+         </div>
+        </div>
+      </fieldset><!-- end row -->
+
+      <fieldset class="row mb-4">
+        <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ __('general.disable_explore_section') }}</legend>
+        <div class="col-sm-10">
+          <div class="form-check form-switch form-switch-md">
+           <input class="form-check-input" type="checkbox" name="disable_explore_section" @checked($settings->disable_explore_section) value="1" role="switch">
+         </div>
+        </div>
+      </fieldset><!-- end row -->
+
+      <fieldset class="row mb-4">
+        <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ __('general.disable_creators_section') }}</legend>
+        <div class="col-sm-10">
+          <div class="form-check form-switch form-switch-md">
+           <input class="form-check-input" type="checkbox" name="disable_creators_section" @checked($settings->disable_creators_section) value="1" role="switch">
+         </div>
+        </div>
+      </fieldset><!-- end row -->
+
+      <fieldset class="row mb-4">
+        <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ __('general.users_can_delete_messages') }}</legend>
+        <div class="col-sm-10">
+          <div class="form-check form-switch form-switch-md">
+           <input class="form-check-input" type="checkbox" name="users_can_delete_messages" @checked($settings->users_can_delete_messages) value="1" role="switch">
+         </div>
+        </div>
+      </fieldset><!-- end row -->
+
+      <fieldset class="row mb-4">
+        <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ __('general.delete_old_users_inactive') }}</legend>
+        <div class="col-sm-10">
+          <div class="form-check form-switch form-switch-md">
+           <input class="form-check-input" type="checkbox" name="delete_old_users_inactive" @checked($settings->delete_old_users_inactive) value="1" role="switch">
+         </div>
+        </div>
+      </fieldset><!-- end row -->
+
+      <fieldset class="row mb-4">
+        <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ __('general.delete_old_messages') }}</legend>
+        <div class="col-sm-10">
+          <div class="form-check form-switch form-switch-md">
+           <input class="form-check-input" type="checkbox" name="delete_old_messages" @checked($settings->delete_old_messages) value="1" role="switch">
+         </div>
+        </div>
+      </fieldset><!-- end row -->
+
+      <fieldset class="row mb-4">
+        <legend class="col-form-label col-sm-2 pt-0 text-lg-end">{{ __('general.allow_reels') }}</legend>
+        <div class="col-sm-10">
+          <div class="form-check form-switch form-switch-md">
+           <input class="form-check-input" type="checkbox" name="allow_reels" @checked($settings->allow_reels) value="1" role="switch">
          </div>
         </div>
       </fieldset><!-- end row -->
@@ -418,7 +517,7 @@
   $('.gendersSelect').select2({
   tags: false,
   tokenSeparators: [','],
-  placeholder: '{{ trans('general.genders') }}',
+  placeholder: '{{ __('general.genders') }}',
 });
 </script>
 @endsection

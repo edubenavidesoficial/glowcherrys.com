@@ -27,5 +27,9 @@ class AppServiceProvider extends ServiceProvider
     {
         Blade::withoutDoubleEncoding();
         Paginator::useBootstrap();
+
+        if (env('FORCE_HTTPS')) {
+            url()->forceScheme('https');
+        }
     }
 }

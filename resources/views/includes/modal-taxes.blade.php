@@ -31,7 +31,7 @@
 	<li class="list-group-item py-1 list-taxes">
     <div class="row">
       <div class="col">
-        <small>{{trans('general.total')}}:</small>
+        <small class="font-weight-bold">{{trans('general.total')}}:</small>
       </div>
       <div class="col-auto">
         <small class="totalPPV font-weight-bold">

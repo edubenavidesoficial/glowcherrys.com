@@ -41,16 +41,16 @@
 @if ($msg->sender->id == auth()->user()->id)
 <div data="{{$msg->id}}" class="media py-2 chatlist">
 <div class="media-body position-relative">
-  @if ($msg->tip == 'no')
+  @if ($msg->tip == 'no' && !$msg->gift_id && $settings->users_can_delete_messages)
   <a href="javascript:void(0);" class="btn-removeMsg removeMsg" data="{{$msg->id}}" title="{{__('general.delete')}}">
     <i class="fa fa-trash-alt"></i>
     </a>
   @endif
-  <div class="@if ($mediaCount == 0) float-right @else wrapper-msg-left @endif message position-relative text-word-break @if ($mediaCount == 0 && $msg->tip == 'no') bg-primary @else media-container @endif text-white @if ($msg->format == 'zip') w-50 @else w-auto @endif  rounded-bottom-right-0">
+  <div class="@if ($mediaCount == 0) float-right @else wrapper-msg-left @endif message position-relative text-word-break @if ($mediaCount == 0 && $msg->tip == 'no' && !$msg->gift_id) bg-primary @else media-container @endif text-white @if ($msg->format == 'zip') w-50 @else w-auto @endif  rounded-bottom-right-0">
       @include('includes.media-messages')
   </div>
 
-  @if ($mediaCount != 0 && $msg->message != '')
+  @if ($mediaCount != 0 && $msg->message != '' || $msg->gift_id && $msg->message != '')
     <div class="w-100 d-inline-block">
       <div class="w-auto position-relative text-word-break message bg-primary float-right text-white rounded-top-right-0">
         {!! $chatMessage !!}
@@ -75,13 +75,8 @@
   <img src="{{Helper::getFile(config('path.avatar').$msg->sender->avatar)}}" class="rounded-circle avatar-chat" width="50" height="50">
 </a>
 <div class="media-body position-relative">
-    @if ($msg->tip == 'no')
-    <a href="javascript:void(0);" class="btn-removeMsg removeMsgPersonal" data="{{$msg->id}}" title="{{__('general.delete')}}">
-      <i class="fa fa-trash-alt"></i>
-      </a>
-    @endif
   @if ($msg->price != 0.00 && ! auth()->user()->checkPayPerViewMsg($msg->id))
-    <div class="btn-block p-sm text-center content-locked mb-2 pt-lg pb-lg px-3 {{$textWhite}} custom-rounded float-left" style="{{$backgroundPostLocked}}">
+    <div class="btn-block p-sm text-center content-locked mb-2 pt-lg pb-lg px-3 {{$textWhite}} custom-rounded float-left" style="{{$backgroundPostLocked}} max-width: 500px;">
     		<span class="btn-block text-center mb-3">
           <i class="feather ico-no-result border-0 icon-lock {{$textWhite}}"></i></span>
         <a href="javascript:void(0);" data-toggle="modal" data-target="#payPerViewForm" data-mediaid="{{$msg->id}}" data-price="{{Helper::formatPrice($msg->price, true)}}" data-subtotalprice="{{Helper::formatPrice($msg->price)}}" data-pricegross="{{$msg->price}}" class="btn btn-primary w-100">
@@ -106,22 +101,26 @@
       			<li class="list-inline-item"><i class="feather icon-mic"></i> {{$countFilesAudio}}</li>
       			@endif
 
-      			@if ($media->type == 'file')
+      			@if ($media->type == 'zip')
       			<li class="list-inline-item"><i class="far fa-file-archive"></i> {{$media->file_size}}</li>
       		@endif
-          @endforeach
+
+          @if ($media->type == 'epub')
+            <li class="list-inline-item"><i class="bi-book"></i> {{$media->file_size}}</li>
+          @endif
+        @endforeach
         </ul>
 
       </div><!-- btn-block parent -->
     @endif
 
 @if ($msg->price == 0.00 || $msg->price != 0.00 && auth()->user()->checkPayPerViewMsg($msg->id))
-  <div class="@if ($mediaCount == 0) float-left @else wrapper-msg-right @endif message position-relative text-word-break @if ($mediaCount == 0 && $msg->tip == 'no') bg-light @else media-container @endif @if ($msg->format == 'zip') w-50 @else w-auto @endif rounded-bottom-left-0">
+  <div class="@if ($mediaCount == 0) float-left @else wrapper-msg-right @endif message position-relative text-word-break @if ($mediaCount == 0 && $msg->tip == 'no' && !$msg->gift_id) bg-light @else media-container @endif @if ($msg->format == 'zip') w-50 @else w-auto @endif rounded-bottom-left-0">
         @include('includes.media-messages')
   </div>
   @endif
 
-  @if ($mediaCount != 0 && $msg->message != '')
+  @if ($mediaCount != 0 && $msg->message != '' || $msg->gift_id && $msg->message != '')
     <div class="w-100 d-inline-block">
       <div class="w-auto position-relative text-word-break message bg-light float-left rounded-top-left-0">
         {!! $chatMessage !!}

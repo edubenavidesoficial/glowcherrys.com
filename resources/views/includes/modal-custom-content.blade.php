@@ -16,11 +16,17 @@
 							{{ __('auth.email') }}:
 
 							@if (! isset($sale->user()->email))
-								{{ trans('general.no_available') }}
+								<em>{{ __('general.no_available') }}</em>
 							@else
 							{{ $sale->user()->email }}
 						@endif
 						</h6>
+
+						@if (isset($sale->user()->name) && $sale->products()->type == 'physical')
+						<h6>
+							{{ __('auth.name') }}: {{ $sale->user()->name }}<br>					
+						</h6>
+						@endif
 
 						@if ($sale->products()->type == 'physical')
 							<h6 class="font-weight-light">{{ __('general.address') }} : {{ $sale->address }}</h6>

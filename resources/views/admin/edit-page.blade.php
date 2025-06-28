@@ -23,22 +23,22 @@
              @csrf
 
 		        <div class="row mb-3">
-		          <label class="col-sm-2 col-form-label text-lg-end">{{ trans('admin.title') }}</label>
+		          <label class="col-sm-2 col-form-label text-lg-end">{{ __('admin.title') }}</label>
 		          <div class="col-sm-10">
 		            <input value="{{ $data->title }}" name="title" type="text" class="form-control">
 		          </div>
 		        </div>
 
             <div class="row mb-3">
-		          <label class="col-sm-2 col-form-label text-lg-end">{{ trans('admin.slug') }}</label>
+		          <label class="col-sm-2 col-form-label text-lg-end">{{ __('admin.slug') }}</label>
 		          <div class="col-sm-10">
 		            <input value="{{ $data->slug }}" name="slug"  type="text" class="form-control">
-                <small class="d-block"><strong>{{ trans('general.important') }}: {{ trans('general.slug_lang_info') }}</strong></small>
+                <small class="d-block"><strong>{{ __('general.important') }}: {{ __('general.slug_lang_info') }}</strong></small>
 		          </div>
 		        </div>
 
 						<div class="row mb-3">
-		          <label class="col-sm-2 col-form-label text-lg-end">{{ trans('admin.keywords') }} (SEO)</label>
+		          <label class="col-sm-2 col-form-label text-lg-end">{{ __('admin.keywords') }} (SEO)</label>
 		          <div class="col-sm-10">
 		            <input value="{{ $data->keywords }}" name="keywords" type="text" class="form-control">
 		          </div>
@@ -52,19 +52,19 @@
 		        </div>
 
 		        <div class="row mb-3">
-		          <label class="col-sm-2 col-form-labe text-lg-end">{{ trans('general.language') }}</label>
+		          <label class="col-sm-2 col-form-labe text-lg-end">{{ __('general.language') }}</label>
 		          <div class="col-sm-10">
 		            <select name="lang" class="form-select">
                   @foreach (Languages::orderBy('name')->get() as $language)
-                    <option @if ($language->abbreviation == session('locale')) selected="selected" @endif value="{{$language->abbreviation}}">{{ $language->name }}</option>
+                    <option @selected($data->lang == $language->abbreviation) value="{{$language->abbreviation}}">{{ $language->name }}</option>
                   @endforeach
 		           </select>
-               <small class="d-block">{{ trans('general.page_lang') }}</small>
+               <small class="d-block">{{ __('general.page_lang') }}</small>
 		          </div>
 		        </div>
 
 						<div class="row mb-3">
-		          <label class="col-sm-2 col-form-labe text-lg-end">{{ trans('general.who_can_access_this_page') }}</label>
+		          <label class="col-sm-2 col-form-labe text-lg-end">{{ __('general.who_can_access_this_page') }}</label>
 		          <div class="col-sm-10">
 		            <select name="access" class="form-select">
 									<option @if ($data->access == 'all') selected="selected" @endif value="all">{{ __('general.all') }}</option>
@@ -75,7 +75,7 @@
 		        </div>
 
             <div class="row mb-3">
-		          <label class="col-sm-2 col-form-labe text-lg-end">{{ trans('admin.content') }}</label>
+		          <label class="col-sm-2 col-form-labe text-lg-end">{{ __('admin.content') }}</label>
 		          <div class="col-sm-10">
                 <textarea class="form-control" name="content" rows="4" id="content">{{ $data->content }}</textarea>
 		          </div>
@@ -98,5 +98,5 @@
 @endsection
 
 @section('javascript')
-<script src="{{ asset('/js/ckeditor/ckeditor-init.js') }}?v={{$settings->version}}" type="text/javascript"></script>
+<script src="{{ asset('public/js/ckeditor/ckeditor-init.js') }}?v={{$settings->version}}" type="text/javascript"></script>
 @endsection

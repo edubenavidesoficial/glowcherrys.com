@@ -16,4 +16,16 @@ class LoginSessions extends Model
         'country',
         'updated_at'
     ];
+
+    public function getNameBrowser()
+    {
+        $explode = explode(' ', $this->browser);
+        return $explode[0];
+    }
+
+    public function getNamePlatform()
+    {
+        $explode = explode(' ', $this->platform);
+        return $explode[0];
+    }
 }

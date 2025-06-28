@@ -25,6 +25,16 @@
 			<div class="card shadow-custom border-0">
 				<div class="card-body p-lg-4">
 
+					@if ($data->total() != 0)
+					<div class="d-block mb-2 w-100">
+						<!-- form -->
+						<form class="mt-lg-0 mt-2 position-relative" role="search" autocomplete="off" action="{{ url('panel/admin/deposits') }}" method="get">
+							<i class="bi bi-search btn-search bar-search"></i>
+							<input type="text" name="q" class="form-control ps-5 w-auto" value="" placeholder="{{ __('admin.transaction_id') }}">
+						</form><!-- form -->
+					</div>
+					@endif
+
 					<div class="table-responsive p-0">
 						<table class="table table-hover">
 						 <tbody>
@@ -32,17 +42,16 @@
                @if ($data->total() !=  0 && $data->count() != 0)
                   <tr>
                      <th class="active">ID</th>
-                     <th class="active">{{ trans('admin.user') }}</th>
-                     <th class="active">{{ trans('admin.transaction_id') }}</th>
-                     <th class="active">{{ trans('admin.amount') }}</th>
-                     <th class="active">{{ trans('general.payment_gateway') }}</th>
-                     <th class="active">{{ trans('admin.date') }}</th>
-										 <th class="active">{{ trans('admin.status') }}</th>
+                     <th class="active">{{ __('admin.user') }}</th>
+                     <th class="active">{{ __('admin.transaction_id') }}</th>
+                     <th class="active">{{ __('admin.amount') }}</th>
+                     <th class="active">{{ __('general.payment_gateway') }}</th>
+                     <th class="active">{{ __('admin.date') }}</th>
+										 <th class="active">{{ __('admin.status') }}</th>
                    </tr><!-- /.TR -->
 
 
                  @foreach ($data as $deposit)
-
                    <tr>
                      <td>{{ $deposit->id }}</td>
                      <td>
@@ -79,7 +88,7 @@
                    @endforeach
 
 						@else
-							<h5 class="text-center p-5 text-muted fw-light m-0">{{ trans('general.no_results_found') }}</h5>
+							<h5 class="text-center p-5 text-muted fw-light m-0">{{ __('general.no_results_found') }}</h5>
 						@endif
 
 					</tbody>

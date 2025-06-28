@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\AdminSettings as Setting;
 use App\Http\Controllers\Traits\PushNotificationTrait;
 
 class Notifications extends Model
@@ -19,12 +20,16 @@ class Notifications extends Model
 
 	public static function send($userDestination, $userAuthor, $type, $target)
 	{
-		$settings = AdminSettings::select('push_notification_status')->first();
 		$user   = User::find($userDestination);
 		$author = User::find($userAuthor);
 		$getPushNotificationDevices = $user->oneSignalDevices->pluck('player_id')->all();
 
-		if ($type == 5 && $user->notify_new_tip == 'no' || $type == 6 && $user->notify_new_ppv == 'no') {
+		if (
+			$type == 5 && $user->notify_new_tip == 'no'
+			|| $type == 6 && $user->notify_new_ppv == 'no'
+			|| $type == 30 && !$user->notify_commented_reel
+			|| $type == 32 && !$user->notify_liked_reel
+		) {
 			return false;
 		}
 
@@ -33,13 +38,13 @@ class Notifications extends Model
 			'author' => $userAuthor,
 			'type' => $type,
 			'target' => $target
-	]);
+		]);
 
-	// Send push notification
-	if ($settings->push_notification_status && $getPushNotificationDevices) {
+		// Send push notification
+		if (Setting::value('push_notification_status') && $getPushNotificationDevices) {
 			$authorName = $author->hide_name == 'yes' ? $author->username : $author->name;
 			$post       = Updates::find($target);
-			$postUrl    = $post ? url($post->user()->username.'/'.'post', $post->id) : null;
+			$postUrl    = $post ? url($post->user()->username . '/' . 'post', $post->id) : null;
 
 			app()->setLocale($user->language);
 
@@ -135,17 +140,95 @@ class Notifications extends Model
 					$msg             = __('general.body_account_verification_reject');
 					$linkDestination = url('/');
 					break;
+
+				case 20:
+					$msg             = __('general.error_video_encoding_post');
+					$linkDestination = url('my/posts');
+					break;
+
+				case 21:
+					$msg             = __('general.error_video_encoding_message');
+					$linkDestination = url('messages');
+					break;
+				case 22:
+					$msg             = __('general.error_video_encoding_story');
+					$linkDestination = url('my/stories');
+					break;
+
+				case 23:
+					$msg             = $authorName . ' ' . __('general.has_sent_private_live_stream_request');
+					$linkDestination = url('my/live/private/requests');
+					break;
+
+				case 24:
+					$msg             = __('general.video_processed_successfully_welcome_message');
+					$linkDestination = url('settings/conversations');
+					break;
+
+				case 25:
+					$msg             = __('general.error_video_encoding_welcome_msg');
+					$linkDestination = url('settings/conversations');
+					break;
+
+				case 26:
+					$msg             = $authorName . ' ' . __('general.has_sent_you_gift');
+					$linkDestination = url('my/payments/received');
+					break;
+
+				case 27:
+					$msg             = __('general.reel_successfully_posted');
+					$linkDestination = url('my/reels');
+					break;
+
+				case 28:
+					$msg             = __('general.error_video_encoding_reel');
+					$linkDestination = url('my/reels');
+					break;
+
+				case 29:
+					$msg             = __('general.liked_your_reel');
+					$linkDestination = route('reels.section.show', $target);
+					break;
+
+				case 30:
+					$msg             = __('general.commented_your_reel');
+					$linkDestination = route('reels.section.show', $target);
+					break;
+
+				case 31:
+					$msg             = __('general.has_mentioned_you_reel');
+					$linkDestination = route('reels.section.show', $target);
+					break;
+
+				case 32:
+					$msg             = __('general.liked_your_comment_reel');
+					$linkDestination = route('reels.section.show', $target);
+					break;
 			}
 
-		try {
-			// Send push notification
-			PushNotificationTrait::sendPushNotification($msg, $linkDestination, $getPushNotificationDevices);
-
-		} catch (\Exception $e) {
-			\Log::info('Push Notification Error - '.$e->getMessage());
+			try {
+				// Send push notification
+				PushNotificationTrait::sendPushNotification($msg, $linkDestination, $getPushNotificationDevices);
+			} catch (\Exception $e) {
+				info('Push Notification Error - ' . $e->getMessage());
+			}
 		}
-		
 	}
-  }
 
+	public static function sendPushNotificationAdmin($user)
+	{
+		try {
+			$user = User::findOrFail($user);
+			$admin = User::wherePermissions('full_access')->first();
+			$getPushNotificationDevices = $admin->oneSignalDevices->pluck('player_id')->all();
+			$msg = __('general.new_transaction_from', ['user' => $user->username]);
+			$linkDestination = url('panel/admin/transactions');
+
+			if (Setting::value('push_notification_status') && $getPushNotificationDevices) {
+				PushNotificationTrait::sendPushNotification($msg, $linkDestination, $getPushNotificationDevices);
+			}
+		} catch (\Exception $e) {
+			info('Push Notification Error (From sendPushNotificationAdmin) - ' . $e->getMessage());
+		}
+	}
 }

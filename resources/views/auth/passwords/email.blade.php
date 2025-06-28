@@ -13,7 +13,7 @@
     <div class="container pt-lg-md">
       <div class="row justify-content-center">
         <div class="col-lg-5">
-          <div class="card bg-white shadow border-0">
+          <div class="card bg-white shadow border-0 b-radio-custom">
 
               <h4 class="text-center mb-0 font-weight-bold pt-4 px-4">
                 {{__('auth.password_recover')}}

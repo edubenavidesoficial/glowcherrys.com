@@ -27,26 +27,26 @@
 					 <dt class="col-sm-2 text-lg-end">{{ __('admin.transaction_id') }}</dt>
 					 <dd class="col-sm-10">{{$data->txn_id != 'null' ? $data->txn_id : __('general.not_available')}}</dd>
 
-					 <dt class="col-sm-2 text-lg-end">{{ trans('auth.full_name') }}</dt>
-					 <dd class="col-sm-10">{{$data->user()->name ?? trans('general.no_available')}}</dd>
+					 <dt class="col-sm-2 text-lg-end">{{ __('auth.full_name') }}</dt>
+					 <dd class="col-sm-10">{{$data->user()->name ?? __('general.no_available')}}</dd>
 
 					 <dt class="col-sm-2 text-lg-end">{{ __('general.image') }}</dt>
 					 <dd class="col-sm-10">
 						 <a class="glightbox" href="{{ Storage::url(config('path.admin').$data->screenshot_transfer) }}" data-gallery="gallery{{$data->id}}">
-							 {{ trans('admin.view') }} <i class="bi-arrows-fullscreen"></i>
+							 {{ __('admin.view') }} <i class="bi-arrows-fullscreen"></i>
 						 </a>
 					 </dd>
 
-					 <dt class="col-sm-2 text-lg-end">{{ trans('auth.email') }}</dt>
-					 <dd class="col-sm-10">{{$data->user()->email ?? trans('general.no_available')}}</dd>
+					 <dt class="col-sm-2 text-lg-end">{{ __('auth.email') }}</dt>
+					 <dd class="col-sm-10">{{$data->user()->email ?? __('general.no_available')}}</dd>
 
-					 <dt class="col-sm-2 text-lg-end">{{ trans('admin.amount') }}</dt>
+					 <dt class="col-sm-2 text-lg-end">{{ __('admin.amount') }}</dt>
 					 <dd class="col-sm-10"><strong class="text-success">{{App\Helper::amountFormat($data->amount)}}</strong></dd>
 
-					 <dt class="col-sm-2 text-lg-end">{{ trans('general.payment_gateway') }}</dt>
+					 <dt class="col-sm-2 text-lg-end">{{ __('general.payment_gateway') }}</dt>
 					 <dd class="col-sm-10">{{ $data->payment_gateway == 'Bank Transfer' ? __('general.bank_transfer') : $data->payment_gateway}}</dd>
 
-					 <dt class="col-sm-2 text-lg-end">{{ trans('admin.date') }}</dt>
+					 <dt class="col-sm-2 text-lg-end">{{ __('admin.date') }}</dt>
 					 <dd class="col-sm-10">{{date($settings->date_format, strtotime($data->date))}}</dd>
 
 				 </dl><!-- row -->
@@ -58,28 +58,21 @@
 
 				@if (isset($data->user()->name))
 					{{-- Approve Donation --}}
-						 {!! Form::open([
-								'method' => 'POST',
-								'url' => 'approve/deposits',
-								'class' => 'd-inline'
-							]) !!}
-					 {!! Form::hidden('id',$data->id ); !!}
-					 {!! Form::submit(trans('general.approve'), ['class' => 'btn btn-success pull-right']) !!}
-
-					{!! Form::close() !!}
+					<form method="POST" action="{{ route('approve.deposits') }}" class="d-inline">
+						@csrf
+						<input type="hidden" name="id" value="{{ $data->id }}">
+						<input type="submit" value="{{ __('general.approve') }}" class="btn btn-success pull-right me-2">
+					</form>
 				@endif
 
 				{{-- Delete Deposit --}}
-				{!! Form::open([
-					 'method' => 'POST',
-					 'url' => 'delete/deposits',
-					 'class' => 'd-inline',
-					 'id' => 'formDeleteDeposits'
-				 ]) !!}
-			{!! Form::hidden('id', $data->id ); !!}
-			{!! Form::button('<i class="bi-trash me-2"></i>'.trans('general.delete'), ['class' => 'btn btn-danger pull-right margin-separator actionDelete']) !!}
-
-		 {!! Form::close() !!}
+				<form method="POST" action="{{ route('delete.deposits') }}" class="d-inline" id="formDeleteDeposits">
+					@csrf
+					<input type="hidden" name="id" value="{{ $data->id }}">
+					<button type="submit" class="btn btn-danger pull-right margin-separator actionDelete">
+						<i class="bi-trash me-2"></i>{{ __('general.delete') }}
+					</button>
+				</form>
 
 				</div>
 			</div>

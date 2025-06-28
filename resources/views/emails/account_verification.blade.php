@@ -35,17 +35,17 @@
                         <td style="font-family: Arial, &#039;Helvetica Neue&#039;, Helvetica, sans-serif; padding: 35px;">
                             <!-- Greeting -->
                             <h1 style="margin-top: 0; color: #2F3133; font-size: 19px; font-weight: bold; text-align: left;">
-                              {{trans('emails.hello')}} {{$fullname}}
+                              {{__('emails.hello')}} {{$fullname}}
                             </h1>
 
                             <!-- Intro -->
                             <p style="margin-top: 0; color: #74787E; font-size: 16px; line-height: 1.5em;">
-                              {{$body}}
+                              {!! $body !!}
                             </p>
 
                             <!-- Salutation -->
                             <p style="margin-top: 0; color: #74787E; font-size: 16px; line-height: 1.5em;">
-                                {{trans('emails.regards')}}<br>{{$title_site}}
+                                {{__('emails.regards')}}<br>{{$title_site}}
                             </p>
                           </td>
                     </tr>
@@ -62,7 +62,7 @@
                                 <p style="margin-top: 0; color: #74787E; font-size: 12px; line-height: 1.5em;">
                                     &copy; <?php echo date('Y'); ?>
                                     {{$title_site}}
-                                    {{trans('emails.rights_reserved')}}
+                                    {{__('emails.rights_reserved')}}
                                 </p>
                             </td>
                         </tr>

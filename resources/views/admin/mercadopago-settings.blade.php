@@ -50,7 +50,6 @@
 		          <label class="col-sm-2 col-form-label text-lg-end">Access Token</label>
 		          <div class="col-sm-10">
 		            <input value="{{ $data->key_secret }}" name="key_secret" type="password" class="form-control">
-								<p class="d-block"><a href="https://www.mercadopago.com/mlb/account/credentials" target="_blank">https://www.mercadopago.com/mlb/account/credentials</a></p>
 		          </div>
 		        </div>
 

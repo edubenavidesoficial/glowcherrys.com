@@ -8,7 +8,7 @@ class Reports extends Model
 {
 
   protected $guarded = [];
-	const UPDATED_AT = null;
+  const UPDATED_AT = null;
 
   public function user()
   {
@@ -20,13 +20,18 @@ class Reports extends Model
     return $this->belongsTo(User::class, 'report_id')->first();
   }
 
-   public function updates()
-   {
+  public function updates()
+  {
     return $this->belongsTo(Updates::class, 'report_id')->first();
   }
 
   public function products()
   {
-   return $this->belongsTo(Products::class, 'report_id')->first();
- }
+    return $this->belongsTo(Products::class, 'report_id')->first();
+  }
+
+  public function live()
+  {
+    return $this->belongsTo(User::class, 'report_id')->first();
+  }
 }
