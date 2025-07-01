@@ -1104,7 +1104,7 @@ class AdminController extends Controller
 	public function themeStore(Request $request)
 	{
 		$temp  = 'temp/'; // Temp
-		$path  = '/img'; // Path
+		$path = public_path('img'); // Path
 		$pathAvatar  = config('path.avatar'); // Path
 
 		$rules = array(
@@ -1127,10 +1127,16 @@ class AdminController extends Controller
 			$file      = 'logo-' . time() . '.' . $extension;
 
 			if ($request->file('logo')->move($temp, $file)) {
-				\File::copy($temp . $file, $path . $file);
+                 // Ensure directory exists
+            if (!\File::exists($path)) {
+                \File::makeDirectory($path, 0755, true);
+            }
+               \File::copy($temp . $file, $path . '/' . $file);
 				\File::delete($temp . $file);
 				// Delete old
-				\File::delete($path . $this->settings->logo);
+				if ($this->settings->logo) {
+                    \File::delete($path . '/' . $this->settings->logo);
+                }
 			} // End File
 
 			$this->settings->logo = $file;
