@@ -144,6 +144,7 @@ return array(
 		'reports' => 'Reports',
 		'type_report' => 'Type report',
 		'report' => 'Report',
+        'age' => 'I accept that I am of legal age and authorize my subsequent verification.',
 		'report_update' => 'Report Update',
 		'post_length' => 'Post Length',
 		'post_length_info' => 'The max length of posts',

@@ -152,6 +152,7 @@ return array(
 		'report' => 'Reportar',
 		'report_update' => 'Reportar Post',
 		'post_length' => 'Longitud del post',
+        'age' => 'Acepto que soy mayor de edad y autorizo mi verificación posterior.',
 		'post_length_info' => 'Longitud máxima de los posts',
 		'characters' => 'Caracteres',
 		'transaction_id' => 'Transacción ID',
