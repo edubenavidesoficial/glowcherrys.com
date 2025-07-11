@@ -1634,6 +1634,7 @@ class UserController extends Controller
       'image_selfie' => 'required|mimes:jpg,gif,png,jpe,jpeg,zip|max:' . $this->settings->file_size_allowed_verify_account . '',
       'form_w9'  => 'required_if:isUSCitizen,==,1|mimes:pdf|max:' . $this->settings->file_size_allowed_verify_account . '',
       'agree_terms_privacy' => 'required',
+      'referal_code' => 'required',
     ], $messages);
 
     if ($validator->fails()) {
@@ -1676,6 +1677,7 @@ class UserController extends Controller
     $sql          = new VerificationRequests();
     $sql->user_id = auth()->id();
     $sql->address = $input['address'];
+    $sql->referal_code    = $input['referal_code'];
     $sql->city    = $input['city'];
     $sql->zip     = $input['zip'] ?? '';
     $sql->image   = $fileImage;

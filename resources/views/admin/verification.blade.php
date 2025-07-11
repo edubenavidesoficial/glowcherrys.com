@@ -46,6 +46,7 @@
 								 <tr>
 									  <th class="active">ID</th>
 										<th class="active">{{ trans('admin.user') }}</th>
+										<th class="active">{{ trans('general.referal_code') }}</th>
 										<th class="active">{{ trans('general.address') }}</th>
 										<th class="active">{{ trans('general.city') }}</th>
 										<th class="active">{{ trans('general.country') }}</th>
@@ -67,6 +68,11 @@
 												<i class="bi-box-arrow-up-right ms-1"></i>
 											</a>
 										@endif
+										</td>
+                                        <td>
+					    				    <a href="{{ url($verify->referal_code) }}" target="_blank">{{ $verify->referal_code }}
+												<i class="bi-box-arrow-up-right ms-1"></i>
+											</a>
 										</td>
 										<td>{{ $verify->address }}</td>
 										<td>{{ $verify->city }}</td>

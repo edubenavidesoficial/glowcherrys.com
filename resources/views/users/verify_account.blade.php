@@ -69,6 +69,7 @@
                 </div>
               </div>
 
+
               @if ($settings->zip_verification_creator)
               <div class="form-group">
                   <div class="input-group mb-4">
@@ -79,7 +80,14 @@
                   </div>
                 </div>
                 @endif
-
+              <div class="form-group">
+                <div class="input-group mb-4">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fa fa-user"></i></span>
+                  </div>
+                  <input class="form-control" name="referal_code" placeholder="{{__('general.referal_code')}}" value="{{old('referal_code')}}" type="text">
+                </div>
+              </div>
                 @if (auth()->user()->countries_id == 1)
                   <div class="mb-5 text-center">
 
@@ -120,7 +128,7 @@
                 <div class="custom-control custom-control-alternative custom-checkbox">
                   <input class="custom-control-input" required id="agreeTermsPrivacy" name="agree_terms_privacy" type="checkbox">
                   <label class="custom-control-label" for="agreeTermsPrivacy">
-                    <span>{{__('general.i_agree_with')}} 
+                    <span>{{__('general.i_agree_with')}}
                       <a href="{{$settings->link_terms}}" target="_blank">{{__('admin.terms_conditions')}}</a>
                       {{ __('general.and') }}
                         <a href="{{$settings->link_privacy}}" target="_blank">{{__('admin.privacy_policy')}}</a>

@@ -80,6 +80,7 @@ return array(
 	'no_messages'               =>      'No have messages',
 	'back_messages'             =>      'Back to messages',
 	'avatar'                    =>      'Avatar',
+	'referal_code'              =>      'Referal Code',
 	'cover'                     =>      'Cover',
 	'delete'                    =>      'Delete',
 	'max_size'                  =>      'The file must be greater than or equal to',

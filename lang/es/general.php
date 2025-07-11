@@ -80,6 +80,7 @@ return array(
 	'no_messages' => 'No tienes mensajes',
 	'back_messages' => 'Volver a los mensajes',
 	'avatar' => 'Avatar',
+    'referal_code' => 'Codigo de Referido',
 	'cover' => 'Portada',
 	'delete' => 'Eliminar',
 	'max_size' => 'El archivo debe ser mayor o igual que',
@@ -1442,7 +1443,7 @@ return array(
 	'm' => 'm',// Minutes abbreviation
 	'connecting' => 'Conectando...',
 	'error_twofa_too_many_attempts' => 'Demasiados intentos. Por favor, inténtalo de nuevo más tarde.',
-	'allow_reels' => 'Permitir Reels',	
+	'allow_reels' => 'Permitir Reels',
 	'please_select_video' => 'Por favor selecciona un video',
 	'available_only_for_subscribers' => ' Disponible solo para suscriptores',
 	'available_everyone' => 'Disponible para todos',
