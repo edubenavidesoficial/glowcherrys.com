@@ -10,13 +10,14 @@ use App\Models\LiveComments;
 use Illuminate\Http\Request;
 use App\Models\Notifications;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 final class GiftController extends Controller
 {
     use Traits\Functions;
 
-    public $path = '/imggifts/';
+    public $path = 'img/gifts/';
 
     public function show()
     {
@@ -25,27 +26,35 @@ final class GiftController extends Controller
         ]);
     }
 
-    public function store(Request $request): RedirectResponse
-    {
-        $rules = [
-            'price' => 'required|numeric|min:0.50',
-            'image' => 'required|mimes:png,svg,gif|dimensions:min_width=100',
-        ];
+public function store(Request $request): RedirectResponse
+{
+    $rules = [
+        'price' => 'required|numeric|min:0.50',
+        'image' => 'required|mimes:png,svg,gif|dimensions:min_width=100',
+    ];
 
-        $this->validate($request, $rules);
+    $this->validate($request, $rules);
 
-        if ($request->hasFile('image')) {
-            $file = $request->file('image')->hashName();
-            $request->file('image')->move($this->path, $file);
-
-            Gift::create([
-                'price' => $request->price,
-                'image' => $file
-            ]);
+    if ($request->hasFile('image')) {
+        // Asegurar que el directorio existe (conservando las barras)
+        if (!is_dir(public_path($this->path))) {
+            mkdir(public_path($this->path), 0755, true);
         }
 
-        return back()->withSuccess(__('general.successfully_added'));
+        $file = $request->file('image')->hashName();
+        Log::info('File ' . $file);
+        Log::info('Path ' . $this->path);
+
+        $request->file('image')->move(public_path($this->path), $file);
+
+        Gift::create([
+            'price' => $request->price,
+            'image' => $file
+        ]);
     }
+
+    return back()->withSuccess(__('general.successfully_added'));
+}
 
     public function edit(Gift $gift)
     {
