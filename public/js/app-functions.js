@@ -422,8 +422,8 @@
 		time: 1000
 	});
 
-	var logo = URL_BASE + '/img' + $(".logo").attr('data-logo');
-	var logo2 = URL_BASE + '/img' + $(".logo").attr('data-logo-2');
+	var logo = URL_BASE + '/img/' + $(".logo").attr('data-logo');
+	var logo2 = URL_BASE + '/img/' + $(".logo").attr('data-logo-2');
 
 	if ($(document).scrollTop() > $(".scroll").height()) {
 		let buttonRegister = $('.btn-register-menu');
