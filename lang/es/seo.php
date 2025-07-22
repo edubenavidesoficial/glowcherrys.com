@@ -9,6 +9,6 @@ return array(
 	|
 	*/
 	"slogan" => "Soporte a los creadores de contenido", // New on v4.0
-	"description" => "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer ut tortor rutrum massa efficitur tincidunt vel nec lacus. Curabitur porta aliquet diam, eu gravida neque lacinia.",
-	"keywords" => "donaciones,soporte,creadores,sponzy,suscripción,contenido",
+	"description" => "Únete a glow cherrys ahora: encuentra a tu creador favorito, chatea. Mira en vivos y disfruta mucho más. Haz clic y empieza hoy. Glowcherrys, hecho con ❤️",
+	"keywords" => "donaciones,soporte,creadores,glowcherrys,suscripción,contenido",
 );

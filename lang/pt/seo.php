@@ -9,6 +9,6 @@ return array(
 	|
 	*/
 	"slogan" => "Support Creators Content", // New on v4.0
-	"description" => "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer ut tortor rutrum massa efficitur tincidunt vel nec lacus. Curabitur porta aliquet diam, eu gravida neque lacinia.",
-	"keywords" => "donations,support,creators,sponzy,subscription,content",
+	"description" => "Registe-se agora no Glowcherrys: encontre o seu criador favorito, converse, assista a transmissões em direto e desfrute muito mais. Clique e comece hoje mesmo. Glowcherrys, feito com ❤️.",
+	"keywords" => "donations,support,creators,glowcherrys,subscription,content",
 );
