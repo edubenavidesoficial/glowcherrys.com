@@ -1,5 +1,5 @@
 <?php
-
+use App\Services\GeoIPService;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\TipController;
@@ -18,7 +18,7 @@ use App\Http\Controllers\RedsysController;
 use App\Http\Controllers\InstallController;
 use App\Http\Controllers\RepliesController;
 use App\Http\Controllers\StoriesController;
-use App\Http\Controllers\StripeController; 
+use App\Http\Controllers\StripeController;
 use App\Http\Controllers\UpdatesController;
 use App\Http\Controllers\UpgradeController;
 use App\Http\Controllers\AddFundsController;
@@ -55,7 +55,7 @@ use App\Http\Controllers\UploadMediaStoryController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\UploadMediaFileShopController;
-use App\Http\Controllers\UploadMediaMessageController; 
+use App\Http\Controllers\UploadMediaMessageController;
 use App\Http\Controllers\LiveStreamingPrivateController;
 use App\Http\Controllers\UploadMediaPreviewShopController;
 use App\Http\Controllers\UploadMediaWelcomeMessageController;
@@ -86,6 +86,12 @@ Route::get('home', function() {
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('login', [LoginController::class, 'login']);
 Route::get('logout', [LoginController::class, 'logout']);
+
+Route::get('/test-ip', function(GeoIPService $geo){
+    return $geo->isBlocked(request()->ip())
+        ? 'IP bloqueada'
+        : 'IP permitida';
+});
 
 // Admin login when Disable registration/Email login is enabled
 Route::get('login/admin', [LoginController::class, 'showLoginForm'])->name('login.admin');
@@ -143,7 +149,7 @@ Route::get('verify/account/{confirmation_code}', [HomeController::class, 'getVer
 		case 'paypal':
 			$alertDelayPayment = ' <br><br>' . __('general.alert_paypal_delay');
 			break;
-		
+
 		case 'paystack':
 			$alertDelayPayment = ' <br><br>' . __('general.alert_paystack_delay');
 			break;
@@ -152,12 +158,12 @@ Route::get('verify/account/{confirmation_code}', [HomeController::class, 'getVer
 		$alertDelayPayment = null;
 		break;
 	}
-	
+
 
 	 session()->put('subscription_success', __('general.subscription_success') . $alertDelayPayment);
 
 	 return redirect($user);
-	 
+
  	})->name('subscription.success');
 
  Route::get('buy/subscription/cancel/{user}', function($user){
@@ -426,7 +432,7 @@ Route::get('verify/account/{confirmation_code}', [HomeController::class, 'getVer
 	Route::any('upload/media/shop/preview',[UploadMediaPreviewShopController::class, 'store']);
 	Route::post('delete/media/shop/preview',[UploadMediaPreviewShopController::class, 'delete']);
 
-	Route::any('upload/media/shop/file',[UploadMediaFileShopController::class, 'store']); 
+	Route::any('upload/media/shop/file',[UploadMediaFileShopController::class, 'store']);
 	Route::post('delete/media/shop/file',[UploadMediaFileShopController::class, 'delete']);
 
 	Route::post('buy/now/product',[ProductsController::class, 'buy']);
@@ -440,17 +446,17 @@ Route::get('verify/account/{confirmation_code}', [HomeController::class, 'getVer
 	// Files Images Messages
 	Route::get('files/messages/{id}/{path}', [UpdatesController::class, 'messagesImage'])->where(['id' =>'[0-9]+', 'path' => '.*']);
 
-	Route::any('upload/media',[UploadMediaController::class, 'store']); 
+	Route::any('upload/media',[UploadMediaController::class, 'store']);
 	Route::post('delete/media',[UploadMediaController::class, 'delete']);
 
-	Route::any('upload/media/message',[UploadMediaMessageController::class, 'store']); 
+	Route::any('upload/media/message',[UploadMediaMessageController::class, 'store']);
 	Route::post('delete/media/message',[UploadMediaMessageController::class, 'delete']);
 
 	Route::post('new/message/massive', [MessagesController::class, 'sendMessageMassive']);
 
 	Route::post('reject/order/{id}',[ProductsController::class, 'rejectOrder']);
 
-	Route::post('create/live', [LiveStreamingsController::class, 'create']);  
+	Route::post('create/live', [LiveStreamingsController::class, 'create']);
 	Route::post('finish/live', [LiveStreamingsController::class, 'finish']);
 
 	Route::get('live/{username}',[LiveStreamingsController::class, 'show'])->name('live');
@@ -461,7 +467,7 @@ Route::get('verify/account/{confirmation_code}', [HomeController::class, 'getVer
 	Route::post('live/like',[LiveStreamingsController::class, 'like']);
 
 	// Comment Like
-	Route::post('comment/like',[CommentsController::class, 'like'])->middleware('auth'); 
+	Route::post('comment/like',[CommentsController::class, 'like'])->middleware('auth');
 
 	Route::get('my/posts',[UserController::class, 'myPosts'])->name('my.posts');
 	Route::get('post/editing',[UserController::class, 'postEditing'])->name('post.edit.pending');
@@ -559,7 +565,7 @@ Route::get('verify/account/{confirmation_code}', [HomeController::class, 'getVer
 	Route::get('settings/conversations', [UserController::class, 'settingsConversations']);
 	Route::post('settings/conversations/update', [UserController::class, 'updateConversations'])->name('settings.conversations_update');
 
-	Route::any('upload/media/welcome/message',[UploadMediaWelcomeMessageController::class, 'store']); 
+	Route::any('upload/media/welcome/message',[UploadMediaWelcomeMessageController::class, 'store']);
 	Route::post('delete/media/welcome/message',[UploadMediaWelcomeMessageController::class, 'delete']);
 
 	Route::get('viewer/epub/{id}', [UpdatesController::class, 'viewEpub']);
@@ -625,15 +631,15 @@ Route::group(['middleware' => 'private.content'], function() {
 	Route::prefix('panel/admin')->group(function () {
 		// Dashboard
 		Route::get('/', [AdminController::class, 'admin'])->name('dashboard');
-	
+
 		// Settings
 		Route::get('/settings', [AdminController::class, 'settings'])->name('general');
 		Route::post('/settings', [AdminController::class, 'saveSettings']);
-	
+
 		// Limits
 		Route::get('/settings/limits', [AdminController::class, 'settingsLimits'])->name('general');
 		Route::post('/settings/limits', [AdminController::class, 'saveSettingsLimits']);
-	
+
 		// Video Encoding
 		Route::view('/video/encoding', 'admin.video_encoding')->name('general');
 		Route::post('/video/encoding', [AdminController::class, 'saveVideoEncoding']);
@@ -644,84 +650,84 @@ Route::group(['middleware' => 'private.content'], function() {
 		// Websockets
 		Route::view('/websockets', 'admin.websockets')->name('general');
 		Route::post('/websockets', [AdminController::class, 'saveWebsockets']);
-	
+
 		// BILLING
 		Route::view('/billing', 'admin.billing')->name('billing');
 		Route::post('/billing', [AdminController::class, 'billingStore']);
-	
+
 		// EMAIL SETTINGS
 		Route::view('/settings/email', 'admin.email-settings')->name('email');
 		Route::post('/settings/email', [AdminController::class, 'emailSettings']);
-	
+
 		// Test SMTP
 		Route::post('/settings/test-smtp', [AdminController::class, 'testSMTP']);
-	
+
 		// STORAGE
 		Route::view('/storage', 'admin.storage')->name('storage');
 		Route::post('/storage', [AdminController::class, 'storage']);
-	
+
 		// THEME
 		Route::get('/theme', [AdminController::class, 'theme'])->name('theme');
 		Route::post('/theme', [AdminController::class, 'themeStore']);
-	
+
 		//Withdrawals
 		Route::get('/withdrawals', [AdminController::class, 'withdrawals'])->name('withdrawals');
 		Route::get('/withdrawal/{id}', [AdminController::class, 'withdrawalsView'])->name('withdrawals');
 		Route::post('/withdrawals/paid/{id}', [AdminController::class, 'withdrawalsPaid']);
 		Route::post('/withdrawals/reject/{id}', [AdminController::class, 'withdrawalsReject'])->name('withdrawals.reject');
-	
+
 		// Subscriptions
 		Route::get('/subscriptions', [AdminController::class, 'subscriptions'])->name('subscriptions');
-	
+
 		// Transactions
 		Route::get('/transactions', [AdminController::class, 'transactions'])->name('transactions');
 		Route::post('/transactions/cancel/{id}', [AdminController::class, 'cancelTransaction']);
-	
+
 		// Members
 		Route::get('/members', [AdminController::class, 'index'])->name('members');
-	
+
 		// EDIT MEMBER
 		Route::get('/members/edit/{id}', [AdminController::class, 'edit'])->name('members');
-	
+
 		// EDIT MEMBER POST
 		Route::post('/members/edit/{id}', [AdminController::class, 'update']);
-	
+
 		// DELETE MEMBER
 		Route::post('/members/{id}', [AdminController::class, 'destroy']);
-	
+
 		// Pages
 		Route::get('/pages', [PagesController::class, 'index'])->name('pages');
-	
+
 		// ADD NEW PAGES
 		Route::get('/pages/create', [PagesController::class, 'create'])->name('pages');
-	
+
 		// ADD NEW PAGES POST
 		Route::post('/pages/create', [PagesController::class, 'store']);
-	
+
 		// EDIT PAGES
 		Route::get('/pages/edit/{id}', [PagesController::class, 'edit'])->name('pages');
-	
+
 		// EDIT PAGES POST
 		Route::post('/pages/edit/{id}', [PagesController::class, 'update']);
-	
+
 		// DELETE PAGES
 		Route::post('/pages/{id}', [PagesController::class, 'destroy']);
-	
+
 		// Verification Requests
 		Route::get('/verification/members', [AdminController::class, 'memberVerification'])->name('verification_requests');
 		Route::post('/verification/members/{action}/{id}/{user}', [AdminController::class, 'memberVerificationSend']);
-	
+
 		// Payments Settings
 		Route::get('/payments', [AdminController::class, 'payments'])->name('payments');
 		Route::post('/payments', [AdminController::class, 'savePayments']);
-	
+
 		Route::get('/payments/{id}', [AdminController::class, 'paymentsGateways'])->name('payments');
 		Route::post('/payments/{id}', [AdminController::class, 'savePaymentsGateways']);
-	
+
 		// Profiles Social
 		Route::get('/profiles-social', [AdminController::class, 'profiles_social'])->name('profiles_social');
 		Route::post('/profiles-social', [AdminController::class, 'update_profiles_social']);
-	
+
 		// Categories
 		Route::get('/categories', [AdminController::class, 'categories'])->name('categories');
 		Route::get('/categories/add', [AdminController::class, 'addCategories'])->name('categories');
@@ -729,87 +735,87 @@ Route::group(['middleware' => 'private.content'], function() {
 		Route::get('/categories/edit/{id}', [AdminController::class, 'editCategories'])->name('categories');
 		Route::post('/categories/update', [AdminController::class, 'updateCategories']);
 		Route::post('/categories/delete/{id}', [AdminController::class, 'deleteCategories']);
-	
+
 		// Posts
 		Route::get('/posts', [AdminController::class, 'posts'])->name('posts');
 		Route::post('/posts/delete/{id}', [AdminController::class, 'deletePost']);
-	
+
 		// Approve post
 		Route::post('/posts/approve/{id}', [AdminController::class, 'approvePost']);
-	
+
 		// Reports
 		Route::get('/reports', [AdminController::class, 'reports'])->name('reports');
 		Route::post('/reports/delete/{id}', [AdminController::class, 'deleteReport']);
-	
+
 		// Social Login
 		Route::view('/social-login', 'admin.social-login')->name('social_login');
 		Route::post('/social-login', [AdminController::class, 'updateSocialLogin']);
-	
+
 		// Google
 		Route::get('/google', [AdminController::class, 'google'])->name('google');
 		Route::post('/google', [AdminController::class, 'update_google']);
-	
+
 		//***** Languages
 		Route::get('/languages', [LangController::class, 'index'])->name('languages');
-	
+
 		// ADD NEW
 		Route::get('/languages/create', [LangController::class, 'create'])->name('languages');
-	
+
 		// ADD NEW POST
 		Route::post('/languages/create', [LangController::class, 'store']);
-	
+
 		// EDIT LANG
 		Route::get('/languages/edit/{id}', [LangController::class, 'edit'])->name('languages');
-	
+
 		// EDIT LANG POST
 		Route::post('/languages/edit/{id}', [LangController::class, 'update']);
-	
+
 		// DELETE LANG
 		Route::post('/languages/{id}', [LangController::class, 'destroy']);
-	
+
 		// Maintenance mode
 		Route::view('/maintenance/mode', 'admin.maintenance_mode')->name('maintenance_mode');
 		Route::post('/maintenance/mode', [AdminController::class, 'maintenanceMode']);
-	
+
 		// Clear Cache
 		Route::get('/clear-cache', [AdminController::class, 'clearCache'])->name('maintenance_mode');
-	
+
 		// Blog
 		Route::get('/blog', [AdminController::class, 'blog'])->name('blog');
 		Route::post('/blog/delete/{id}', [AdminController::class, 'deleteBlog']);
-	
+
 		// Add Blog Post
 		Route::view('/blog/create', 'admin.create-blog')->name('blog');
 		Route::post('/blog/create', [AdminController::class, 'createBlogStore']);
-	
+
 		// Edit Blog Post
 		Route::get('/blog/{id}', [AdminController::class, 'editBlog'])->name('blog');
 		Route::post('/blog/update', [AdminController::class, 'updateBlog']);
-	
+
 		// Resend confirmation email
 		Route::get('/resend/email/{id}', [AdminController::class, 'resendConfirmationEmail'])->name('members');
-	
+
 		// Deposits
 		Route::get('/deposits', [AdminController::class, 'deposits'])->name('deposits');
 		Route::get('/deposits/{id}', [AdminController::class, 'depositsView'])->name('deposits');
 		Route::post('/approve/deposits', [AdminController::class, 'approveDeposits'])->name('approve.deposits');
 		Route::post('/delete/deposits', [AdminController::class, 'deleteDeposits'])->name('delete.deposits');
-	
+
 		// Login as User
 		Route::post('/login/user/{id}', [AdminController::class, 'loginAsUser']);
-	
+
 		// Custom CSS/JS
 		Route::view('/custom-css-js', 'admin.css-js')->name('custom_css_js');
 		Route::post('/custom-css-js', [AdminController::class, 'customCssJs']);
-	
+
 		// PWA
 		Route::view('/pwa', 'admin.pwa')->name('pwa');
 		Route::post('/pwa', [AdminController::class, 'pwa']);
-	
+
 		// Role and permissions
 		Route::get('/members/roles-and-permissions/{id}', [AdminController::class, 'roleAndPermissions'])->name('members');
 		Route::post('/members/roles-and-permissions/{id}', [AdminController::class, 'storeRoleAndPermissions']);
-	
+
 		// Shop Categories
 		Route::get('/shop-categories', [AdminController::class, 'shopCategories'])->name('shop_categories');
 		Route::get('/shop-categories/add', [AdminController::class, 'addShopCategories'])->name('shop_categories');
@@ -817,81 +823,81 @@ Route::group(['middleware' => 'private.content'], function() {
 		Route::get('/shop-categories/edit/{id}', [AdminController::class, 'editShopCategories'])->name('shop_categories');
 		Route::post('/shop-categories/update', [AdminController::class, 'updateShopCategories']);
 		Route::post('/shop-categories/delete/{id}', [AdminController::class, 'deleteShopCategories']);
-	
+
 		// Push notification
 		Route::view('/push-notifications', 'admin.push_notifications')->name('push_notifications');
 		Route::post('/push-notifications', [AdminController::class, 'savePushNotifications']);
-	
+
 		Route::get('/referrals', [AdminController::class, 'referrals'])->name('referrals');
-	
+
 		Route::view('/shop', 'admin.shop')->name('shop');
 		Route::post('/shop',  [AdminController::class, 'shopStore']);
-	
+
 		Route::get('/products', [AdminController::class, 'products'])->name('products');
 		Route::post('/product/delete/{id}', [AdminController::class, 'productDelete']);
-	
+
 		Route::get('/sales', [AdminController::class, 'sales'])->name('sales');
 		Route::post('/sales/refund/{id}', [AdminController::class, 'salesRefund']);
-	
+
 		Route::get('/tax-rates', [TaxRatesController::class, 'show'])->name('tax');
 		Route::view('/tax-rates/add', 'admin.add-tax')->name('tax');
 		Route::post('/tax-rates/add', [TaxRatesController::class, 'store']);
 		Route::get('/tax-rates/edit/{id}', [TaxRatesController::class, 'edit'])->name('tax');
 		Route::post('/tax-rates/update', [TaxRatesController::class, 'update']);
 		Route::post('/ajax/states', [TaxRatesController::class, 'getStates']);
-	
+
 		Route::get('/countries', [CountriesStatesController::class, 'countries'])->name('countries_states');
 		Route::view('/countries/add', 'admin.add-country')->name('countries_states');
 		Route::post('/countries/add', [CountriesStatesController::class, 'addCountry']);
 		Route::get('/countries/edit/{id}', [CountriesStatesController::class, 'editCountry'])->name('countries_states');
 		Route::post('/countries/update', [CountriesStatesController::class, 'updateCountry']);
 		Route::post('/countries/delete/{id}', [CountriesStatesController::class, 'deleteCountry']);
-	
+
 		Route::get('/states', [CountriesStatesController::class, 'states'])->name('countries_states');
 		Route::view('/states/add', 'admin.add-state')->name('countries_states');
 		Route::post('/states/add', [CountriesStatesController::class, 'addState']);
 		Route::get('/states/edit/{id}', [CountriesStatesController::class, 'editState'])->name('countries_states');
 		Route::post('/states/update', [CountriesStatesController::class, 'updateState']);
 		Route::post('/states/delete/{id}', [CountriesStatesController::class, 'deleteState']);
-	
+
 		Route::view('/announcements', 'admin.announcements')->name('announcements');
 		Route::post('/announcements', [AdminController::class, 'storeAnnouncements']);
 
 		Route::view('/video-calls', 'admin.video-call-settings')->name('video_calls');
 		Route::post('/video-calls', [AdminController::class, 'saveVIdeoCallSettings']);
-	
+
 		Route::view('/live-streaming', 'admin.live_streaming')->name('live_streaming');
 		Route::post('/live-streaming', [AdminController::class, 'saveLiveStreaming']);
-	
+
 		// Stories
 		Route::view('/stories/settings', 'admin.stories-settings')->name('stories');
 		Route::post('/stories/settings', [AdminController::class, 'saveStoriesSettings']);
-	
+
 		// Stories Posts
 		Route::get('/stories/posts', [AdminController::class, 'storiesPosts'])->name('stories');
 		Route::post('/stories/posts/delete/{id}', [AdminController::class, 'deleteStory']);
-	
+
 		// Stories Backgrounds
 		Route::get('/stories/backgrounds', [AdminController::class, 'storiesBackgrounds'])->name('stories');
 		Route::post('/stories/backgrounds/add', [AdminController::class, 'addStoryBackground']);
 		Route::post('/stories/backgrounds/delete/{id}', [AdminController::class, 'deleteStoryBackground']);
-	
+
 		// Stories Fonts
 		Route::get('/stories/fonts', [AdminController::class, 'storiesFonts'])->name('stories');
 		Route::post('/stories/fonts/add', [AdminController::class, 'addStoryFont']);
 		Route::post('/stories/fonts/delete/{id}', [AdminController::class, 'deleteStoryFont']);
-	
+
 		// Comments on Posts
 		Route::get('/comments', [AdminController::class, 'comments'])->name('comments_replies');
 		Route::post('/comments/delete/{id}', [AdminController::class, 'deleteComment']);
-	
+
 		// Replies comments on posts
 		Route::get('/replies', [AdminController::class, 'replies'])->name('comments_replies');
 		Route::post('/replies/delete/{id}', [AdminController::class, 'deleteReply']);
-	
+
 		// Messages (Chat)
 		Route::get('/messages', [AdminController::class, 'messages'])->name('messages');
-	
+
 		// Advertising
 		Route::get('/advertising', [AdvertisingController::class, 'show'])->name('advertising');
 		Route::view('/advertising/add', 'admin.add-advertising')->name('advertising');
@@ -928,7 +934,7 @@ Route::group(['middleware' => 'private.content'], function() {
 		Route::get('/names-reserved', [AdminController::class, 'namesReserved'])->name('general');
 		Route::post('/add/name/reserved', [AdminController::class, 'storeNameReserved'])->name('add.name.reserved');
 		Route::post('/reserved/delete/{id}', [AdminController::class, 'deleteReserved'])->name('reserved.delete');
-	});	
+	});
 
  });
  //==== End Panel Admin
@@ -948,7 +954,7 @@ Route::group(['middleware' => 'private.content'], function() {
  Route::post('payment/stripe/charge', [StripeController::class, 'charge']);
 
 // Files Images Post
-Route::get('files/storage/{id}/{path}', [UpdatesController::class, 'image'])->where(['id' =>'[0-9]+', 'path' => '.*']); 
+Route::get('files/storage/{id}/{path}', [UpdatesController::class, 'image'])->where(['id' =>'[0-9]+', 'path' => '.*']);
 
 // Change Lang
 Route::get('change/lang/{id}', [LangController::class, 'changeLang'])->where(['id' => '[a-z]+']);
@@ -964,7 +970,7 @@ Route::get('search/creators', [HomeController::class, 'searchCreator']);
 // Explore Creators refresh
 Route::post('refresh/creators', [HomeController::class, 'refreshCreators']);
 
-Route::get('payment/paystack', [PaystackController::class, 'show'])->name('paystack'); 
+Route::get('payment/paystack', [PaystackController::class, 'show'])->name('paystack');
 Route::get('payment/ccbill', [CCBillController::class, 'show'])->name('ccbill');
 
 // File Media
@@ -980,7 +986,7 @@ Route::post('2fa/resend',[TwoFactorAuthController::class, 'resend'])->middleware
 
 Route::get('explore/creators/live',[HomeController::class, 'creatorsBroadcastingLive']);
 
-Route::post('webhook/mollie', [AddFundsController::class, 'webhookMollie']); 
+Route::post('webhook/mollie', [AddFundsController::class, 'webhookMollie']);
 
 // PayPal Webhook
 Route::post('webhook/paypal', [PayPalController::class, 'webhook']);
@@ -1009,8 +1015,8 @@ Route::post('webhook/cardinity/cancel', [CardinityController::class, 'cancelPaym
 // Resize Images
 Route::get('assets/{path}/{size}/{file}', [HomeController::class, 'resizeImage'])
 	->where([
-		'path' =>'[a-z]+', 
-		'size' => '[0-9]+', 
+		'path' =>'[a-z]+',
+		'size' => '[0-9]+',
 		'file' => '.*'
 		])
 	->name('resize');

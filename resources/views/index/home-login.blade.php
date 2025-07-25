@@ -122,8 +122,15 @@
                   <label class="custom-control-label" for=" customCheckLogin">
                     <span>{{__('auth.remember_me')}}</span>
                   </label>
-                </div>
+                    <input class="custom-control-input" id="customCheckAge" type="checkbox" name="agree_gdpr">
+								<label class="custom-control-label" for="customCheckAge">
+									<span>
+										{{__('admin.age')}}
+									</span>
+								</label>
+								<p id="error-msg" style="color:red; display:none;"></p>
 
+                </div>
                 <div class="custom-control custom-control-alternative custom-checkbox display-none" id="agree_gdpr">
                   <input class="custom-control-input" id="customCheckRegister" type="checkbox" name="agree_gdpr">
                     <label class="custom-control-label" for="customCheckRegister">
