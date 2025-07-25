@@ -117,20 +117,33 @@
                         </div>
                   </div>
 
-                <div class="custom-control custom-control-alternative custom-checkbox" id="remember">
-                  <input class="custom-control-input" id=" customCheckLogin" type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}>
-                  <label class="custom-control-label" for=" customCheckLogin">
-                    <span>{{__('auth.remember_me')}}</span>
-                  </label>
-                    <input class="custom-control-input" id="customCheckAge" type="checkbox" name="agree_gdpr">
-								<label class="custom-control-label" for="customCheckAge">
-									<span>
-										{{__('admin.age')}}
-									</span>
-								</label>
-								<p id="error-msg" style="color:red; display:none;"></p>
+                <div class="custom-control custom-control-alternative custom-checkbox">
+    <!-- Checkbox de recordar sesión -->
+    <input
+        class="custom-control-input"
+        id="customCheckLogin"
+        type="checkbox"
+        name="remember"
+        {{ old('remember') ? 'checked' : '' }}>
+    <label class="custom-control-label" for="customCheckLogin">
+        <span>{{ __('auth.remember_me') }}</span>
+    </label>
+</div>
 
-                </div>
+<div class="custom-control custom-control-alternative custom-checkbox">
+    <!-- Checkbox de aceptar condición obligatoria -->
+    <input
+        class="custom-control-input"
+        id="customCheckAge"
+        type="checkbox"
+        name="agree_gdpr"
+        required>
+    <label class="custom-control-label" for="customCheckAge">
+        <span>{{ __('admin.age') }}</span>
+    </label>
+    <p id="error-msg" style="color:red; display:none;"></p>
+</div>
+
                 <div class="custom-control custom-control-alternative custom-checkbox display-none" id="agree_gdpr">
                   <input class="custom-control-input" id="customCheckRegister" type="checkbox" name="agree_gdpr">
                     <label class="custom-control-label" for="customCheckRegister">
