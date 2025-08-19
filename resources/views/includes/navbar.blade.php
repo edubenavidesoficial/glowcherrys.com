@@ -388,4 +388,87 @@
   line-height: 0;
   vertical-align: middle;
 }
+
+.navbar {
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  transition: background 0.4s ease, box-shadow 0.3s ease;
+  padding: 0.6rem 1rem;
+}
+
+.navbar_background_color {
+  background: linear-gradient(135deg, #696767FF, #660219FF);
+}
+
+.bg-white .floating-menu{
+  background: linear-gradient(135deg, #D50A40FF, #443C3CFF);
+}
+
+.navbar_background_color:hover {
+  background: linear-gradient(135deg, #222, #5D0214FF);
+}
+
+.bg-white:hover {
+  background: linear-gradient(135deg, #870425FF, #403338FF);
+}
+
+.navbar-nav .nav-link {
+  font-weight: 500;
+  transition: color 0.3s ease, transform 0.2s ease;
+  margin: 0 0.3rem;
+}
+
+.navbar-nav .nav-link:hover {
+  color: #D2E3E7FF; /* azul moderno */
+  transform: translateY(-2px);
+}
+
+/* 💫 Íconos con vibración */
+.icon-navbar,
+.navbar-nav i {
+  font-size: 1.2rem;
+  transition: transform 0.2s ease, color 0.3s ease;
+}
+
+.icon-navbar:hover,
+.navbar-nav i:hover {
+  color: #E4EFF1FF;
+  animation: vibrar 0.25s linear infinite;
+}
+
+@keyframes vibrar {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-2px); }
+  50% { transform: translateX(2px); }
+  75% { transform: translateX(-2px); }
+  100% { transform: translateX(0); }
+}
+
+/* 🔲 Dropdown */
+.dropdown-menu {
+  border-radius: 12px;
+  box-shadow: 0px 6px 20px rgba(0,0,0,0.15);
+  border: none;
+  animation: fadeIn 0.25s ease-in-out;
+}
+
+.dropdown-item {
+  transition: background 0.3s, padding-left 0.3s;
+}
+
+.dropdown-item:hover {
+  background: rgba(209, 216, 219, 0.535);
+  padding-left: 1.5rem;
+  color: #7D8486FF;
+}
+
+/* 🌟 Animación fade */
+@keyframes fadeIn {
+  from {opacity: 0; transform: translateY(-5px);}
+  to {opacity: 1; transform: translateY(0);}
+}
+
+.link-scroll a.nav-link:not(.btn), .navbar-toggler:not(.text-white) {
+    color: #f93939 !important;
+}
 </style>

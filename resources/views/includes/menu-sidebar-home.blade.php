@@ -1,29 +1,48 @@
 <style>
 .floating-menu {
-  background-color: #c30000; 
-  border-radius: 5px;
-  padding: 15px 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  background: linear-gradient(to bottom right, rgba(128, 2, 36, 0.65) 53.78%, rgba(79, 21, 21, 0.25));
+  backdrop-filter: blur(5px) saturate(50%);
+  -webkit-backdrop-filter: blur(5px) saturate(50%);
+  border-radius: 16px;
+  padding: 15px 12px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.25);
   max-width: 240px;
   z-index: 999;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
+/* 🌟 Hover con brillo */
+.floating-menu:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 35px rgba(121, 0, 0, 0.5);
+  background: linear-gradient(135deg, rgba(200, 182, 186, 0.724) 53.78%, rgba(79, 21, 21, 0.25));
+}
+
+/* ✨ Texto e íconos dentro */
+.floating-menu * {
+  color: #fff;
+  font-weight: 500;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+}
+
+
 .floating-menu a {
-  color: white;
+  color: rgb(108, 30, 30);
   display: flex;
   align-items: center;
-  padding: 8px 10px;
+  padding: 8px 10px;s
   border-radius: 4px;
   transition: background 0.2s;
   text-decoration: none;
 }
 
 .floating-menu a:hover {
-  background-color: #a10000;
+  background: linear-gradient(135deg, #696767FF, #660219FF);
 }
 
 .floating-menu a.active {
-  background-color: #a10000;
+  background: linear-gradient(135deg, #696767FF, #660219FF);
   pointer-events: none;
 }
 </style>
