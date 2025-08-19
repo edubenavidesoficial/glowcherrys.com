@@ -8,6 +8,7 @@
 				: '<i class="bi-lightning-charge mr-2"></i>'. __('general.custom_content'))
 			!!}
 		</span>
+        que esta imagen salga degradada o que este difumnada
 	<div class="card-cover position-relative" style="background: url({{ route('resize', ['path' => 'shop', 'file' => $product->previews[0]->name, 'size' => 480]) }}) #efefef center center; background-size: cover; height:300px;">
 
 		<span @class(['price-shop', 'bg-danger' => $product->type == 'physical' && $product->quantity == 0])>
@@ -37,3 +38,25 @@
 </div>
 </div><!-- End Card -->
 </a>
+<style>
+    .card-cover {
+  position: relative;
+  overflow: hidden;
+}
+
+.card-cover::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: inherit; /* Toma la misma imagen */
+  filter: blur(6px); /* Controla el nivel de difuminado */
+  transform: scale(1.1); /* Evita bordes blancos */
+  z-index: 1;
+}
+
+.card-cover > * {
+  position: relative;
+  z-index: 2; /* Mantiene el texto encima */
+}
+
+</style>

@@ -361,9 +361,9 @@
     	 </div>
 
        @foreach ($userProducts->where('id', '<>', $product->id)->take(3)->latest()->get() as $product)
-       <div class="col-md-4 mb-4">
+       <div class="col-md-3 mb-4">
          @include('shop.listing-products')
-       </div><!-- end col-md-4 -->
+       </div><!-- end col-md-3 -->
        @endforeach
 
      </div><!-- row -->
